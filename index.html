@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ATAM GO — The AI Operations Platform for DecoNetwork Businesses</title>
+<meta name="description" content="The only AI-powered operations platform built exclusively for DecoNetwork print and embroidery businesses. Live production dashboards, intelligent order tracking, stock management and DAN — your AI production assistant."/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #38bdf8; --indigo: #6366f1; --green: #22c55e;
+    --amber: #f59e0b; --red: #ef4444; --pink: #f472b6;
+    --bg: #020617; --surface: #0d1525; --border: #1e2d45;
+    --text: #e8edf5; --muted: #64748b; --subtle: #94a3b8;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(2,6,23,0.92); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 40px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  .nav-logo span { color: var(--blue); }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--blue); color: #04243a; padding: 8px 20px;
+    border-radius: 8px; font-weight: 800; font-size: 13px;
+    text-decoration: none; letter-spacing: 0.02em; transition: all 0.15s;
+  }
+  .nav-cta:hover { background: #7dd3fc; color: #04243a; }
+
+  /* SECTIONS */
+  section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding-top: 160px; padding-bottom: 100px; text-align: center; position: relative; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.25);
+    color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 6px 14px; border-radius: 20px; margin-bottom: 28px;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 6px var(--blue); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+  h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 24px; }
+  h1 .accent { background: linear-gradient(135deg, var(--blue), var(--indigo)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 18px; color: var(--subtle); max-width: 640px; margin: 0 auto 40px; line-height: 1.7; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--indigo)); color: #fff;
+    padding: 14px 28px; border-radius: 10px; font-weight: 800; font-size: 15px;
+    text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,189,248,0.3); }
+  .btn-secondary {
+    background: transparent; color: var(--text); border: 1px solid var(--border);
+    padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 15px;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+  .hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 64px; flex-wrap: wrap; }
+  .hero-stat .num { font-size: 32px; font-weight: 800; color: var(--blue); display: block; }
+  .hero-stat .lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  /* SECTION HEADERS */
+  .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  h2 { font-size: clamp(28px, 3.5vw, 44px); font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px; }
+  .section-sub { font-size: 17px; color: var(--subtle); max-width: 560px; line-height: 1.7; }
+
+  /* PROBLEM */
+  .problem { border-top: 1px solid var(--border); }
+  .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 48px; }
+  .problem-card {
+    background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 12px; padding: 24px;
+  }
+  .problem-icon { font-size: 24px; margin-bottom: 12px; }
+  .problem-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #f87171; }
+  .problem-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* SOLUTION */
+  .solution { border-top: 1px solid var(--border); }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 48px; }
+  .feature-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px;
+    position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+  .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .feature-card.blue::before { background: linear-gradient(90deg, var(--blue), var(--indigo)); }
+  .feature-card.green::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
+  .feature-card.amber::before { background: linear-gradient(90deg, var(--amber), #f97316); }
+  .feature-card.pink::before { background: linear-gradient(90deg, var(--pink), var(--indigo)); }
+  .feature-card.red::before { background: linear-gradient(90deg, var(--red), var(--amber)); }
+  .feature-card.indigo::before { background: linear-gradient(90deg, var(--indigo), var(--blue)); }
+  .feature-icon { font-size: 28px; margin-bottom: 14px; }
+  .feature-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+  .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+  .feature-tag { display: inline-block; margin-top: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+  .feature-tag.pro { background: rgba(99,102,241,0.15); color: var(--indigo); }
+  .feature-tag.studio { background: rgba(56,189,248,0.15); color: var(--blue); }
+  .feature-tag.elite { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .feature-tag.all { background: rgba(34,197,94,0.12); color: var(--green); }
+
+  /* DAN SECTION */
+  .dan-section { border-top: 1px solid var(--border); text-align: center; }
+  .dan-demo {
+    margin-top: 48px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px; max-width: 720px; margin-left: auto; margin-right: auto;
+    text-align: left;
+  }
+  .dan-demo-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .dan-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--indigo)); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .dan-name { font-size: 15px; font-weight: 700; }
+  .dan-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 5px; }
+  .dan-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 5px var(--green); }
+  .chat-exchange { display: flex; flex-direction: column; gap: 14px; }
+  .msg { max-width: 85%; padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.6; }
+  .msg.user { background: linear-gradient(135deg, var(--blue), var(--indigo)); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .msg.dan { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); align-self: flex-start; border-bottom-left-radius: 4px; color: #e2e8f0; }
+
+  /* PRICING PREVIEW */
+  .pricing-preview { border-top: 1px solid var(--border); text-align: center; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 48px; }
+  .pricing-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 28px; text-align: left; position: relative; overflow: hidden; transition: transform 0.2s;
+  }
+  .pricing-card:hover { transform: translateY(-3px); }
+  .pricing-card.featured { border-color: var(--blue); }
+  .pricing-card.featured::after { content: 'MOST POPULAR'; position: absolute; top: 16px; right: -28px; background: var(--blue); color: #04243a; font-size: 9px; font-weight: 800; letter-spacing: 0.08em; padding: 4px 36px; transform: rotate(45deg); }
+  .pricing-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .pricing-card.starter::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
+  .pricing-card.pro::before { background: linear-gradient(90deg, var(--indigo), var(--blue)); }
+  .pricing-card.studio::before { background: linear-gradient(90deg, var(--blue), var(--indigo)); }
+  .pricing-card.elite::before { background: linear-gradient(90deg, var(--amber), #f97316); }
+  .tier-name { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .tier-price { font-size: 36px; font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1; }
+  .tier-price span { font-size: 16px; font-weight: 600; color: var(--muted); }
+  .tier-setup { font-size: 12px; color: var(--muted); margin-top: 4px; margin-bottom: 20px; }
+  .tier-desc { font-size: 13px; color: var(--subtle); margin-bottom: 20px; line-height: 1.6; }
+  .tier-features { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+  .tier-features li { font-size: 13px; color: var(--subtle); display: flex; align-items: flex-start; gap: 8px; }
+  .tier-features li::before { content: '✓'; color: var(--green); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+  .tier-features li.locked { color: #2c3a52; }
+  .tier-features li.locked::before { content: '—'; color: #2c3a52; }
+  .tier-btn {
+    display: block; text-align: center; padding: 12px; border-radius: 8px;
+    font-weight: 800; font-size: 13px; text-decoration: none; transition: all 0.15s; letter-spacing: 0.02em;
+  }
+  .tier-btn.primary { background: var(--blue); color: #04243a; }
+  .tier-btn.primary:hover { background: #7dd3fc; }
+  .tier-btn.outline { border: 1px solid var(--border); color: var(--text); }
+  .tier-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* SOCIAL PROOF */
+  .proof { border-top: 1px solid var(--border); }
+  .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 48px; }
+  .proof-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .proof-quote { font-size: 15px; color: var(--subtle); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+  .proof-author { font-size: 13px; font-weight: 700; color: var(--text); }
+  .proof-company { font-size: 12px; color: var(--muted); }
+
+  /* CTA */
+  .cta-section {
+    border-top: 1px solid var(--border); text-align: center;
+    background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(99,102,241,0.06));
+    border-radius: 24px; margin: 0 40px 80px;
+  }
+  .cta-section h2 { font-size: clamp(28px, 4vw, 48px); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border); padding: 40px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;
+    max-width: 1200px; margin: 0 auto; font-size: 13px; color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    section { padding: 60px 20px; }
+    .hero { padding-top: 100px; }
+    .cta-section { margin: 0 20px 60px; }
+    footer { padding: 40px 20px; flex-direction: column; gap: 12px; text-align: center; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ATAM<span>GO</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#dan">Meet DAN</a>
+    <a href="#pricing">Pricing</a>
+    <a href="mailto:hello@atamworkwear.co.uk">Contact</a>
+    <a href="#pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span>Built exclusively for DecoNetwork businesses</div>
+  <h1>The <span class="accent">AI operations brain</span> your print shop is missing</h1>
+  <p class="hero-sub">Live production dashboards, intelligent order tracking, stock management and an AI assistant that knows your business by name — built specifically for DecoNetwork.</p>
+  <div class="hero-ctas">
+    <a href="#pricing" class="btn-primary">Start free 14-day trial →</a>
+    <a href="#features" class="btn-secondary">See what's included</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">5,000+</span><span class="lbl">DecoNetwork businesses globally</span></div>
+    <div class="hero-stat"><span class="num">0</span><span class="lbl">Others have anything like this</span></div>
+    <div class="hero-stat"><span class="num">30s</span><span class="lbl">To get your week-ahead briefing</span></div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <p class="section-eyebrow">The problem</p>
+  <h2>DecoNetwork runs your orders.<br>But it doesn't run your business.</h2>
+  <p class="section-sub">Every decorator and print shop we've spoken to has the same blind spots.</p>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-icon">📦</div>
+      <h3>Stock you can't see</h3>
+      <p>DecoNetwork allocates stock to orders automatically but never tells you what's actually left on the shelf. You find out when it's already a problem.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📅</div>
+      <h3>No week-ahead view</h3>
+      <p>Your team starts Monday not knowing what's coming. Orders get missed, dispatches are rushed, and customers chase you before you chase them.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">👻</div>
+      <h3>Customers going quiet</h3>
+      <p>A regular customer stops ordering and nobody notices for weeks. By the time you realise, they're already using someone else.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">🔥</div>
+      <h3>Orders at risk</h3>
+      <p>Shipping deadlines approach and nobody has a single place to see which orders are due today, which are late, and what still needs producing.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📊</div>
+      <h3>No production metrics</h3>
+      <p>How much did you produce this week? Who decorated what? Which customers drove the most volume? You're running blind without the numbers.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">⏰</div>
+      <h3>Time spent digging</h3>
+      <p>Every answer requires opening DecoNetwork, running a report, cross-referencing something else. You spend more time finding information than acting on it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="features">
+  <p class="section-eyebrow">The solution</p>
+  <h2>Everything your shop needs.<br>In one place. In real time.</h2>
+  <p class="section-sub">ATAM GO connects directly to DecoNetwork and surfaces the intelligence you've been missing — automatically.</p>
+  <div class="features-grid">
+    <div class="feature-card blue">
+      <div class="feature-icon">⚡</div>
+      <h3>Live Production Dashboard</h3>
+      <p>Real-time decoration volume, embroidery vs print split, process code breakdown, top customers, and store-by-store performance — all updating live as your team works.</p>
+      <span class="feature-tag all">All plans</span>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-icon">🚚</div>
+      <h3>Order Watchlist & Dispatch</h3>
+      <p>Due today, due tomorrow, late and at-risk — all in one view with live countdown timers. One-click dispatch confirmation with optional webhook to your carrier system.</p>
+      <span class="feature-tag all">All plans</span>
+    </div>
+    <div class="feature-card amber">
+      <div class="feature-icon">👥</div>
+      <h3>Customer Reorder Monitor</h3>
+      <p>Tracks every customer's mean reorder pattern. Flags who's overdue before they go cold. Shows the £ value at risk so you know who to call first.</p>
+      <span class="feature-tag all">All plans</span>
+    </div>
+    <div class="feature-card pink">
+      <div class="feature-icon">🤖</div>
+      <h3>DAN — Your AI Production Assistant</h3>
+      <p>Ask DAN anything in plain English. Week-ahead briefings, team workload, overdue orders, customer history. Answers in seconds, not reports.</p>
+      <span class="feature-tag pro">Pro & above</span>
+    </div>
+    <div class="feature-card blue">
+      <div class="feature-icon">🎯</div>
+      <h3>Weekly Production Targets</h3>
+      <p>Live embroidery and print targets with animated visual fill — resetting every Monday. Your team knows exactly where they are against the week's goal at a glance.</p>
+      <span class="feature-tag pro">Pro & above</span>
+    </div>
+    <div class="feature-card red">
+      <div class="feature-icon">📦</div>
+      <h3>Stock Intelligence</h3>
+      <p>Full DecoNetwork inventory sync — organised by garment type, colour and size. See exactly what's free to use (not just what's in the system). DAN can cross-reference stock vs upcoming orders and flag shortfalls before they happen.</p>
+      <span class="feature-tag studio">Studio & Elite</span>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-icon">📅</div>
+      <h3>Friday Briefing</h3>
+      <p>Every Friday when you log in, DAN automatically opens and delivers the complete week-ahead order breakdown — by day, by team member, by decoration count. No prompt needed.</p>
+      <span class="feature-tag pro">Pro & above</span>
+    </div>
+    <div class="feature-card indigo">
+      <div class="feature-icon">⚙️</div>
+      <h3>Custom Workflow Automations</h3>
+      <p>n8n-powered automations built specifically for your business. Carrier integrations, CRM sync, daily email summaries, manager alerts — configured around how you actually work.</p>
+      <span class="feature-tag elite">Elite only</span>
+    </div>
+  </div>
+</section>
+
+<!-- DAN -->
+<section class="dan-section" id="dan">
+  <p class="section-eyebrow">Meet DAN</p>
+  <h2>An AI that actually knows<br>your production business</h2>
+  <p class="section-sub" style="margin: 0 auto;">DAN isn't a generic chatbot. He knows your team by name, your order pipeline, your stock levels, and your customers. Ask him anything.</p>
+  <div class="dan-demo">
+    <div class="dan-demo-header">
+      <div class="dan-avatar">🤖</div>
+      <div>
+        <div class="dan-name">DAN</div>
+        <div class="dan-status">Analysing your production data</div>
+      </div>
+    </div>
+    <div class="chat-exchange">
+      <div class="msg user">What's my week looking like next week?</div>
+      <div class="msg dan">Week ahead — 7 Jul to 11 Jul:<br><br>Monday 7 Jul: 7 orders, 8 decorations, 134 garments<br>Tuesday 7 Jul: 13 orders, 17 decorations, 96 garments<br>Wednesday 8 Jul: 8 orders, 10 decorations, 89 garments<br>Thursday 9 Jul: 6 orders, 7 decorations, 26 garments<br>Friday 10 Jul: 10 orders, 12 decorations, 85 garments<br><br>Total: 44 orders, 54 decorations, 430 garments<br><br>Want the breakdown by team member?</div>
+      <div class="msg user">Do we have enough stock for next week's orders?</div>
+      <div class="msg dan">Checked your stock against next week's order list. Most lines look fine. Two to flag:<br><br>Navy L RX301 — you need 21 for order #635403, you have 4 in stock. Short by 17.<br>Black XL 1080 — 2 left, needed for 3 orders next week. Worth ordering today.<br><br>Everything else has sufficient cover. Want me to flag these as at-risk?</div>
+      <div class="msg user">Which customers haven't reordered recently?</div>
+      <div class="msg dan">3 customers overdue based on their usual reorder pattern:<br><br>1. Bell Lighting — last ordered 47 days ago, usually reorders every 28 days. Last value £1,840.<br>2. Total Fitness Health Clubs — 34 days, mean is 21. At risk.<br>3. PPG Industries — 29 days, threshold 25 days. Worth a call today.<br><br>Combined value at risk: £4,200. Want me to list their contact details?</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING PREVIEW -->
+<section class="pricing-preview" id="pricing">
+  <p class="section-eyebrow">Pricing</p>
+  <h2>Simple pricing.<br>No surprises.</h2>
+  <p class="section-sub" style="margin: 0 auto;">One-time setup fee covers everything — DecoNetwork connection, Supabase database, n8n workflows and full configuration. Monthly fee keeps it live, updated and supported.</p>
+  <div class="pricing-grid">
+
+    <div class="pricing-card starter">
+      <div class="tier-name">Starter</div>
+      <div class="tier-price">£49<span>/mo</span></div>
+      <div class="tier-setup">+ £199 one-time setup</div>
+      <div class="tier-desc">Visibility and control for smaller shops who need to stop flying blind.</div>
+      <ul class="tier-features">
+        <li>Live production dashboard</li>
+        <li>Order watchlist & dispatch tracker</li>
+        <li>Customer reorder monitor</li>
+        <li>Activity feed & search</li>
+        <li>Store & process breakdowns</li>
+        <li>n8n workflow triggers</li>
+        <li class="locked">DAN AI assistant</li>
+        <li class="locked">Weekly production targets</li>
+        <li class="locked">Stock management</li>
+        <li class="locked">Custom automations</li>
+      </ul>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Starter Enquiry" class="tier-btn outline">Get started</a>
+    </div>
+
+    <div class="pricing-card pro featured">
+      <div class="tier-name">Pro</div>
+      <div class="tier-price">£99<span>/mo</span></div>
+      <div class="tier-setup">+ £299 one-time setup</div>
+      <div class="tier-desc">The full ops picture plus DAN — for shops serious about running a tighter operation.</div>
+      <ul class="tier-features">
+        <li>Everything in Starter</li>
+        <li>DAN AI assistant (production & orders)</li>
+        <li>Weekly production targets</li>
+        <li>Friday auto-briefing</li>
+        <li>Dispatch command centre</li>
+        <li>Team workload tracking</li>
+        <li class="locked">DAN stock intelligence</li>
+        <li class="locked">Stock management dashboard</li>
+        <li class="locked">Customer churn predictions</li>
+        <li class="locked">Custom automations</li>
+      </ul>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Pro Enquiry" class="tier-btn primary">Get started</a>
+    </div>
+
+    <div class="pricing-card studio">
+      <div class="tier-name">Studio</div>
+      <div class="tier-price">£199<span>/mo</span></div>
+      <div class="tier-setup">+ £499 one-time setup</div>
+      <div class="tier-desc">Full intelligence — stock, AI cross-referencing, and everything your ops team needs.</div>
+      <ul class="tier-features">
+        <li>Everything in Pro</li>
+        <li>DAN with full stock intelligence</li>
+        <li>Stock management dashboard</li>
+        <li>Garment type & SKU organisation</li>
+        <li>Stock vs orders cross-referencing</li>
+        <li>Customer churn predictions</li>
+        <li>Inventory sync 3x daily</li>
+        <li class="locked">Custom n8n automations</li>
+        <li class="locked">Multi-store support</li>
+        <li class="locked">Dedicated onboarding call</li>
+      </ul>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Studio Enquiry" class="tier-btn outline">Get started</a>
+    </div>
+
+    <div class="pricing-card elite">
+      <div class="tier-name">Elite</div>
+      <div class="tier-price">£399<span>/mo</span></div>
+      <div class="tier-setup">+ £999 one-time setup</div>
+      <div class="tier-desc">We configure everything around how your business actually works. Fully managed.</div>
+      <ul class="tier-features">
+        <li>Everything in Studio</li>
+        <li>Custom n8n workflow builds</li>
+        <li>Multi-store & multi-user</li>
+        <li>Carrier & CRM integrations</li>
+        <li>Daily automated email summaries</li>
+        <li>Manager alert system</li>
+        <li>Monthly strategy call</li>
+        <li>Priority support direct line</li>
+        <li>Bespoke dashboard configuration</li>
+        <li>Quarterly feature reviews</li>
+      </ul>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Elite Enquiry" class="tier-btn outline">Get started</a>
+    </div>
+
+  </div>
+  <p style="margin-top: 32px; font-size: 13px; color: var(--muted); text-align: center;">All plans include a 14-day free trial. No card required to start. Setup fee billed after trial.</p>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="proof" id="proof">
+  <p class="section-eyebrow">Early customers</p>
+  <h2>Built for businesses like yours</h2>
+  <div class="proof-grid">
+    <div class="proof-card">
+      <p class="proof-quote">"We were always reacting — chasing late orders, finding out stock was gone when it was too late. Now we know exactly what's coming before the week even starts."</p>
+      <div class="proof-author">Daniel Spooner</div>
+      <div class="proof-company">ATAM Workwear — Studio plan</div>
+    </div>
+    <div class="proof-card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:8px;min-height:180px;">
+      <div style="font-size:32px;">🏭</div>
+      <p style="font-size:14px;color:var(--muted);">Could this be your business?</p>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Trial Request" class="tier-btn primary" style="margin-top:8px;padding:10px 20px;font-size:13px;">Start your free trial</a>
+    </div>
+    <div class="proof-card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:8px;min-height:180px;">
+      <div style="font-size:32px;">🖨️</div>
+      <p style="font-size:14px;color:var(--muted);">Running DecoNetwork? We'd love to show you a demo with your real data.</p>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Demo Request" class="tier-btn outline" style="margin-top:8px;padding:10px 20px;font-size:13px;">Book a demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <section style="padding: 80px 40px;">
+    <p class="section-eyebrow">Ready to see it?</p>
+    <h2>Your ops brain is waiting.</h2>
+    <p class="section-sub" style="margin: 16px auto 36px;">14-day free trial. No card required. We connect it to your DecoNetwork and show you a live demo with your real data before you pay a penny.</p>
+    <div class="hero-ctas">
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Trial Request" class="btn-primary">Start free trial →</a>
+      <a href="mailto:hello@atamworkwear.co.uk?subject=ATAM GO Demo Request" class="btn-secondary">Book a demo</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div>© 2026 ATAM Workwear. ATAM GO is a product of ATAM Workwear Ltd.</div>
+  <div style="display:flex;gap:24px;">
+    <a href="mailto:hello@atamworkwear.co.uk" style="color:var(--muted);text-decoration:none;">hello@atamworkwear.co.uk</a>
+  </div>
+</footer>
+
+</body>
+</html>
