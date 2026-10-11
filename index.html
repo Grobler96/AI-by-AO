@@ -119,7 +119,7 @@ h2{font-family:var(--disp);font-size:clamp(34px,5.4vw,70px);line-height:1.04;let
 .fcard .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:var(--c,var(--violet));box-shadow:0 0 18px -2px var(--c)}
 .fcard small{display:block;color:var(--muted);font-size:11px;line-height:1.2}
 .fcard strong{font-family:var(--disp);font-weight:600;font-size:14px;line-height:1.25}
-@keyframes bob{0%,100%{transform:translate3d(0,0,var(--z)) rotateZ(var(--rz,0deg))}50%{transform:translate3d(0,-18px,var(--z)) rotateZ(calc(var(--rz,0deg)*-1))}}
+@keyframes bob{0%,100%{transform:translate3d(var(--fx,0px),var(--fy,0px),var(--z)) rotateZ(var(--rz,0deg))}50%{transform:translate3d(var(--fx,0px),calc(var(--fy,0px) - 18px),var(--z)) rotateZ(calc(var(--rz,0deg)*-1))}}
 .floor{position:absolute;left:-30%;right:-30%;bottom:-6%;height:50%;transform:perspective(500px) rotateX(68deg);-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000 20%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0,#000 20%,transparent 70%);background-image:linear-gradient(rgba(56,225,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.4) 1px,transparent 1px);background-size:44px 44px;animation:grid 2.4s linear infinite;pointer-events:none}
 @keyframes grid{to{background-position:0 44px}}
 .scroll-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:24px;height:40px;border:1.5px solid var(--muted);border-radius:14px;opacity:.7}
@@ -362,6 +362,43 @@ h2{font-family:var(--disp);font-size:clamp(34px,5.4vw,70px);line-height:1.04;let
 footer{border-top:1px solid var(--line);padding:40px clamp(18px,4vw,48px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px;max-width:1360px;margin:0 auto}
 footer .links{gap:22px}
 
+/* ===== scroll experience ===== */
+html.lenis,html.lenis body{height:auto}
+html.gs{scroll-behavior:auto!important}
+.stage-wrap{width:100%;will-change:transform}
+.gs h2{perspective:700px}
+.sw{display:inline-block;white-space:nowrap}
+.sc,.sc-u{display:inline-block;transform-origin:50% 100%;will-change:transform}
+
+.bigword{max-width:none;height:100vh;padding:0;display:grid;place-items:center;overflow:hidden;text-align:center}
+.bw-in{position:relative;display:grid;place-items:center;gap:22px;width:100%}
+.bw-glow{position:absolute;left:50%;top:50%;width:70vmin;height:70vmin;margin:-35vmin 0 0 -35vmin;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.55),rgba(56,225,255,.25) 40%,transparent 70%);filter:blur(30px);pointer-events:none}
+.bw-kicker{font-family:var(--mono);font-size:clamp(12px,1.2vw,15px);letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);position:relative}
+.bw-text{font-family:var(--disp);font-size:clamp(60px,16.5vw,250px);font-weight:700;letter-spacing:-.04em;line-height:.9;display:flex;justify-content:center;margin:0;position:relative;white-space:nowrap}
+.bw-l{display:inline-block;will-change:transform}
+.bw-l:nth-child(even){color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.85)}
+.bw-l:nth-child(3n){background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:0}
+.bw-sub{font-family:var(--disp);font-size:clamp(20px,2.6vw,34px);letter-spacing:-.02em;color:#dfe4ff;position:relative;padding:0 18px}
+
+.shatter{max-width:none;height:100vh;padding:0;position:relative;overflow:hidden;display:grid;place-items:center;text-align:center}
+.sh-behind{position:relative;padding:0 18px;z-index:1}
+.sh-title{font-size:clamp(46px,9vw,140px);margin:0}
+.sh-behind p{color:var(--muted);font-size:clamp(16px,1.6vw,20px);margin-top:18px}
+.sh-tiles{position:absolute;inset:0;z-index:2;perspective:1000px;pointer-events:none;display:none}
+.gs .sh-tiles{display:block}
+.sh-tiles i{position:absolute;display:block;background-repeat:no-repeat;will-change:transform,opacity;backface-visibility:hidden}
+
+.hz-sec{max-width:none;padding:80px 0 50px;overflow:hidden}
+.hz-sec .head{margin-bottom:34px;padding:0 18px}
+.hz-view{perspective:1300px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.hz-view::-webkit-scrollbar{display:none}
+.gs .hz-view{overflow:visible}
+.hz-track{display:flex;gap:28px;width:max-content;padding:20px calc(50vw - 170px);transform-style:preserve-3d}
+.ci.hc{position:relative;left:auto;top:auto;flex:none;width:340px;height:330px;scroll-snap-align:center;transform-style:preserve-3d}
+.hz-prog{width:min(420px,70vw);height:3px;margin:30px auto 0;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.hz-prog i{display:block;height:100%;background:var(--grad);transform-origin:0 50%;transform:scaleX(0)}
+@media (max-width:640px){.hz-track{padding:20px calc(50vw - 130px);gap:20px}.ci.hc{width:260px;height:310px}.ci.hc .big{font-size:72px}}
+
 /* ===== responsive ===== */
 @media (max-width:1100px){
   .web,.auto-head{grid-template-columns:1fr}
@@ -422,7 +459,7 @@ footer .links{gap:22px}
 <main id="top">
 <!-- ================= HERO ================= -->
 <section class="hero">
-  <div>
+  <div class="hero-copy">
     <div class="eyebrow"><span class="dot"></span>AI workforce · online 24/7</div>
     <h1>
       <span class="line"><span class="w" style="--i:0">Automation</span> <span class="w" style="--i:1">that</span></span>
@@ -440,7 +477,7 @@ footer .links{gap:22px}
     </div>
   </div>
 
-  <div class="stage" id="stage">
+  <div class="stage-wrap" id="stageWrap"><div class="stage" id="stage">
     <div class="floor"></div>
     <div class="stage-in" id="stageIn">
       <div class="orb-core"></div>
@@ -451,7 +488,7 @@ footer .links{gap:22px}
       <div class="fcard" style="--z:90px;--c:#ff4fd8;left:2%;bottom:20%;--dl:-3s;--rz:2deg"><div class="ic">⚡</div><div><small>n8n workflow · 7 steps</small><strong>Invoice sent · CRM updated</strong></div></div>
       <div class="fcard" style="--z:180px;--c:#7dffb2;right:0;bottom:10%;--dl:-4.5s;--rz:-2deg"><div class="ic">🤖</div><div><small>DAN</small><strong>3 orders at risk</strong></div></div>
     </div>
-  </div>
+  </div></div>
   <div class="scroll-hint"></div>
 </section>
 
@@ -472,6 +509,7 @@ footer .links{gap:22px}
     </div>
   </div>
 
+  <div class="wf-pin" id="wfPin">
   <div class="scen rv" id="scen">
     <button class="on" data-s="0">🛒 Order to delivery</button>
     <button data-s="1">🎯 Lead to booked call</button>
@@ -485,6 +523,7 @@ footer .links{gap:22px}
       <div class="wf-foot"><div class="msg" id="wfMsg"></div><div class="wf-count"><b id="wfCount">0</b><span>TASKS DONE IN THIS DEMO</span></div></div>
     </div>
   </div>
+  </div>
 
   <div class="tiles">
     <div class="flip rv"><div class="flip-in"><div class="face"><span class="ti">🎯</span><b>Lead capture &amp; follow up</b></div><div class="face back">Every enquiry logged, scored and answered in seconds. Nobody slips through.</div></div></div>
@@ -497,6 +536,16 @@ footer .links{gap:22px}
     <div class="flip rv" style="--d:.15s"><div class="flip-in"><div class="face"><span class="ti">🔌</span><b>Literally anything else</b></div><div class="face back">If you do it more than twice a week, it can almost certainly run itself. Ask us.</div></div></div>
   </div>
   <div class="auto-cta rv"><a href="#contact" class="btn primary mag">Tell us what to automate →</a></div>
+</section>
+
+<!-- ================= BIG WORD ================= -->
+<section class="bigword" id="bigword" aria-label="If it is repetitive, we automate it">
+  <div class="bw-in">
+    <div class="bw-glow"></div>
+    <div class="bw-kicker">If it's repetitive</div>
+    <h2 class="bw-text"><span class="bw-l">A</span><span class="bw-l">U</span><span class="bw-l">T</span><span class="bw-l">O</span><span class="bw-l">M</span><span class="bw-l">A</span><span class="bw-l">T</span><span class="bw-l">E</span></h2>
+    <p class="bw-sub">If you do it twice, it should run itself.</p>
+  </div>
 </section>
 
 <!-- ================= SERVICES ================= -->
@@ -571,6 +620,16 @@ footer .links{gap:22px}
   </div>
 </section>
 
+<!-- ================= SHATTER ================= -->
+<section class="shatter" id="shatter">
+  <div class="sh-behind">
+    <div class="eyebrow"><span class="dot"></span>Web design</div>
+    <h2 class="sh-title">Built to be<br><span class="grad">remembered.</span></h2>
+    <p>Websites that move, react and come alive as you scroll.</p>
+  </div>
+  <div class="sh-tiles" id="shTiles"></div>
+</section>
+
 <!-- ================= WEB DESIGN ================= -->
 <section id="web">
   <div class="web">
@@ -603,15 +662,15 @@ footer .links{gap:22px}
   </div>
 </section>
 
-<!-- ================= PROCESS CAROUSEL ================= -->
-<section id="process" class="carousel-sec">
+<!-- ================= PROCESS ================= -->
+<section id="process" class="hz-sec">
   <div class="head center rv">
     <div class="eyebrow"><span class="dot"></span>How it works</div>
     <h2>From idea to <span class="grad">autopilot</span></h2>
-    <p class="lead">Drag to spin. A clear five step path from first conversation to a system that runs itself.</p>
+    <p class="lead">A clear five step path from first conversation to a system that runs itself.</p>
   </div>
-  <div class="car rv" id="car"><div class="ringc" id="ringc"></div></div>
-  <div class="car-ctl"><button id="prev" aria-label="Previous">←</button><button id="next" aria-label="Next">→</button></div>
+  <div class="hz-view"><div class="hz-track" id="hzTrack"></div></div>
+  <div class="hz-prog"><i id="hzBar"></i></div>
 </section>
 
 <!-- ================= OPS LAYER ================= -->
@@ -686,6 +745,9 @@ footer .links{gap:22px}
   <div class="links"><a href="#services">Services</a><a href="#ops">Ops Layer</a><a href="mailto:grobleroliver@gmail.com">Contact</a></div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 (()=>{
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
@@ -780,7 +842,7 @@ setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi])},2800);
   const cv=$('#globe'),g=cv.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2);let S;
   function rs(){S=cv.clientWidth;cv.width=cv.height=S*dpr}rs();addEventListener('resize',rs);
   const N=360,P=[];
-  for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=i*2.399963;P.push({x:Math.cos(t)*r,y,z:Math.sin(t)*r,s:Math.random()})}
+  for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=i*2.399963;P.push({x:Math.cos(t)*r,y,z:Math.sin(t)*r,s:Math.random(),r:Math.random()})}
   const E=[];for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,dz=P[i].z-P[j].z;if(dx*dx+dy*dy+dz*dz<.062)E.push([i,j])}
   const pulses=[...Array(26)].map(()=>({e:Math.floor(Math.random()*E.length),t:Math.random(),v:.008+Math.random()*.014}));
   let ry=0,rx=.35,vy=.0045,tx=0;
@@ -788,13 +850,14 @@ setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi])},2800);
     g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.scale(dpr,dpr);
     vy+=((.0045+mouse.nx*.006)-vy)*.05;ry+=vy;tx+=((.35+mouse.ny*.35)-rx)*.04;rx+=((.35+mouse.ny*.35)-rx)*.04;
     const cy_=Math.cos(ry),sy_=Math.sin(ry),cx_=Math.cos(rx),sx_=Math.sin(rx),R=S*.34,c=S/2;
-    const Q=P.map(p=>{let x=p.x*cy_+p.z*sy_,z=-p.x*sy_+p.z*cy_,y=p.y*cx_-z*sx_;z=p.y*sx_+z*cx_;const k=1.5/(1.5-z*.55);return{x:c+x*R*k,y:c+y*R*k,z,k}});
+    const hp=window.__heroP||0;
+    const Q=P.map(p=>{const f=1+hp*hp*(.3+p.r*3.2);let x=p.x*cy_+p.z*sy_,z=-p.x*sy_+p.z*cy_,y=p.y*cx_-z*sx_;z=p.y*sx_+z*cx_;const k=1.5/(1.5-z*.55);return{x:c+x*R*k*f,y:c+y*R*k*f,z,k}});
     g.lineWidth=.8;
-    for(const [i,j] of E){const a=Q[i],b=Q[j],d=(a.z+b.z)/2;g.strokeStyle=`rgba(${d>0?'90,200,255':'140,100,255'},${.07+(d+1)*.2})`;g.beginPath();g.moveTo(a.x,a.y);g.lineTo(b.x,b.y);g.stroke()}
+    for(const [i,j] of E){const a=Q[i],b=Q[j],d=(a.z+b.z)/2;g.strokeStyle=`rgba(${d>0?'90,200,255':'140,100,255'},${(.07+(d+1)*.2)*(1-hp)})`;g.beginPath();g.moveTo(a.x,a.y);g.lineTo(b.x,b.y);g.stroke()}
     for(const pl of pulses){pl.t+=pl.v;if(pl.t>1){pl.t=0;pl.e=Math.floor(Math.random()*E.length)}
       const [i,j]=E[pl.e],a=Q[i],b=Q[j],x=a.x+(b.x-a.x)*pl.t,y=a.y+(b.y-a.y)*pl.t,al=(a.z+b.z)/2>-.3?1:.25;
       g.fillStyle=`rgba(255,255,255,${al})`;g.shadowColor='#38e1ff';g.shadowBlur=14;g.beginPath();g.arc(x,y,2.2,0,6.283);g.fill();g.shadowBlur=0}
-    for(let i=0;i<N;i++){const q=Q[i],a=.25+(q.z+1)*.4,r=(1.1+P[i].s*1.4)*q.k;
+    for(let i=0;i<N;i++){const q=Q[i],a=(.25+(q.z+1)*.4)*(1-hp*.4),r=(1.1+P[i].s*1.4)*q.k;
       g.fillStyle=i%7===0?`rgba(255,79,216,${a})`:`rgba(${q.z>0?'160,235,255':'170,140,255'},${a})`;g.beginPath();g.arc(q.x,q.y,r,0,6.283);g.fill()}
     if(!reduce)requestAnimationFrame(frame)
   }
@@ -906,7 +969,23 @@ new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect(
   }
   $$('#scen button').forEach((b,k)=>b.onclick=()=>{tok++;run(k,tok)});
   setLabels(0);addEventListener('resize',layout);
-  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();tok++;run(0,tok)}},{threshold:.3}).observe(wf);
+  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();if(!window.__wfScrub){tok++;run(0,tok)}}},{threshold:.3}).observe(wf);
+  /* scroll scrubbed mode: the workflow executes in step with the scrollbar */
+  const sparks=E.map(()=>{const d=document.createElement('div');d.className='spark';d.style.opacity=0;wf.appendChild(d);return d});
+  const NT=[.06,.26,.52,.52,.52,.8],EW=[[.12,.26],[.34,.5],[.34,.5],[.34,.5],[.6,.78],[.6,.78],[.6,.78]];
+  let scrubbing=false;
+  function scrubTo(p){
+    tok++;
+    if(!scrubbing){scrubbing=true;cur=0;setLabels(0);nodes.forEach(n=>n.classList.remove('swap'));$$('#scen button').forEach((b,k)=>b.classList.toggle('on',k===0))}
+    nodes.forEach((n,i)=>{n.classList.toggle('run',p>=NT[i]&&p<NT[i]+.06);n.classList.toggle('done',p>=NT[i]+.06)});
+    EW.forEach(([a,b],k)=>{paths[k].f.classList.toggle('on',p>=a);const sp=sparks[k];
+      if(p>a&&p<b){const f=paths[k].f,L=f.getTotalLength(),t=(p-a)/(b-a),pt=f.getPointAtLength(L*t);sp.style.opacity=1;sp.style.transform=`translate(${pt.x}px,${pt.y}px)`}else sp.style.opacity=0});
+    $('#wfState').textContent=p<NT[0]?'listening':p<.86?'executing':'succeeded';
+    $('#wfMsg').innerHTML=p>=.86?'<span class="pill">✓ 6 steps · 0 humans needed</span>':'';
+    $('#wfCount').textContent=nodes.filter(n=>n.classList.contains('done')).length;
+  }
+  function release(next){scrubbing=false;sparks.forEach(sp=>sp.style.opacity=0);count=6;tok++;run(next,tok)}
+  window.__wf={scrubTo,release};
   if(fine&&!reduce){
     wrap.addEventListener('pointermove',e=>{const r=wrap.getBoundingClientRect();wf.style.setProperty('--wy',(((e.clientX-r.left)/r.width-.5)*8)+'deg');wf.style.setProperty('--wx',(9-((e.clientY-r.top)/r.height-.5)*10)+'deg')});
     wrap.addEventListener('pointerleave',()=>{wf.style.setProperty('--wy','0deg');wf.style.setProperty('--wx','9deg')});
@@ -923,27 +1002,10 @@ new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect(
   b.addEventListener('pointerleave',()=>{bi.style.setProperty('--by','16deg');bi.style.setProperty('--bx','8deg')});
 })();
 
-/* ---------- 3D carousel ---------- */
+/* ---------- process cards ---------- */
 (()=>{
-  const steps=[['01','Discover','We map your workflows, find the biggest time sinks and define what success looks like.','WEEK 1'],['02','Design','Conversation flows, voice, tone and integrations, designed around your customers.','WEEK 1 to 2'],['03','Build','We train and wire up your AI with your data, tools and n8n automations.','WEEK 2 to 3'],['04','Launch','Go live with monitoring, human handoff and a safety net. We stay on call.','WEEK 3'],['05','Evolve','Monthly tuning, new automations and reporting so it keeps getting smarter.','ONGOING']];
-  const ring=$('#ringc'),N=steps.length,car=$('#car');let items=[],R,ang=0,vel=0,drag=false,lx=0,target=null,auto=true;
-  steps.forEach(s=>{const d=document.createElement('div');d.className='ci';d.innerHTML=`<div class="big">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="tag">◆ ${s[3]}</div>`;ring.appendChild(d);items.push(d)});
-  function layout(){const w=innerWidth<640?230:300;R=Math.round((w/2)/Math.tan(Math.PI/N))+(innerWidth<640?50:90);
-    items.forEach((d,i)=>{d.style.width=w+'px';d.style.left=-w/2+'px';d.style.height=(innerWidth<640?330:360)+'px';d.style.top=-(innerWidth<640?165:180)+'px';d.style.transform=`rotateY(${i*360/N}deg) translateZ(${R}px)`})}
-  layout();addEventListener('resize',layout);
-  car.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;target=null;car.setPointerCapture(e.pointerId)});
-  car.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-lx;lx=e.clientX;ang+=dx*.4;vel=dx*.4});
-  const up=()=>{drag=false};car.addEventListener('pointerup',up);car.addEventListener('pointercancel',up);
-  car.addEventListener('pointerenter',()=>auto=false);car.addEventListener('pointerleave',()=>auto=true);
-  const snap=dir=>{const s=360/N;target=(Math.round(ang/s)+dir)*s;vel=0};
-  $('#prev').onclick=()=>snap(1);$('#next').onclick=()=>snap(-1);
-  function f(){
-    if(!drag){if(target!==null){ang+=(target-ang)*.08;if(Math.abs(target-ang)<.05)target=null}else{ang+=vel;vel*=.95;if(auto&&!reduce&&Math.abs(vel)<.05)ang-=.18}}
-    ring.style.transform=`translateZ(${-R}px) rotateX(${-6+mouse.ny*-4}deg) rotateY(${ang}deg)`;
-    items.forEach((d,i)=>{let a=((i*360/N+ang)%360+540)%360-180;const f=Math.cos(a*Math.PI/180);d.style.opacity=(.25+Math.max(0,f)*.75).toFixed(2);d.style.filter=f<0?'blur(3px)':'none'});
-    requestAnimationFrame(f)
-  }
-  f();
+  const steps=[['01','Discover','We map your workflows, find the biggest time sinks and define what success looks like.','WEEK 1'],['02','Design','Conversation flows, voice, tone and integrations, designed around your customers.','WEEK 1 to 2'],['03','Build','We wire up your AI and n8n automations with your data and tools.','WEEK 2 to 3'],['04','Launch','Go live with monitoring, human handoff and a safety net. We stay on call.','WEEK 3'],['05','Evolve','Monthly tuning, new automations and reporting so it keeps getting smarter.','ONGOING']];
+  $('#hzTrack').innerHTML=steps.map(s=>`<div class="ci hc"><div class="big">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="tag">◆ ${s[3]}</div></div>`).join('');
 })();
 
 /* ---------- ops layer dashboard ---------- */
@@ -974,7 +1036,120 @@ new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect(
 })();
 
 /* ---------- parallax on scroll for floating cards ---------- */
-if(!reduce)addEventListener('scroll',()=>{const y=scrollY;if(y<innerHeight*1.2)$('.stage').style.translate=`0 ${y*.12}px`;$('.aurora').style.transform=`translateY(${y*-.04}px)`},{passive:true});
+if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translateY(${scrollY*-.04}px)`},{passive:true});
+
+/* ---------- scroll experience: Lenis smooth scroll + GSAP ScrollTrigger ---------- */
+(()=>{
+  if(reduce||!window.gsap||!window.ScrollTrigger)return;
+  gsap.registerPlugin(ScrollTrigger);
+  document.documentElement.classList.add('gs');
+
+  /* smooth scrolling */
+  if(window.Lenis){
+    const lenis=new Lenis({duration:1.15,smoothWheel:true});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+    $$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+      const id=a.getAttribute('href'),t=id==='#top'?0:document.querySelector(id);if(t===null)return;
+      e.preventDefault();lenis.scrollTo(t,{offset:id==='#top'?0:-70,duration:1.6})}));
+  }
+
+  const mm=gsap.matchMedia();
+
+  /* hero: pinned, copy lifts away, globe zooms and explodes, cards fly out */
+  const fly=[[-1,-.8],[1,-.5],[-1,.7],[1,.9]];
+  mm.add('(min-width:901px)',()=>{
+    const tl=gsap.timeline({scrollTrigger:{trigger:'.hero',start:'top top',end:'+=110%',pin:true,scrub:1,onUpdate:st=>window.__heroP=st.progress}});
+    tl.to('.hero-copy',{y:-160,opacity:0,ease:'power1.in'},0)
+      .to('.scroll-hint',{opacity:0,duration:.2},0)
+      .to('#stageWrap',{scale:2.1,xPercent:-25,ease:'power1.in'},0)
+      .to('#stageWrap',{opacity:0,ease:'power2.in',duration:.5},.5);
+    $$('#stage .fcard').forEach((c,i)=>tl.to(c,{'--fx':fly[i][0]*520+'px','--fy':fly[i][1]*340+'px',ease:'power2.in'},0));
+    return()=>{window.__heroP=0};
+  });
+  mm.add('(max-width:900px)',()=>{
+    const tl=gsap.timeline({scrollTrigger:{trigger:'#stageWrap',start:'top 60%',end:'bottom top',scrub:1,onUpdate:st=>window.__heroP=st.progress}});
+    tl.to('#stageWrap',{scale:1.5,opacity:0,ease:'power1.in'},0);
+    $$('#stage .fcard').forEach((c,i)=>tl.to(c,{'--fx':fly[i][0]*220+'px','--fy':fly[i][1]*200+'px',ease:'power2.in'},0));
+    return()=>{window.__heroP=0};
+  });
+
+  /* workflow: pinned on desktop, each step executes in sync with the scroll */
+  mm.add('(min-width:901px)',()=>{
+    window.__wfScrub=true;
+    ScrollTrigger.create({trigger:'#wfPin',start:'top 76px',end:'+=150%',pin:true,scrub:true,
+      onUpdate:st=>window.__wf.scrubTo(st.progress),
+      onLeave:()=>window.__wf.release(1),
+      onEnterBack:()=>window.__wf.scrubTo(1)});
+    return()=>{window.__wfScrub=false};
+  });
+
+  /* big word: letters assemble out of nowhere, then spread apart */
+  (()=>{
+    const L=$$('.bw-l'),n=L.length;
+    const tl=gsap.timeline({scrollTrigger:{trigger:'#bigword',start:'top top',end:'+=160%',pin:true,scrub:1}});
+    tl.fromTo('.bw-glow',{scale:.25,opacity:.2},{scale:2.6,opacity:1,ease:'none',duration:1},0)
+      .from('.bw-kicker',{opacity:0,y:30,duration:.2},0.05)
+      .fromTo('.bw-sub',{opacity:0,y:40},{opacity:1,y:0,duration:.2},.62)
+      .to('.bw-kicker',{opacity:0,y:-30,duration:.15},.7);
+    L.forEach((l,i)=>{
+      const o=i-(n-1)/2;
+      tl.from(l,{x:()=>gsap.utils.random(-1,1)*innerWidth*.6,y:()=>gsap.utils.random(-1,1)*innerHeight*.7,rotation:gsap.utils.random(-120,120),scale:gsap.utils.random(.2,2.4),opacity:0,ease:'power3.out',duration:.42},i*.012)
+        .to(l,{x:()=>o*innerWidth*.07,y:()=>(i%2?1:-1)*innerHeight*.16,rotation:o*7,ease:'power2.inOut',duration:.36},.6);
+    });
+  })();
+
+  /* shatter: a full screen image breaks into 3D tiles that fly past you */
+  (()=>{
+    const host=$('#shTiles'),W=innerWidth,H=innerHeight,port=H>W,cols=port?6:12,rows=port?10:7;
+    const cv=document.createElement('canvas'),cw=port?900:1600,ch=port?1600:900;cv.width=cw;cv.height=ch;const g=cv.getContext('2d');
+    let bg=g.createLinearGradient(0,0,cw,ch);bg.addColorStop(0,'#05061a');bg.addColorStop(1,'#1a0c38');g.fillStyle=bg;g.fillRect(0,0,cw,ch);
+    for(let i=0;i<260;i++){g.fillStyle=`rgba(255,255,255,${Math.random()*.7})`;g.fillRect(Math.random()*cw,Math.random()*ch,Math.random()*2+.5,Math.random()*2+.5)}
+    g.strokeStyle='rgba(139,92,246,.35)';g.lineWidth=1.5;const hz=ch*.66;
+    for(let i=-24;i<=24;i++){g.beginPath();g.moveTo(cw/2,hz);g.lineTo(cw/2+i*cw*.09,ch);g.stroke()}
+    for(let j=1;j<14;j++){const y=hz+Math.pow(j/13,2.2)*(ch-hz);g.strokeStyle=`rgba(56,225,255,${.12+j*.02})`;g.beginPath();g.moveTo(0,y);g.lineTo(cw,y);g.stroke()}
+    const cx=cw/2,cy=ch*.42,R=Math.min(cw,ch)*.26;
+    let rg=g.createRadialGradient(cx-R*.3,cy-R*.35,R*.05,cx,cy,R);rg.addColorStop(0,'#ffffff');rg.addColorStop(.25,'#38e1ff');rg.addColorStop(.65,'#8b5cf6');rg.addColorStop(1,'#2a0f5c');
+    g.shadowColor='#8b5cf6';g.shadowBlur=120;g.fillStyle=rg;g.beginPath();g.arc(cx,cy,R,0,7);g.fill();g.shadowBlur=0;
+    g.save();g.translate(cx,cy);g.scale(1,.28);g.strokeStyle='rgba(255,79,216,.85)';g.lineWidth=6;g.beginPath();g.arc(0,0,R*1.55,0,7);g.stroke();g.strokeStyle='rgba(56,225,255,.6)';g.lineWidth=3;g.beginPath();g.arc(0,0,R*1.85,0,7);g.stroke();g.restore();
+    g.textAlign='center';g.fillStyle='#fff';g.font=`700 ${port?96:120}px "Space Grotesk",system-ui,sans-serif`;g.fillText('Keep scrolling.',cx,ch*.86);
+    g.font=`500 ${port?26:28}px "JetBrains Mono",monospace`;g.fillStyle='rgba(56,225,255,.9)';g.fillText('AI BY AO  ·  WEB DESIGN',cx,ch*.92);
+    const url=cv.toDataURL('image/jpeg',.82),tiles=[];
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const t=document.createElement('i');
+      t.style.cssText=`left:${c/cols*100}%;top:${r/rows*100}%;width:calc(${100/cols}% + 1px);height:calc(${100/rows}% + 1px);background-image:url(${url});background-size:${cols*100}% ${rows*100}%;background-position:${cols>1?c/(cols-1)*100:0}% ${rows>1?r/(rows-1)*100:0}%`;
+      host.appendChild(t);tiles.push(t)}
+    const tl=gsap.timeline({scrollTrigger:{trigger:'#shatter',start:'top top',end:'+=130%',pin:true,scrub:1}});
+    tl.to(tiles,{x:()=>gsap.utils.random(-1,1)*innerWidth*.9,y:()=>gsap.utils.random(-1,.6)*innerHeight*1.1,z:()=>gsap.utils.random(150,900),rotationX:()=>gsap.utils.random(-260,260),rotationY:()=>gsap.utils.random(-260,260),rotation:()=>gsap.utils.random(-90,90),opacity:0,ease:'power2.in',stagger:{amount:.55,from:'center',grid:[rows,cols]}},0)
+      .fromTo('.sh-behind',{scale:.75,opacity:0},{scale:1,opacity:1,ease:'power2.out',duration:.6},.35);
+  })();
+
+  /* process: pinned horizontal strip, cards swing in 3D as they pass the centre */
+  (()=>{
+    const track=$('#hzTrack'),cards=$$('.hc',track),bar=$('#hzBar');
+    const dist=()=>Math.max(0,track.scrollWidth-innerWidth);
+    const swing=()=>{const cx=innerWidth/2,k=innerWidth<700?.45:1;cards.forEach(c=>{const r=c.getBoundingClientRect(),o=(r.left+r.width/2-cx)/innerWidth;gsap.set(c,{rotationY:o*-50*k,z:-Math.abs(o)*320*k,opacity:1-Math.min(Math.abs(o)*1.1,.7)})})};
+    gsap.to(track,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:'#process',start:'top top',end:()=>'+='+dist()*1.2,pin:true,scrub:1,invalidateOnRefresh:true,onUpdate:st=>{bar.style.transform=`scaleX(${st.progress})`}},onUpdate:swing});
+    swing();addEventListener('resize',swing);
+  })();
+
+  /* headings: split into letters that rise and swing into place as you scroll */
+  function split(el){const out=[];
+    [...el.childNodes].forEach(n=>{
+      if(n.nodeType===3){const fr=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w)){fr.appendChild(document.createTextNode(' '));return}
+          const ws=document.createElement('span');ws.className='sw';[...w].forEach(ch=>{const c=document.createElement('span');c.className='sc';c.textContent=ch;ws.appendChild(c);out.push(c)});fr.appendChild(ws)});
+        n.replaceWith(fr)}
+      else if(n.nodeType===1&&n.nodeName!=='BR'){n.classList.add('sc-u');out.push(n)}});
+    return out}
+  $$('main section:not(.hero):not(.bigword):not(.shatter) h2').forEach(h=>{
+    const parts=split(h);
+    gsap.fromTo(parts,{yPercent:110,rotationX:-85,opacity:0},{yPercent:0,rotationX:0,opacity:1,ease:'power3.out',stagger:.03,scrollTrigger:{trigger:h,start:'top 90%',end:'top 55%',scrub:.8}});
+  });
+
+  ScrollTrigger.sort();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>ScrollTrigger.refresh());
+  addEventListener('load',()=>ScrollTrigger.refresh());
+})();
 
 /* ---------- contact form -> mailto ---------- */
 $('#form').addEventListener('submit',e=>{
