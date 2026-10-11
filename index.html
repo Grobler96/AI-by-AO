@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI by AO — AI Phone Callers, Chatbots & Automation That Speaks, Writes & Sells</title>
-<meta name="description" content="AI by AO builds AI phone callers, intelligent chatbots, email automation and the ATAM GO operations platform for DecoNetwork businesses. Automation that speaks, writes and sells — 24/7.">
+<title>AI by AO | AI Phone Callers, Chatbots & Automation That Speaks, Writes & Sells</title>
+<meta name="description" content="AI by AO builds AI phone callers, intelligent chatbots, email automation and an AI operations layer for DecoNetwork businesses. Automation that speaks, writes and sells, 24/7.">
 <meta name="theme-color" content="#04050d">
-<meta property="og:title" content="AI by AO — Automation That Speaks, Writes & Sells">
-<meta property="og:description" content="AI phone callers, chatbots, email systems and DAN — the AI operations brain for print shops.">
+<meta property="og:title" content="AI by AO | Automation That Speaks, Writes & Sells">
+<meta property="og:description" content="AI phone callers, chatbots, email systems and DAN, the AI operations brain for print shops.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -223,7 +223,7 @@ h2{font-family:var(--disp);font-size:clamp(34px,5.4vw,70px);line-height:1.04;let
 .car-ctl button{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:20px;transition:.25s}
 .car-ctl button:hover{border-color:var(--cyan);box-shadow:0 0 24px -4px var(--cyan);transform:scale(1.1)}
 
-/* ===== ATAM GO ===== */
+/* ===== OPS LAYER ===== */
 .go{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(30px,5vw,80px);align-items:center}
 .feat-list{display:grid;gap:14px;margin-top:34px}
 .feat{display:flex;gap:16px;padding:18px 20px;border-radius:18px;border:1px solid var(--line);background:var(--surface);transition:.35s}
@@ -259,22 +259,6 @@ h2{font-family:var(--disp);font-size:clamp(34px,5.4vw,70px);line-height:1.04;let
 .stat b{font-family:var(--disp);font-size:clamp(44px,6vw,80px);line-height:1;letter-spacing:-.04em;display:block}
 .stat span{color:var(--muted);font-size:14px}
 
-/* ===== pricing ===== */
-.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch}
-.plan{display:flex;flex-direction:column;padding:32px 26px}
-.plan.hot{background:linear-gradient(160deg,rgba(139,92,246,.28),rgba(56,225,255,.06));border-color:rgba(139,92,246,.6);box-shadow:0 0 80px -20px var(--violet)}
-.plan.hot::before{opacity:1}
-.ribbon{position:absolute;top:18px;right:-34px;transform:rotate(38deg);background:var(--grad);color:#05060f;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 40px}
-.plan h4{font-family:var(--disp);font-size:22px;transform:translateZ(24px)}
-.plan .pr{font-family:var(--disp);font-size:54px;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin:14px 0 2px;transform:translateZ(36px)}
-.plan .pr small{font-size:16px;color:var(--muted);font-weight:500;letter-spacing:0}
-.plan .setup{font-size:13px;color:var(--cyan);font-family:var(--mono)}
-.plan .desc{color:var(--muted);font-size:13.5px;margin:14px 0 18px;min-height:62px}
-.plan ul{list-style:none;display:grid;gap:9px;font-size:13.5px;margin-bottom:26px;flex:1}
-.plan li{display:flex;gap:10px;color:#cdd3ee}.plan li::before{content:"✓";color:var(--lime);font-weight:700}
-.plan li.no{opacity:.35;text-decoration:line-through}.plan li.no::before{content:"–";color:var(--muted)}
-.plan .btn{justify-content:center;width:100%}
-
 /* ===== testimonial / cta ===== */
 .quote{max-width:900px;margin:0 auto;text-align:center;padding:clamp(30px,5vw,60px)}
 .quote p{font-family:var(--disp);font-size:clamp(22px,3.2vw,38px);line-height:1.3;letter-spacing:-.02em}
@@ -300,7 +284,7 @@ footer .links{gap:22px}
 
 /* ===== responsive ===== */
 @media (max-width:1100px){
-  .services,.price-grid{grid-template-columns:repeat(2,1fr)}
+  .services{grid-template-columns:repeat(2,1fr)}
   .go,.demo-wrap{grid-template-columns:1fr}
   .dash{height:620px}
 }
@@ -314,7 +298,7 @@ footer .links{gap:22px}
   .car{height:420px}
 }
 @media (max-width:640px){
-  .services,.price-grid,.stats{grid-template-columns:1fr}
+  .services,.stats{grid-template-columns:1fr}
   .fcard{font-size:11px;padding:9px 11px}.fcard .ic{width:28px;height:28px;font-size:14px}
   .dash{height:auto;perspective:none}.dash-in{position:static;transform:none!important;display:grid;gap:18px}
   .panel{position:static;width:100%!important;transform:none;animation:none}
@@ -343,8 +327,7 @@ footer .links{gap:22px}
     <a href="#services">Services</a>
     <a href="#demo">Live Demo</a>
     <a href="#process">Process</a>
-    <a href="#atam-go">ATAM GO</a>
-    <a href="#pricing">Pricing</a>
+    <a href="#ops">Ops Layer</a>
     <a href="#contact" class="btn primary sm mag">Get started →</a>
   </div>
   <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
@@ -359,15 +342,15 @@ footer .links{gap:22px}
       <span class="line"><span class="w" style="--i:0">Automation</span> <span class="w" style="--i:1">that</span></span>
       <span class="line"><span class="w grad" style="--i:2" id="swap">speaks</span><span class="w" style="--i:3">.</span></span>
     </h1>
-    <p class="lead">We build AI phone callers, chatbots and email systems that answer, qualify, follow up and close — while you sleep. Plus <b style="color:#fff">ATAM GO</b>, the AI operations brain for DecoNetwork print shops.</p>
+    <p class="lead">We build AI phone callers, chatbots and email systems that answer, qualify, follow up and close while you sleep. Plus our <b style="color:#fff">AI Operations Layer</b>, the intelligence that sits on top of your print shop and runs it smarter.</p>
     <div class="cta-row">
       <a href="#contact" class="btn primary mag">Book a free demo <span>→</span></a>
       <a href="#demo" class="btn ghost mag">▶ Watch the AI work</a>
     </div>
     <div class="hero-stats">
-      <div><b data-count="24" data-suf="/7">0</b><span>Always-on coverage</span></div>
+      <div><b data-count="24" data-suf="/7">0</b><span>Always on coverage</span></div>
       <div><b data-count="1" data-pre="<" data-suf="s">0</b><span>Response time</span></div>
-      <div><b data-count="100" data-suf="%">0</b><span>Custom-built for you</span></div>
+      <div><b data-count="100" data-suf="%">0</b><span>Custom built for you</span></div>
     </div>
   </div>
 
@@ -395,12 +378,12 @@ footer .links{gap:22px}
   <div class="head center rv">
     <div class="eyebrow"><span class="dot"></span>What we build</div>
     <h2>A workforce that<br><span class="grad">never clocks out</span></h2>
-    <p class="lead">Four AI systems, custom-built around your business — trained on your data, speaking in your voice.</p>
+    <p class="lead">Four AI systems, custom built around your business, trained on your data, speaking in your voice.</p>
   </div>
   <div class="services">
     <article class="card tilt svc rv" style="--c1:#8b5cf6;--c2:#38e1ff;--d:.05s"><i class="glare"></i>
       <span class="num">01 / VOICE</span><div class="ico">📞</div>
-      <h3>AI Phone Callers</h3><p>Human-sounding voice agents that answer every call, make outbound follow-ups and book straight into your calendar.</p>
+      <h3>AI Phone Callers</h3><p>Voice agents that sound human, that answer every call, make outbound follow ups and book straight into your calendar.</p>
       <ul><li>Inbound &amp; outbound calling</li><li>Live calendar booking</li><li>Instant call summaries</li></ul>
     </article>
     <article class="card tilt svc rv" style="--c1:#38e1ff;--c2:#7dffb2;--d:.15s"><i class="glare"></i>
@@ -410,12 +393,12 @@ footer .links{gap:22px}
     </article>
     <article class="card tilt svc rv" style="--c1:#ff4fd8;--c2:#8b5cf6;--d:.25s"><i class="glare"></i>
       <span class="num">03 / EMAIL</span><div class="ico">✉️</div>
-      <h3>Email Automation</h3><p>Personalised nurture and follow-up sequences that write themselves and send at exactly the right moment.</p>
-      <ul><li>AI-written personalisation</li><li>Behaviour-triggered flows</li><li>Reply detection &amp; routing</li></ul>
+      <h3>Email Automation</h3><p>Personalised nurture and follow up sequences that write themselves and send at exactly the right moment.</p>
+      <ul><li>Personalisation written by AI</li><li>Flows triggered by behaviour</li><li>Reply detection &amp; routing</li></ul>
     </article>
     <article class="card tilt svc rv" style="--c1:#ffc857;--c2:#ff4fd8;--d:.35s"><i class="glare"></i>
       <span class="num">04 / OPS</span><div class="ico">⚙️</div>
-      <h3>Custom Workflows</h3><p>n8n-powered automations that connect your tools, kill busywork and keep every system in sync.</p>
+      <h3>Custom Workflows</h3><p>Automations built on n8n that connect your tools, kill busywork and keep every system in sync.</p>
       <ul><li>CRM &amp; carrier integrations</li><li>Alerts &amp; daily digests</li><li>Dashboards on your data</li></ul>
     </article>
   </div>
@@ -426,13 +409,13 @@ footer .links{gap:22px}
   <div class="head rv">
     <div class="eyebrow"><span class="dot"></span>Live simulation</div>
     <h2>Watch it <span class="grad">work</span>.<br>Right now.</h2>
-    <p class="lead">This is the experience your customers get. Pick a channel — or just watch it cycle.</p>
+    <p class="lead">This is the experience your customers get. Pick a channel, or just watch it cycle.</p>
   </div>
   <div class="demo-wrap">
     <div class="tabs rv" id="tabs">
-      <button class="tab on" data-i="0"><h4>📞 Voice agent</h4><p>Answers instantly, handles objections and books the job — no hold music, no missed calls.</p><span class="bar"></span></button>
+      <button class="tab on" data-i="0"><h4>📞 Voice agent</h4><p>Answers instantly, handles objections and books the job. No hold music, no missed calls.</p><span class="bar"></span></button>
       <button class="tab" data-i="1"><h4>💬 Website chatbot</h4><p>Knows your catalogue, qualifies the lead and hands hot prospects straight to you.</p><span class="bar"></span></button>
-      <button class="tab" data-i="2"><h4>✉️ Email engine</h4><p>Follows up, personalises, detects replies and books the meeting — automatically.</p><span class="bar"></span></button>
+      <button class="tab" data-i="2"><h4>✉️ Email engine</h4><p>Follows up, personalises, detects replies and books the meeting automatically.</p><span class="bar"></span></button>
     </div>
     <div class="device rv" style="--d:.2s">
       <div class="phone"><div class="screen"><div class="notch"></div>
@@ -443,11 +426,11 @@ footer .links{gap:22px}
           <div class="endcall" id="end0"></div>
         </div>
         <div class="pane" id="p1">
-          <div class="chathead"><div class="avatar">✨</div><div><b>Aria · Assistant</b><span>● online — replies in 1s</span></div></div>
+          <div class="chathead"><div class="avatar">✨</div><div><b>Aria · Assistant</b><span>● online · replies in 1s</span></div></div>
           <div class="tx" id="tx1" style="padding-top:14px"></div>
         </div>
         <div class="pane" id="p2">
-          <div class="mailhead">Follow-up engine <small>● running</small></div>
+          <div class="mailhead">Follow up engine <small>● running</small></div>
           <div class="flow" id="flow">
             <div class="step"><div class="s-ic">🎯</div><div><b>New lead captured</b><span>Quote form · 09:02</span></div><span class="chk">✓</span></div>
             <div class="step"><div class="s-ic">🧠</div><div><b>AI writes personal email</b><span>Uses name, product &amp; budget</span></div><span class="chk">✓</span></div>
@@ -467,26 +450,26 @@ footer .links{gap:22px}
   <div class="head center rv">
     <div class="eyebrow"><span class="dot"></span>How it works</div>
     <h2>From idea to <span class="grad">autopilot</span></h2>
-    <p class="lead">Drag to spin. A clear five-step path from first conversation to a system that runs itself.</p>
+    <p class="lead">Drag to spin. A clear five step path from first conversation to a system that runs itself.</p>
   </div>
   <div class="car rv" id="car"><div class="ringc" id="ringc"></div></div>
   <div class="car-ctl"><button id="prev" aria-label="Previous">←</button><button id="next" aria-label="Next">→</button></div>
 </section>
 
-<!-- ================= ATAM GO ================= -->
-<section id="atam-go">
+<!-- ================= OPS LAYER ================= -->
+<section id="ops">
   <div class="go">
     <div class="rv">
-      <div class="eyebrow"><span class="dot"></span>Flagship product · ATAM GO</div>
+      <div class="eyebrow"><span class="dot"></span>Flagship product · AI Operations Layer</div>
       <h2>The AI ops brain your <span class="grad">print shop</span> is missing</h2>
-      <p class="lead">Built exclusively for DecoNetwork businesses. Live production dashboards, order tracking, stock intelligence — and DAN, an AI that knows your shop by name.</p>
+      <p class="lead">Built exclusively for DecoNetwork businesses. Live production dashboards, order tracking, stock intelligence and DAN, an AI that knows your shop by name.</p>
       <div class="feat-list">
-        <div class="feat"><div class="fi">⚡</div><div><b>Live production dashboard</b><span>Decoration volume, embroidery vs print, top customers — updating as your team works.</span></div></div>
-        <div class="feat"><div class="fi">🚚</div><div><b>Order watchlist &amp; dispatch</b><span>Due today, late and at-risk with live countdowns and one-click dispatch.</span></div></div>
-        <div class="feat"><div class="fi">👥</div><div><b>Customer reorder monitor</b><span>Spots who's gone quiet and shows the £ value at risk — before they leave.</span></div></div>
-        <div class="feat"><div class="fi">📦</div><div><b>Stock intelligence</b><span>See what's genuinely free to use, cross-checked against next week's orders.</span></div></div>
+        <div class="feat"><div class="fi">⚡</div><div><b>Live production dashboard</b><span>Decoration volume, embroidery vs print, top customers, updating as your team works.</span></div></div>
+        <div class="feat"><div class="fi">🚚</div><div><b>Order watchlist &amp; dispatch</b><span>Due today, late and at risk, with live countdowns and dispatch in one click.</span></div></div>
+        <div class="feat"><div class="fi">👥</div><div><b>Customer reorder monitor</b><span>Spots who's gone quiet and shows the £ value at risk before they leave.</span></div></div>
+        <div class="feat"><div class="fi">📦</div><div><b>Stock intelligence</b><span>See what's genuinely free to use, checked against next week's orders.</span></div></div>
       </div>
-      <a href="#contact" class="btn primary mag" style="margin-top:34px">Book an ATAM GO demo →</a>
+      <a href="#contact" class="btn primary mag" style="margin-top:34px">Book an Ops Layer demo →</a>
     </div>
 
     <div class="dash rv" id="dash" style="--d:.2s">
@@ -505,49 +488,17 @@ footer .links{gap:22px}
   </div>
 
   <div class="stats">
-    <div class="card tilt stat rv"><i class="glare"></i><b class="grad" data-count="30" data-suf="s">0</b><span>to get your week-ahead briefing</span></div>
+    <div class="card tilt stat rv"><i class="glare"></i><b class="grad" data-count="30" data-suf="s">0</b><span>to get your briefing for the week ahead</span></div>
     <div class="card tilt stat rv" style="--d:.1s"><i class="glare"></i><b class="grad" data-count="5000" data-suf="+" data-fmt="1">0</b><span>DecoNetwork businesses worldwide</span></div>
     <div class="card tilt stat rv" style="--d:.2s"><i class="glare"></i><b class="grad" data-count="0">0</b><span>other tools like it for DecoNetwork</span></div>
   </div>
 </section>
 
-<!-- ================= PRICING ================= -->
-<section id="pricing">
-  <div class="head center rv">
-    <div class="eyebrow"><span class="dot"></span>ATAM GO pricing</div>
-    <h2>Simple pricing.<br><span class="grad">No surprises.</span></h2>
-    <p class="lead">One-time setup covers your DecoNetwork connection, database, workflows and full configuration. The monthly fee keeps it live, updated and supported.</p>
-  </div>
-  <div class="price-grid">
-    <div class="card tilt plan rv"><i class="glare"></i>
-      <h4>Starter</h4><div class="pr">£49<small>/mo</small></div><div class="setup">+ £199 one-time setup</div>
-      <p class="desc">Visibility and control for smaller shops who need to stop flying blind.</p>
-      <ul><li>Live production dashboard</li><li>Order watchlist &amp; dispatch</li><li>Customer reorder monitor</li><li>Activity feed &amp; search</li><li class="no">DAN AI assistant</li><li class="no">Stock management</li></ul>
-      <a href="mailto:grobleroliver@gmail.com?subject=ATAM GO Starter Enquiry" class="btn ghost">Get started</a></div>
-    <div class="card tilt plan hot rv" style="--d:.1s"><i class="glare"></i><div class="ribbon">POPULAR</div>
-      <h4>Pro</h4><div class="pr">£99<small>/mo</small></div><div class="setup">+ £299 one-time setup</div>
-      <p class="desc">The full ops picture plus DAN — for shops serious about running tighter.</p>
-      <ul><li>Everything in Starter</li><li>DAN AI assistant</li><li>Weekly production targets</li><li>Friday auto-briefing</li><li>Team workload tracking</li><li class="no">Custom automations</li></ul>
-      <a href="mailto:grobleroliver@gmail.com?subject=ATAM GO Pro Enquiry" class="btn primary">Get started</a></div>
-    <div class="card tilt plan rv" style="--d:.2s"><i class="glare"></i>
-      <h4>Studio</h4><div class="pr">£199<small>/mo</small></div><div class="setup">+ £499 one-time setup</div>
-      <p class="desc">Full intelligence — stock, AI cross-referencing and everything your ops team needs.</p>
-      <ul><li>Everything in Pro</li><li>Stock management dashboard</li><li>Stock vs orders cross-check</li><li>Inventory sync 3× daily</li><li>Multi-store support</li><li>Dedicated onboarding call</li></ul>
-      <a href="mailto:grobleroliver@gmail.com?subject=ATAM GO Studio Enquiry" class="btn ghost">Get started</a></div>
-    <div class="card tilt plan rv" style="--d:.3s"><i class="glare"></i>
-      <h4>Elite</h4><div class="pr">£399<small>/mo</small></div><div class="setup">+ £999 one-time setup</div>
-      <p class="desc">Fully managed. We configure everything around how your business works.</p>
-      <ul><li>Everything in Studio</li><li>Custom n8n workflow builds</li><li>Carrier &amp; CRM integrations</li><li>Daily email summaries</li><li>Monthly strategy call</li><li>Priority support line</li></ul>
-      <a href="mailto:grobleroliver@gmail.com?subject=ATAM GO Elite Enquiry" class="btn ghost">Get started</a></div>
-  </div>
-  <p class="center rv" style="margin-top:34px;color:var(--muted);font-size:15px">Need a phone caller, chatbot or email system instead? <a href="#contact" style="color:var(--cyan);border-bottom:1px solid">Request a custom quote →</a></p>
-</section>
-
 <!-- ================= TESTIMONIAL ================= -->
 <section style="padding-block:40px">
   <div class="card tilt quote rv"><i class="glare"></i>
-    <p>“We were always reacting — chasing late orders, finding out stock was gone when it was too late. Now we know exactly what's coming before the week even starts.”</p>
-    <div class="by"><i>DS</i><div><b>Daniel Spooner</b>ATAM Workwear · Studio plan</div></div>
+    <p>“We were always reacting, chasing late orders, finding out stock was gone when it was too late. Now we know exactly what's coming before the week even starts.”</p>
+    <div class="by"><i>DS</i><div><b>Daniel Spooner</b>Workwear business owner</div></div>
   </div>
 </section>
 
@@ -557,11 +508,11 @@ footer .links{gap:22px}
     <div class="cta-orb"></div>
     <div class="eyebrow"><span class="dot"></span>Let's build yours</div>
     <h2>Ready to put AI<br>to <span class="grad">work</span>?</h2>
-    <p class="lead" style="margin:0 auto">Tell us what slows your business down. We'll show you a live version — before you spend a penny.</p>
+    <p class="lead" style="margin:0 auto">Tell us what slows your business down. We'll show you a live version before you commit to anything.</p>
     <form class="form" id="form">
       <input name="name" placeholder="Your name" required>
       <input name="email" type="email" placeholder="Email address" required>
-      <select name="topic"><option>AI Phone Caller</option><option>Chatbot</option><option>Email Automation</option><option>ATAM GO (DecoNetwork)</option><option>Custom Workflow</option></select>
+      <select name="topic"><option>AI Phone Caller</option><option>Chatbot</option><option>Email Automation</option><option>AI Operations Layer (DecoNetwork)</option><option>Custom Workflow</option></select>
       <input name="company" placeholder="Company">
       <textarea name="msg" placeholder="What would you like to automate?"></textarea>
       <button class="btn primary mag" type="submit">Send message 🚀</button>
@@ -574,7 +525,7 @@ footer .links{gap:22px}
 <footer>
   <a href="#top" class="logo"><span class="logo-mark" style="animation-duration:14s"><span></span><span></span><span></span></span>AI by <b>AO</b></a>
   <div>© 2026 AI by AO. All rights reserved.</div>
-  <div class="links"><a href="#services">Services</a><a href="#atam-go">ATAM GO</a><a href="mailto:grobleroliver@gmail.com">Contact</a></div>
+  <div class="links"><a href="#services">Services</a><a href="#ops">Ops Layer</a><a href="mailto:grobleroliver@gmail.com">Contact</a></div>
 </footer>
 
 <script>
@@ -712,13 +663,13 @@ let wAmp=0,wSpk='ai',timerT;
 async function runCall(my){
   const tx=$('#tx0'),end=$('#end0');tx.innerHTML='';end.innerHTML='';
   let s=0;clearInterval(timerT);timerT=setInterval(()=>{s++;$('#timer').textContent=`● 00:${String(s).padStart(2,'0')} connected`},1000);
-  const L=[['ai','AI','Hi, thanks for calling Northside Print — how can I help?'],['me','CALLER','I need 200 branded hoodies by the 24th. Possible?'],['ai','AI','Absolutely. Embroidered or printed? I can have a quote ready in a minute.'],['me','CALLER','Embroidered. Left chest logo.'],['ai','AI','Perfect — quote sent to your email. Booking a proof call Thursday 2pm?'],['me','CALLER','Yes please!']];
+  const L=[['ai','AI','Hi, thanks for calling Northside Print, how can I help?'],['me','CALLER','I need 200 branded hoodies by the 24th. Possible?'],['ai','AI','Absolutely. Embroidered or printed? I can have a quote ready in a minute.'],['me','CALLER','Embroidered. Left chest logo.'],['ai','AI','Perfect. Quote sent to your email. Booking a proof call Thursday 2pm?'],['me','CALLER','Yes please!']];
   for(const [c,w,t] of L){if(!alive(my))return;wSpk=c;wAmp=1;const ty=c==='ai'?typing(tx):null;await sleep(c==='ai'?900:600);if(!alive(my))return;ty&&ty.remove();addLine(tx,c,w,t);await sleep(1700);wAmp=.15}
   if(!alive(my))return;end.innerHTML='<span class="pill">✓ Booked Thu 14:00</span><span class="pill">✓ Quote sent</span><span class="pill">✓ CRM updated</span>';wAmp=0;await sleep(2400);clearInterval(timerT)
 }
 async function runChat(my){
   const tx=$('#tx1');tx.innerHTML='';
-  const L=[['me','YOU','Do you do bulk embroidery for staff uniforms?'],['ai','ARIA','Yes! Minimum is just 10 pieces. How many are you thinking, and by when?'],['me','YOU','About 60 polos, needed in 2 weeks.'],['ai','ARIA','That works. Estimated £412 incl. digitising. Want me to reserve a production slot and email the proof?'],['me','YOU','Yes — reserve it.'],['ai','ARIA','Done ✅ Slot reserved. Your account manager has been notified.']];
+  const L=[['me','YOU','Do you do bulk embroidery for staff uniforms?'],['ai','ARIA','Yes! Minimum is just 10 pieces. How many are you thinking, and by when?'],['me','YOU','About 60 polos, needed in 2 weeks.'],['ai','ARIA','That works. Want me to reserve a production slot and email the proof?'],['me','YOU','Yes, reserve it.'],['ai','ARIA','Done ✅ Slot reserved. Your account manager has been notified.']];
   for(const [c,w,t] of L){if(!alive(my))return;const ty=c==='ai'?typing(tx):null;await sleep(c==='ai'?1100:800);if(!alive(my))return;ty&&ty.remove();addLine(tx,c,w,t);await sleep(1300)}
   await sleep(2000)
 }
@@ -746,7 +697,7 @@ new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect(
 
 /* ---------- 3D carousel ---------- */
 (()=>{
-  const steps=[['01','Discover','We map your workflows, find the biggest time-sinks and define what success looks like.','WEEK 1'],['02','Design','Conversation flows, voice, tone and integrations — designed around your customers.','WEEK 1–2'],['03','Build','We train and wire up your AI with your data, tools and n8n automations.','WEEK 2–3'],['04','Launch','Go live with monitoring, human handoff and a safety net. We stay on call.','WEEK 3'],['05','Evolve','Monthly tuning, new automations and reporting so it keeps getting smarter.','ONGOING']];
+  const steps=[['01','Discover','We map your workflows, find the biggest time sinks and define what success looks like.','WEEK 1'],['02','Design','Conversation flows, voice, tone and integrations, designed around your customers.','WEEK 1 to 2'],['03','Build','We train and wire up your AI with your data, tools and n8n automations.','WEEK 2–3'],['04','Launch','Go live with monitoring, human handoff and a safety net. We stay on call.','WEEK 3'],['05','Evolve','Monthly tuning, new automations and reporting so it keeps getting smarter.','ONGOING']];
   const ring=$('#ringc'),N=steps.length,car=$('#car');let items=[],R,ang=0,vel=0,drag=false,lx=0,target=null,auto=true;
   steps.forEach(s=>{const d=document.createElement('div');d.className='ci';d.innerHTML=`<div class="big">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="tag">◆ ${s[3]}</div>`;ring.appendChild(d);items.push(d)});
   function layout(){const w=innerWidth<640?230:300;R=Math.round((w/2)/Math.tan(Math.PI/N))+(innerWidth<640?50:90);
@@ -767,7 +718,7 @@ new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect(
   f();
 })();
 
-/* ---------- ATAM GO dashboard ---------- */
+/* ---------- ops layer dashboard ---------- */
 (()=>{
   const bars=$('#bars');const H=[55,72,48,86,64,30,22];
   H.forEach(()=>{const i=document.createElement('i');i.style.setProperty('--h','8%');bars.appendChild(i)});
@@ -786,7 +737,7 @@ new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect(
   /* countdowns */
   $$('[data-cd]').forEach(e=>{let s=+e.dataset.cd;setInterval(()=>{s=Math.max(0,s-1);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),sc=s%60;e.textContent=[h,m,sc].map(x=>String(x).padStart(2,'0')).join(':')},1000)});
   async function danLoop(){
-    const box=$('#dan');const Q=[['Which customers haven\'t reordered?','3 overdue. Bell Lighting is 47 days out (usually 28). £4,200 at risk — call today.'],['Enough stock for next week?','Short by 17 on Navy L RX301 for order #635403. Want me to flag it?'],['What\'s my week look like?','44 orders · 54 decorations · 430 garments. Monday is your heaviest day.']];
+    const box=$('#dan');const Q=[['Which customers haven\'t reordered?','3 overdue. Bell Lighting is 47 days out (usually 28). £4,200 at risk. Call today.'],['Enough stock for next week?','Short by 17 on Navy L RX301 for order #635403. Want me to flag it?'],['What\'s my week look like?','44 orders · 54 decorations · 430 garments. Monday is your heaviest day.']];
     let i=0;while(true){const [q,a]=Q[i++%Q.length];box.innerHTML='';
       addLine(box,'me','YOU',q);await sleep(700);const t=typing(box);await sleep(1400);t.remove();
       const d=addLine(box,'ai','DAN','');const txt=a;for(let k=0;k<=txt.length;k++){d.lastChild.textContent=txt.slice(0,k);await sleep(16)}
@@ -801,7 +752,7 @@ if(!reduce)addEventListener('scroll',()=>{const y=scrollY;if(y<innerHeight*1.2)$
 $('#form').addEventListener('submit',e=>{
   e.preventDefault();const f=new FormData(e.target);
   const body=`Name: ${f.get('name')}\nEmail: ${f.get('email')}\nCompany: ${f.get('company')||'-'}\nInterested in: ${f.get('topic')}\n\n${f.get('msg')||''}`;
-  location.href=`mailto:grobleroliver@gmail.com?subject=${encodeURIComponent('AI by AO enquiry — '+f.get('topic'))}&body=${encodeURIComponent(body)}`;
+  location.href=`mailto:grobleroliver@gmail.com?subject=${encodeURIComponent('AI by AO enquiry: '+f.get('topic'))}&body=${encodeURIComponent(body)}`;
 });
 
 /* ---------- marquee duplicate ---------- */
