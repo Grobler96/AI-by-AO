@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI by AO | AI Phone Callers, Chatbots & Automation That Speaks, Writes & Sells</title>
-<meta name="description" content="AI by AO builds AI phone callers, intelligent chatbots, email automation and an AI operations layer for DecoNetwork businesses. Automation that speaks, writes and sells, 24/7.">
+<meta name="description" content="AI by AO automates the work that slows businesses down: custom n8n workflows, AI phone callers, chatbots, web design and an AI operations layer for DecoNetwork businesses. Automation that speaks, writes and sells, 24/7.">
 <meta name="theme-color" content="#04050d">
 <meta property="og:title" content="AI by AO | Automation That Speaks, Writes & Sells">
 <meta property="og:description" content="AI phone callers, chatbots, email systems and DAN, the AI operations brain for print shops.">
@@ -259,6 +259,86 @@ h2{font-family:var(--disp);font-size:clamp(34px,5.4vw,70px);line-height:1.04;let
 .stat b{font-family:var(--disp);font-size:clamp(44px,6vw,80px);line-height:1;letter-spacing:-.04em;display:block}
 .stat span{color:var(--muted);font-size:14px}
 
+/* ===== automation showcase ===== */
+.auto-head{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,60px);align-items:end;margin-bottom:34px}
+.auto-head h2{margin-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{font-size:12.5px;padding:7px 13px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:#c3cae6;transition:.3s}
+.chip:hover{border-color:var(--cyan);color:#fff;transform:translateY(-3px);box-shadow:0 8px 20px -8px var(--cyan)}
+.chip.more{border-style:dashed;color:var(--cyan)}
+.scen{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.scen button{padding:10px 18px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600;color:var(--muted);transition:.3s}
+.scen button:hover{color:#fff}
+.scen button.on{color:#fff;border-color:rgba(139,92,246,.6);background:linear-gradient(120deg,rgba(139,92,246,.28),rgba(56,225,255,.08));box-shadow:0 0 30px -10px var(--violet)}
+.wf-wrap{perspective:1800px}
+.wf{position:relative;height:470px;border-radius:28px;border:1px solid rgba(255,255,255,.12);background:radial-gradient(circle,rgba(255,255,255,.08) 1px,transparent 1.6px) 0 0/22px 22px,linear-gradient(160deg,rgba(22,26,58,.9),rgba(8,10,24,.92));overflow:hidden;transform:rotateX(var(--wx,9deg)) rotateY(var(--wy,0deg));transition:transform .4s ease-out;box-shadow:0 70px 120px -40px rgba(0,0,0,.95),0 0 90px -30px var(--violet),inset 0 1px 0 rgba(255,255,255,.12)}
+.wf-bar{position:absolute;top:0;left:0;right:0;height:46px;display:flex;align-items:center;gap:8px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);z-index:4;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.wf-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57}.wf-bar i:nth-child(2){background:#febc2e}.wf-bar i:nth-child(3){background:#28c840}
+.wf-bar span{margin-left:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.wf-bar em{margin-left:auto;font-style:normal;color:var(--lime);display:flex;align-items:center;gap:8px}
+.wf-bar em::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:pulse 1.4s infinite}
+.wf svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.wf .edge{fill:none;stroke:rgba(255,255,255,.13);stroke-width:2}
+.wf .flow{fill:none;stroke:url(#eg);stroke-width:2.6;stroke-dasharray:7 9;animation:dash .9s linear infinite;opacity:0;transition:opacity .4s}
+.wf .flow.on{opacity:1}
+@keyframes dash{to{stroke-dashoffset:-32}}
+.node{position:absolute;width:var(--nw,196px);transform:translate(-50%,-50%);padding:12px 14px;border-radius:16px;background:linear-gradient(160deg,#1e2250,#10132c);border:1.5px solid rgba(255,255,255,.14);display:flex;gap:11px;align-items:center;transition:border-color .3s,box-shadow .3s,transform .35s cubic-bezier(.2,1.4,.4,1),left .5s,top .5s;z-index:2;box-shadow:0 14px 30px -12px rgba(0,0,0,.8)}
+.node::before,.node::after{content:"";position:absolute;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#262b55;border:2px solid #5a6396}
+.node::before{left:-6px}.node::after{right:-6px}
+.wf.vert .node::before{left:50%;top:-6px;margin:0 0 0 -5px}.wf.vert .node::after{right:auto;left:50%;top:auto;bottom:-6px;margin:0 0 0 -5px}
+.node .ni{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:19px;background:var(--nc);flex:none;box-shadow:0 0 16px -3px var(--nc)}
+.node small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;line-height:1.3}
+.node b{font-family:var(--disp);font-size:14px;font-weight:600;line-height:1.25;display:block}
+.node .st{position:absolute;top:-9px;right:-9px;width:22px;height:22px;border-radius:50%;background:var(--lime);color:#04210f;font-size:12px;font-weight:700;display:grid;place-items:center;transform:scale(0);transition:transform .35s cubic-bezier(.2,1.6,.4,1);box-shadow:0 0 14px var(--lime)}
+.node.run{border-color:var(--cyan);box-shadow:0 0 0 5px rgba(56,225,255,.12),0 0 44px -6px var(--cyan);transform:translate(-50%,-50%) scale(1.07)}
+.node.done{border-color:rgba(125,255,178,.55)}
+.node.done .st{transform:scale(1)}
+.node .lbl{transition:opacity .3s}.node.swap .lbl{opacity:0}
+.spark{position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#fff;box-shadow:0 0 12px 4px var(--cyan),0 0 30px 8px rgba(139,92,246,.6);z-index:3;pointer-events:none}
+.wf-foot{position:absolute;left:18px;bottom:16px;right:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;z-index:4;pointer-events:none}
+.wf-foot .msg{font-family:var(--mono);font-size:12px;min-height:30px;display:flex;align-items:center}
+.wf-count{text-align:right}
+.wf-count b{display:block;font-family:var(--disp);font-size:30px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wf-count span{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+.flip{perspective:900px;height:150px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,1.35,.5,1)}
+.flip:hover .flip-in,.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:20px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015));backdrop-filter:blur(8px)}
+.face.back{transform:rotateY(180deg);background:linear-gradient(140deg,rgba(139,92,246,.4),rgba(56,225,255,.16));border-color:rgba(139,92,246,.55);justify-content:center;font-size:14px;line-height:1.5}
+.face .ti{font-size:30px;filter:drop-shadow(0 0 12px rgba(139,92,246,.6))}
+.face b{font-family:var(--disp);font-size:17px;line-height:1.25}
+.auto-cta{display:flex;justify-content:center;margin-top:40px}
+
+/* ===== web design ===== */
+.web{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,80px);align-items:center}
+.browsers{position:relative;height:540px;perspective:1600px}
+.br-in{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--bx,8deg)) rotateY(var(--by,16deg));transition:transform .3s ease-out}
+.br{position:absolute;border-radius:18px;overflow:hidden;background:#0a0d20;border:1px solid rgba(255,255,255,.16);box-shadow:0 50px 90px -30px rgba(0,0,0,.95),0 0 70px -24px var(--violet)}
+.b1{left:0;top:4%;width:86%;height:390px;transform:translateZ(20px)}
+.b2{right:0;bottom:3%;width:160px;height:320px;border-radius:28px;border-width:5px;border-color:#2a2f55;transform:translateZ(140px);box-shadow:0 50px 90px -30px rgba(0,0,0,.95),0 0 70px -20px var(--cyan)}
+.br-top{height:36px;display:flex;align-items:center;gap:7px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line)}
+.br-top i{width:10px;height:10px;border-radius:50%;background:#ff5f57}.br-top i:nth-child(2){background:#febc2e}.br-top i:nth-child(3){background:#28c840}
+.br-top span{margin-left:14px;flex:1;max-width:260px;font-family:var(--mono);font-size:11px;color:var(--muted);background:rgba(255,255,255,.06);border-radius:7px;padding:4px 10px}
+.br-body{height:calc(100% - 36px);overflow:hidden;position:relative}
+.b2 .br-body{height:100%}
+.scroller{padding:18px;display:grid;gap:14px;animation:scrollmock 16s ease-in-out infinite alternate}
+.b2 .scroller{padding:12px;gap:10px;animation-duration:11s}
+@keyframes scrollmock{0%,8%{transform:translateY(0)}92%,100%{transform:translateY(-52%)}}
+.sk{height:9px;border-radius:6px;background:rgba(255,255,255,.1)}
+.sk.h{height:20px;width:80%;background:var(--grad);background-size:200% 100%;animation:shift 5s linear infinite}
+.sk.btn{height:24px;width:42%;border-radius:8px;background:var(--grad)}
+.mk-nav{display:flex;justify-content:space-between;align-items:center}.mk-nav div{display:flex;gap:8px}.mk-nav .sk{width:34px}
+.mk-hero{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:center;padding:10px 0}
+.mk-hero>div:first-child{display:grid;gap:9px}
+.mk-orb{aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,var(--cyan),var(--violet),var(--pink),var(--cyan));animation:rot 6s linear infinite;box-shadow:0 0 50px -6px var(--violet);-webkit-mask:radial-gradient(circle,transparent 36%,#000 38%);mask:radial-gradient(circle,transparent 36%,#000 38%)}
+.mk-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mk-cards div{height:84px;border-radius:12px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.02));border:1px solid var(--line);animation:mkbob 4s ease-in-out infinite}
+.mk-cards div:nth-child(2){animation-delay:-1.3s}.mk-cards div:nth-child(3){animation-delay:-2.6s}
+@keyframes mkbob{50%{transform:translateY(-6px)}}
+.mk-img{height:130px;border-radius:14px;background:linear-gradient(120deg,rgba(56,225,255,.4),rgba(139,92,246,.4),rgba(255,79,216,.35));background-size:200% 200%;animation:shift 6s linear infinite}
+.web .fcard{z-index:3}
+
 /* ===== testimonial / cta ===== */
 .quote{max-width:900px;margin:0 auto;text-align:center;padding:clamp(30px,5vw,60px)}
 .quote p{font-family:var(--disp);font-size:clamp(22px,3.2vw,38px);line-height:1.3;letter-spacing:-.02em}
@@ -284,6 +364,8 @@ footer .links{gap:22px}
 
 /* ===== responsive ===== */
 @media (max-width:1100px){
+  .web,.auto-head{grid-template-columns:1fr}
+  .tiles{grid-template-columns:repeat(3,1fr)}
   .services{grid-template-columns:repeat(2,1fr)}
   .go,.demo-wrap{grid-template-columns:1fr}
   .dash{height:620px}
@@ -298,6 +380,9 @@ footer .links{gap:22px}
   .car{height:420px}
 }
 @media (max-width:640px){
+  .tiles{grid-template-columns:repeat(2,1fr)}.flip{height:140px}.face{padding:16px}.face b{font-size:15px}
+  .browsers{height:440px}.b1{width:94%;height:320px}.b2{width:124px;height:250px}
+  .wf{transform:none}
   .services,.stats{grid-template-columns:1fr}
   .fcard{font-size:11px;padding:9px 11px}.fcard .ic{width:28px;height:28px;font-size:14px}
   .dash{height:auto;perspective:none}.dash-in{position:static;transform:none!important;display:grid;gap:18px}
@@ -324,9 +409,10 @@ footer .links{gap:22px}
 <nav id="nav">
   <a href="#top" class="logo"><span class="logo-mark"><span></span><span></span><span></span></span>AI by <b>AO</b></a>
   <div class="links" id="links">
+    <a href="#automation">Automation</a>
     <a href="#services">Services</a>
     <a href="#demo">Live Demo</a>
-    <a href="#process">Process</a>
+    <a href="#web">Web Design</a>
     <a href="#ops">Ops Layer</a>
     <a href="#contact" class="btn primary sm mag">Get started →</a>
   </div>
@@ -342,10 +428,10 @@ footer .links{gap:22px}
       <span class="line"><span class="w" style="--i:0">Automation</span> <span class="w" style="--i:1">that</span></span>
       <span class="line"><span class="w grad" style="--i:2" id="swap">speaks</span><span class="w" style="--i:3">.</span></span>
     </h1>
-    <p class="lead">We build AI phone callers, chatbots and email systems that answer, qualify, follow up and close while you sleep. Plus our <b style="color:#fff">AI Operations Layer</b>, the intelligence that sits on top of your print shop and runs it smarter.</p>
+    <p class="lead">We automate the work that slows your business down. Custom <b style="color:#fff">n8n workflows</b> that connect every tool you use, AI phone callers, chatbots and websites that answer, follow up and close while you sleep.</p>
     <div class="cta-row">
       <a href="#contact" class="btn primary mag">Book a free demo <span>→</span></a>
-      <a href="#demo" class="btn ghost mag">▶ Watch the AI work</a>
+      <a href="#automation" class="btn ghost mag">▶ See automation run</a>
     </div>
     <div class="hero-stats">
       <div><b data-count="24" data-suf="/7">0</b><span>Always on coverage</span></div>
@@ -362,7 +448,7 @@ footer .links{gap:22px}
       <canvas id="globe"></canvas>
       <div class="fcard" style="--z:140px;--c:#8b5cf6;left:-4%;top:12%;--dl:0s;--rz:-2deg"><div class="ic">📞</div><div><small>AI Caller</small><strong>Appointment booked</strong></div></div>
       <div class="fcard" style="--z:210px;--c:#38e1ff;right:-6%;top:22%;--dl:-1.5s;--rz:2deg"><div class="ic">💬</div><div><small>Chatbot · 0.8s reply</small><strong>Lead qualified</strong></div></div>
-      <div class="fcard" style="--z:90px;--c:#ff4fd8;left:2%;bottom:20%;--dl:-3s;--rz:2deg"><div class="ic">✉️</div><div><small>Email sequence</small><strong>1,204 sent · 41% opened</strong></div></div>
+      <div class="fcard" style="--z:90px;--c:#ff4fd8;left:2%;bottom:20%;--dl:-3s;--rz:2deg"><div class="ic">⚡</div><div><small>n8n workflow · 7 steps</small><strong>Invoice sent · CRM updated</strong></div></div>
       <div class="fcard" style="--z:180px;--c:#7dffb2;right:0;bottom:10%;--dl:-4.5s;--rz:-2deg"><div class="ic">🤖</div><div><small>DAN</small><strong>3 orders at risk</strong></div></div>
     </div>
   </div>
@@ -370,36 +456,76 @@ footer .links{gap:22px}
 </section>
 
 <div class="marquee"><div class="track" id="track">
-  <span>AI Phone Callers</span><span>Smart Chatbots</span><span>Email Automation</span><span>Lead Qualification</span><span>Custom Workflows</span><span>Voice Agents</span><span>DecoNetwork Intelligence</span><span>24/7 Support</span>
+  <span>Business Automation</span><span>n8n Workflows</span><span>AI Phone Callers</span><span>Web Design</span><span>Smart Chatbots</span><span>CRM &amp; Invoicing</span><span>Voice Agents</span><span>Reporting on Autopilot</span><span>DecoNetwork Intelligence</span>
 </div></div>
+
+<!-- ================= AUTOMATION ================= -->
+<section id="automation">
+  <div class="auto-head">
+    <div class="rv">
+      <div class="eyebrow"><span class="dot"></span>Business automation · powered by n8n</div>
+      <h2>If it's repetitive,<br>we <span class="grad">automate it.</span></h2>
+    </div>
+    <div class="rv" style="--d:.15s">
+      <p class="lead">Leads, invoices, reports, onboarding, stock, emails, social posts. We build custom n8n workflows that connect every tool you already use, so the busywork runs itself and your team gets their hours back.</p>
+      <div class="chips"><span class="chip">Gmail</span><span class="chip">Outlook</span><span class="chip">Slack</span><span class="chip">Shopify</span><span class="chip">Xero</span><span class="chip">QuickBooks</span><span class="chip">HubSpot</span><span class="chip">Google Sheets</span><span class="chip">Notion</span><span class="chip">Airtable</span><span class="chip">Stripe</span><span class="chip">WhatsApp</span><span class="chip">OpenAI</span><span class="chip more">+ hundreds more</span></div>
+    </div>
+  </div>
+
+  <div class="scen rv" id="scen">
+    <button class="on" data-s="0">🛒 Order to delivery</button>
+    <button data-s="1">🎯 Lead to booked call</button>
+    <button data-s="2">📊 Monday reporting</button>
+    <button data-s="3">🧾 Invoice chasing</button>
+  </div>
+  <div class="wf-wrap rv" id="wfWrap">
+    <div class="wf" id="wf">
+      <div class="wf-bar"><i></i><i></i><i></i><span id="wfName">workflow / order to delivery</span><em id="wfState">listening</em></div>
+      <svg id="wfSvg"><defs><linearGradient id="eg" x1="0" x2="1"><stop offset="0" stop-color="#38e1ff"/><stop offset=".5" stop-color="#8b5cf6"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs></svg>
+      <div class="wf-foot"><div class="msg" id="wfMsg"></div><div class="wf-count"><b id="wfCount">0</b><span>TASKS DONE IN THIS DEMO</span></div></div>
+    </div>
+  </div>
+
+  <div class="tiles">
+    <div class="flip rv"><div class="flip-in"><div class="face"><span class="ti">🎯</span><b>Lead capture &amp; follow up</b></div><div class="face back">Every enquiry logged, scored and answered in seconds. Nobody slips through.</div></div></div>
+    <div class="flip rv" style="--d:.05s"><div class="flip-in"><div class="face"><span class="ti">🧾</span><b>Invoicing &amp; payments</b></div><div class="face back">Invoices raised, sent and chased automatically until they're paid.</div></div></div>
+    <div class="flip rv" style="--d:.1s"><div class="flip-in"><div class="face"><span class="ti">🗂️</span><b>CRM always up to date</b></div><div class="face back">Contacts, deals and notes synced across every tool without copy and paste.</div></div></div>
+    <div class="flip rv" style="--d:.15s"><div class="flip-in"><div class="face"><span class="ti">📊</span><b>Reports on autopilot</b></div><div class="face back">Numbers pulled from all your tools and delivered to your inbox every week.</div></div></div>
+    <div class="flip rv"><div class="flip-in"><div class="face"><span class="ti">🤝</span><b>Customer onboarding</b></div><div class="face back">Welcome emails, contracts, accounts and tasks created the moment they sign.</div></div></div>
+    <div class="flip rv" style="--d:.05s"><div class="flip-in"><div class="face"><span class="ti">✉️</span><b>Email &amp; newsletters</b></div><div class="face back">Personal emails written by AI and sent at exactly the right moment.</div></div></div>
+    <div class="flip rv" style="--d:.1s"><div class="flip-in"><div class="face"><span class="ti">📦</span><b>Stock &amp; order alerts</b></div><div class="face back">Know about low stock and late orders before your customers do.</div></div></div>
+    <div class="flip rv" style="--d:.15s"><div class="flip-in"><div class="face"><span class="ti">🔌</span><b>Literally anything else</b></div><div class="face back">If you do it more than twice a week, it can almost certainly run itself. Ask us.</div></div></div>
+  </div>
+  <div class="auto-cta rv"><a href="#contact" class="btn primary mag">Tell us what to automate →</a></div>
+</section>
 
 <!-- ================= SERVICES ================= -->
 <section id="services">
   <div class="head center rv">
     <div class="eyebrow"><span class="dot"></span>What we build</div>
     <h2>A workforce that<br><span class="grad">never clocks out</span></h2>
-    <p class="lead">Four AI systems, custom built around your business, trained on your data, speaking in your voice.</p>
+    <p class="lead">Four ways we put your business on autopilot, custom built around how you actually work.</p>
   </div>
   <div class="services">
-    <article class="card tilt svc rv" style="--c1:#8b5cf6;--c2:#38e1ff;--d:.05s"><i class="glare"></i>
-      <span class="num">01 / VOICE</span><div class="ico">📞</div>
+    <article class="card tilt svc rv" style="--c1:#ffc857;--c2:#ff4fd8;--d:.05s"><i class="glare"></i>
+      <span class="num">01 / AUTOMATE</span><div class="ico">⚡</div>
+      <h3>Business Automation</h3><p>Custom n8n workflows that connect your tools and run the repetitive work for you, around the clock.</p>
+      <ul><li>Leads, CRM &amp; invoicing</li><li>Reports, alerts &amp; emails</li><li>Any tool, any process</li></ul>
+    </article>
+    <article class="card tilt svc rv" style="--c1:#8b5cf6;--c2:#38e1ff;--d:.15s"><i class="glare"></i>
+      <span class="num">02 / VOICE</span><div class="ico">📞</div>
       <h3>AI Phone Callers</h3><p>Voice agents that sound human, that answer every call, make outbound follow ups and book straight into your calendar.</p>
       <ul><li>Inbound &amp; outbound calling</li><li>Live calendar booking</li><li>Instant call summaries</li></ul>
     </article>
-    <article class="card tilt svc rv" style="--c1:#38e1ff;--c2:#7dffb2;--d:.15s"><i class="glare"></i>
-      <span class="num">02 / CHAT</span><div class="ico">💬</div>
+    <article class="card tilt svc rv" style="--c1:#38e1ff;--c2:#7dffb2;--d:.25s"><i class="glare"></i>
+      <span class="num">03 / CHAT</span><div class="ico">💬</div>
       <h3>Intelligent Chatbots</h3><p>24/7 assistants on your site and socials that actually understand your products and resolve questions.</p>
       <ul><li>Trained on your content</li><li>Lead capture &amp; handoff</li><li>Website, WhatsApp &amp; more</li></ul>
     </article>
-    <article class="card tilt svc rv" style="--c1:#ff4fd8;--c2:#8b5cf6;--d:.25s"><i class="glare"></i>
-      <span class="num">03 / EMAIL</span><div class="ico">✉️</div>
-      <h3>Email Automation</h3><p>Personalised nurture and follow up sequences that write themselves and send at exactly the right moment.</p>
-      <ul><li>Personalisation written by AI</li><li>Flows triggered by behaviour</li><li>Reply detection &amp; routing</li></ul>
-    </article>
-    <article class="card tilt svc rv" style="--c1:#ffc857;--c2:#ff4fd8;--d:.35s"><i class="glare"></i>
-      <span class="num">04 / OPS</span><div class="ico">⚙️</div>
-      <h3>Custom Workflows</h3><p>Automations built on n8n that connect your tools, kill busywork and keep every system in sync.</p>
-      <ul><li>CRM &amp; carrier integrations</li><li>Alerts &amp; daily digests</li><li>Dashboards on your data</li></ul>
+    <article class="card tilt svc rv" style="--c1:#ff4fd8;--c2:#8b5cf6;--d:.35s"><i class="glare"></i>
+      <span class="num">04 / WEB</span><div class="ico">🎨</div>
+      <h3>Web Design</h3><p>Fast, animated, standout websites that turn visitors into enquiries and plug straight into your automations.</p>
+      <ul><li>Custom design, no templates</li><li>Built for every screen</li><li>Forms wired to your CRM</li></ul>
     </article>
   </div>
 </section>
@@ -415,7 +541,7 @@ footer .links{gap:22px}
     <div class="tabs rv" id="tabs">
       <button class="tab on" data-i="0"><h4>📞 Voice agent</h4><p>Answers instantly, handles objections and books the job. No hold music, no missed calls.</p><span class="bar"></span></button>
       <button class="tab" data-i="1"><h4>💬 Website chatbot</h4><p>Knows your catalogue, qualifies the lead and hands hot prospects straight to you.</p><span class="bar"></span></button>
-      <button class="tab" data-i="2"><h4>✉️ Email engine</h4><p>Follows up, personalises, detects replies and books the meeting automatically.</p><span class="bar"></span></button>
+      <button class="tab" data-i="2"><h4>⚡ Automation engine</h4><p>Captures the lead, updates your CRM, alerts the team and books the meeting. Nobody lifts a finger.</p><span class="bar"></span></button>
     </div>
     <div class="device rv" style="--d:.2s">
       <div class="phone"><div class="screen"><div class="notch"></div>
@@ -430,17 +556,49 @@ footer .links{gap:22px}
           <div class="tx" id="tx1" style="padding-top:14px"></div>
         </div>
         <div class="pane" id="p2">
-          <div class="mailhead">Follow up engine <small>● running</small></div>
+          <div class="mailhead">n8n · new lead <small>● running</small></div>
           <div class="flow" id="flow">
             <div class="step"><div class="s-ic">🎯</div><div><b>New lead captured</b><span>Quote form · 09:02</span></div><span class="chk">✓</span></div>
-            <div class="step"><div class="s-ic">🧠</div><div><b>AI writes personal email</b><span>Uses name, product &amp; budget</span></div><span class="chk">✓</span></div>
-            <div class="step"><div class="s-ic">🚀</div><div><b>Sent at best time</b><span>Tue 10:14 · opened in 4 min</span></div><span class="chk">✓</span></div>
-            <div class="step"><div class="s-ic">↩️</div><div><b>Reply detected</b><span>"Yes, can we talk Thursday?"</span></div><span class="chk">✓</span></div>
-            <div class="step"><div class="s-ic">📅</div><div><b>Meeting booked</b><span>Thu 14:00 · you're notified</span></div><span class="chk">✓</span></div>
+            <div class="step"><div class="s-ic">🧠</div><div><b>AI scores &amp; enriches</b><span>Company, budget &amp; intent</span></div><span class="chk">✓</span></div>
+            <div class="step"><div class="s-ic">🚀</div><div><b>CRM updated</b><span>Deal created in HubSpot</span></div><span class="chk">✓</span></div>
+            <div class="step"><div class="s-ic">↩️</div><div><b>Team alerted on Slack</b><span>Hot lead · £ value attached</span></div><span class="chk">✓</span></div>
+            <div class="step"><div class="s-ic">📅</div><div><b>Personal email &amp; booking</b><span>Thu 14:00 call confirmed</span></div><span class="chk">✓</span></div>
           </div>
-          <div class="mailstat" style="margin-top:auto"><div><b data-live="1204">0</b><span>SENT</span></div><div><b data-live="41" data-suf="%">0</b><span>OPENED</span></div><div><b data-live="18">0</b><span>BOOKED</span></div></div>
+          <div class="mailstat" style="margin-top:auto"><div><b data-live="5">0</b><span>STEPS</span></div><div><b data-live="0">0</b><span>CLICKS</span></div><div><b data-live="9" data-suf="s">0</b><span>TOTAL</span></div></div>
         </div>
       </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WEB DESIGN ================= -->
+<section id="web">
+  <div class="web">
+    <div class="browsers rv" id="browsers">
+      <div class="br-in" id="brIn">
+        <div class="br b1"><div class="br-top"><i></i><i></i><i></i><span>yourbusiness.com</span></div><div class="br-body"><div class="scroller"><div class="mk-nav"><div class="sk" style="width:60px;height:12px;background:var(--grad)"></div><div><span class="sk"></span><span class="sk"></span><span class="sk"></span></div></div>
+<div class="mk-hero"><div><div class="sk h"></div><div class="sk h" style="width:55%"></div><div class="sk"></div><div class="sk" style="width:80%"></div><div class="sk btn"></div></div><div class="mk-orb"></div></div>
+<div class="mk-cards"><div></div><div></div><div></div></div><div class="mk-img"></div><div class="sk" style="width:60%"></div><div class="sk"></div><div class="sk" style="width:85%"></div>
+<div class="mk-cards"><div></div><div></div><div></div></div><div class="mk-img"></div><div class="sk h" style="width:50%"></div><div class="sk"></div></div></div></div>
+        <div class="br b2"><div class="br-body"><div class="scroller"><div class="mk-nav"><div class="sk" style="width:60px;height:12px;background:var(--grad)"></div><div><span class="sk"></span><span class="sk"></span><span class="sk"></span></div></div>
+<div class="mk-hero"><div><div class="sk h"></div><div class="sk h" style="width:55%"></div><div class="sk"></div><div class="sk" style="width:80%"></div><div class="sk btn"></div></div><div class="mk-orb"></div></div>
+<div class="mk-cards"><div></div><div></div><div></div></div><div class="mk-img"></div><div class="sk" style="width:60%"></div><div class="sk"></div><div class="sk" style="width:85%"></div>
+<div class="mk-cards"><div></div><div></div><div></div></div><div class="mk-img"></div><div class="sk h" style="width:50%"></div><div class="sk"></div></div></div></div>
+        <div class="fcard" style="--z:200px;--c:#7dffb2;left:2%;bottom:6%;--dl:-1s"><div class="ic">⚡</div><div><small>New enquiry</small><strong>Added to CRM in 1s</strong></div></div>
+        <div class="fcard" style="--z:170px;--c:#ff4fd8;right:12%;top:0;--dl:-3s"><div class="ic">✨</div><div><small>Built to impress</small><strong>Motion &amp; 3D</strong></div></div>
+      </div>
+    </div>
+    <div class="rv" style="--d:.15s">
+      <div class="eyebrow"><span class="dot"></span>Web design</div>
+      <h2>Websites that<br><span class="grad">sell for you</span></h2>
+      <p class="lead">You're looking at one. We design and build fast, animated websites that make people stop scrolling, then wire them into your automations so every enquiry lands exactly where it should.</p>
+      <div class="feat-list">
+        <div class="feat"><div class="fi">🎨</div><div><b>Custom design, never a template</b><span>Built around your brand, your customers and what makes you different.</span></div></div>
+        <div class="feat"><div class="fi">✨</div><div><b>Motion that wows</b><span>3D, animation and interaction that make you look years ahead of competitors.</span></div></div>
+        <div class="feat"><div class="fi">📱</div><div><b>Flawless on every screen</b><span>Fast loading and pixel perfect on phones, tablets and desktops.</span></div></div>
+        <div class="feat"><div class="fi">⚡</div><div><b>Connected to your automations</b><span>Forms, bookings and chat feed straight into your CRM, inbox and workflows.</span></div></div>
+      </div>
+      <a href="#contact" class="btn primary mag" style="margin-top:34px">Start your website →</a>
     </div>
   </div>
 </section>
@@ -512,7 +670,7 @@ footer .links{gap:22px}
     <form class="form" id="form">
       <input name="name" placeholder="Your name" required>
       <input name="email" type="email" placeholder="Email address" required>
-      <select name="topic"><option>AI Phone Caller</option><option>Chatbot</option><option>Email Automation</option><option>AI Operations Layer (DecoNetwork)</option><option>Custom Workflow</option></select>
+      <select name="topic"><option>Business Automation</option><option>Web Design</option><option>AI Phone Caller</option><option>Chatbot</option><option>AI Operations Layer (DecoNetwork)</option><option>Something else</option></select>
       <input name="company" placeholder="Company">
       <textarea name="msg" placeholder="What would you like to automate?"></textarea>
       <button class="btn primary mag" type="submit">Send message 🚀</button>
@@ -695,9 +853,79 @@ async function runMail(my){
 /* start demo when visible */
 new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){show(0);o.disconnect()}},{threshold:.25}).observe($('#demo'));
 
+/* ---------- n8n workflow showcase ---------- */
+(()=>{
+  const wf=$('#wf'),svg=$('#wfSvg'),wrap=$('#wfWrap');
+  const S=[
+    {id:'order to delivery',n:[['⚡','Webhook','New order received','#ffc857'],['🧠','AI','Read &amp; check the order','#8b5cf6'],['🗂️','HubSpot','Update the CRM','#38e1ff'],['🧾','Xero','Raise the invoice','#7dffb2'],['💬','Slack','Alert production','#ff4fd8'],['✉️','Gmail','Email the customer','#38e1ff']]},
+    {id:'lead to booked call',n:[['📝','Form','Enquiry submitted','#ffc857'],['🧠','AI','Score &amp; enrich lead','#8b5cf6'],['🗂️','CRM','Create the deal','#38e1ff'],['🔎','Web','Research the company','#7dffb2'],['💬','Slack','Ping the sales team','#ff4fd8'],['📅','Calendar','Book the call','#38e1ff']]},
+    {id:'monday reporting',n:[['⏰','Schedule','Every Monday, 8am','#ffc857'],['🔗','5 apps','Pull this week\'s data','#8b5cf6'],['📊','Sheets','Build the report','#38e1ff'],['📈','Dashboard','Refresh the charts','#7dffb2'],['🚨','AI','Flag anything unusual','#ff4fd8'],['📬','Email','Land in your inbox','#38e1ff']]},
+    {id:'invoice chasing',n:[['⏰','Schedule','Daily overdue check','#ffc857'],['🧾','Xero','Find unpaid invoices','#8b5cf6'],['✉️','Gmail','Send a polite reminder','#38e1ff'],['💳','Stripe','Attach a pay link','#7dffb2'],['🗂️','CRM','Log the chase','#ff4fd8'],['✅','Done','Paid, reconciled, thanked','#38e1ff']]}
+  ];
+  const E=[[0,1],[1,2],[1,3],[1,4],[2,5],[3,5],[4,5]];
+  const nodes=[...Array(6)].map(()=>{const d=document.createElement('div');d.className='node';d.innerHTML='<div class="ni"></div><div class="lbl"><small></small><b></b></div><span class="st">✓</span>';wf.appendChild(d);return d});
+  const NS='http://www.w3.org/2000/svg';
+  const paths=E.map(()=>{const b=document.createElementNS(NS,'path'),f=document.createElementNS(NS,'path');b.setAttribute('class','edge');f.setAttribute('class','flow');svg.append(b,f);return{b,f}});
+  let vert=false,P=[];
+  function layout(){
+    const W=wf.clientWidth;vert=W<700;wf.classList.toggle('vert',vert);
+    const nw=vert?Math.min(156,(W-48)/2):Math.min(196,(W-80)/4.2);wf.style.setProperty('--nw',nw+'px');
+    let H;
+    if(!vert){H=470;const pad=nw/2+18,x=f=>pad+f*(W-2*pad),y=f=>46+f*(H-46-60);
+      P=[[x(0),y(.5)],[x(.33),y(.5)],[x(.66),y(.12)],[x(.66),y(.5)],[x(.66),y(.88)],[x(1),y(.5)]];}
+    else{H=700;const y=f=>110+f*(H-200),l=W*.27,r=W*.73,c=W/2;
+      P=[[c,y(0)],[c,y(.25)],[l,y(.5)],[r,y(.5)],[c,y(.75)],[c,y(1)]];}
+    wf.style.height=H+'px';
+    nodes.forEach((n,i)=>{n.style.left=P[i][0]+'px';n.style.top=P[i][1]+'px'});
+    requestAnimationFrame(()=>E.forEach(([a,b],k)=>{
+      const A=nodes[a],B=nodes[b];let d;
+      if(!vert){const x1=P[a][0]+A.offsetWidth/2,y1=P[a][1],x2=P[b][0]-B.offsetWidth/2,y2=P[b][1],m=(x2-x1)*.5;d=`M${x1},${y1} C${x1+m},${y1} ${x2-m},${y2} ${x2},${y2}`}
+      else{const x1=P[a][0],y1=P[a][1]+A.offsetHeight/2,x2=P[b][0],y2=P[b][1]-B.offsetHeight/2,m=(y2-y1)*.5;d=`M${x1},${y1} C${x1},${y1+m} ${x2},${y2-m} ${x2},${y2}`}
+      paths[k].b.setAttribute('d',d);paths[k].f.setAttribute('d',d)}));
+  }
+  function setLabels(i){nodes.forEach((n,k)=>{const [ic,app,t,c]=S[i].n[k];n.style.setProperty('--nc',c);$('.ni',n).textContent=ic;$('small',n).textContent=app;$('b',n).innerHTML=t});$('#wfName').textContent='workflow / '+S[i].id;layout()}
+  function spark(k,ms,my){return new Promise(res=>{
+    const p=paths[k].f,L=p.getTotalLength(),dot=document.createElement('div');dot.className='spark';wf.appendChild(dot);p.classList.add('on');const t0=performance.now();
+    (function f(t){if(my!==tok){dot.remove();return res()}const q=Math.min((t-t0)/ms,1),e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2,pt=p.getPointAtLength(L*e);dot.style.transform=`translate(${pt.x}px,${pt.y}px)`;if(q<1)requestAnimationFrame(f);else{dot.remove();res()}})(t0)})}
+  async function step(i,my){const n=nodes[i];n.classList.add('run');await sleep(550);if(my!==tok)return;n.classList.remove('run');n.classList.add('done');count++;$('#wfCount').textContent=count}
+  let tok=0,count=0,cur=0;
+  async function run(i,my){
+    cur=i;$$('#scen button').forEach((b,k)=>b.classList.toggle('on',k===i));
+    nodes.forEach(n=>{n.classList.remove('run','done');n.classList.add('swap')});paths.forEach(p=>p.f.classList.remove('on'));
+    $('#wfMsg').innerHTML='';$('#wfState').textContent='listening';
+    await sleep(320);if(my!==tok)return;setLabels(i);nodes.forEach(n=>n.classList.remove('swap'));
+    await sleep(700);if(my!==tok)return;$('#wfState').textContent='executing';
+    await step(0,my);if(my!==tok)return;
+    await spark(0,650,my);if(my!==tok)return;await step(1,my);if(my!==tok)return;
+    await Promise.all([1,2,3].map(k=>spark(k,750,my)));if(my!==tok)return;
+    await Promise.all([2,3,4].map(k=>step(k,my)));if(my!==tok)return;
+    await Promise.all([4,5,6].map(k=>spark(k,750,my)));if(my!==tok)return;
+    await step(5,my);if(my!==tok)return;
+    $('#wfState').textContent='succeeded';$('#wfMsg').innerHTML='<span class="pill">✓ 6 steps · 0 humans needed</span>';
+    await sleep(2600);if(my===tok)run((i+1)%S.length,my);
+  }
+  $$('#scen button').forEach((b,k)=>b.onclick=()=>{tok++;run(k,tok)});
+  setLabels(0);addEventListener('resize',layout);
+  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();tok++;run(0,tok)}},{threshold:.3}).observe(wf);
+  if(fine&&!reduce){
+    wrap.addEventListener('pointermove',e=>{const r=wrap.getBoundingClientRect();wf.style.setProperty('--wy',(((e.clientX-r.left)/r.width-.5)*8)+'deg');wf.style.setProperty('--wx',(9-((e.clientY-r.top)/r.height-.5)*10)+'deg')});
+    wrap.addEventListener('pointerleave',()=>{wf.style.setProperty('--wy','0deg');wf.style.setProperty('--wx','9deg')});
+  }
+  /* flip tiles: tap to flip, plus an idle shimmer flip to invite interaction */
+  const flips=$$('.flip');flips.forEach(f=>f.addEventListener('click',()=>f.classList.toggle('on')));
+  if(!reduce)setInterval(()=>{const f=flips[Math.floor(Math.random()*flips.length)];if(f.matches(':hover')||f.classList.contains('on'))return;f.classList.add('on');setTimeout(()=>f.classList.remove('on'),1600)},2600);
+})();
+
+/* ---------- web design browsers ---------- */
+(()=>{
+  const b=$('#browsers'),bi=$('#brIn');
+  b.addEventListener('pointermove',e=>{if(innerWidth<641)return;const r=b.getBoundingClientRect();bi.style.setProperty('--by',(16+((e.clientX-r.left)/r.width-.5)*24)+'deg');bi.style.setProperty('--bx',(8-((e.clientY-r.top)/r.height-.5)*16)+'deg')});
+  b.addEventListener('pointerleave',()=>{bi.style.setProperty('--by','16deg');bi.style.setProperty('--bx','8deg')});
+})();
+
 /* ---------- 3D carousel ---------- */
 (()=>{
-  const steps=[['01','Discover','We map your workflows, find the biggest time sinks and define what success looks like.','WEEK 1'],['02','Design','Conversation flows, voice, tone and integrations, designed around your customers.','WEEK 1 to 2'],['03','Build','We train and wire up your AI with your data, tools and n8n automations.','WEEK 2–3'],['04','Launch','Go live with monitoring, human handoff and a safety net. We stay on call.','WEEK 3'],['05','Evolve','Monthly tuning, new automations and reporting so it keeps getting smarter.','ONGOING']];
+  const steps=[['01','Discover','We map your workflows, find the biggest time sinks and define what success looks like.','WEEK 1'],['02','Design','Conversation flows, voice, tone and integrations, designed around your customers.','WEEK 1 to 2'],['03','Build','We train and wire up your AI with your data, tools and n8n automations.','WEEK 2 to 3'],['04','Launch','Go live with monitoring, human handoff and a safety net. We stay on call.','WEEK 3'],['05','Evolve','Monthly tuning, new automations and reporting so it keeps getting smarter.','ONGOING']];
   const ring=$('#ringc'),N=steps.length,car=$('#car');let items=[],R,ang=0,vel=0,drag=false,lx=0,target=null,auto=true;
   steps.forEach(s=>{const d=document.createElement('div');d.className='ci';d.innerHTML=`<div class="big">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="tag">◆ ${s[3]}</div>`;ring.appendChild(d);items.push(d)});
   function layout(){const w=innerWidth<640?230:300;R=Math.round((w/2)/Math.tan(Math.PI/N))+(innerWidth<640?50:90);
