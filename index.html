@@ -6,9 +6,25 @@
 <title>AI by AO | AI Phone Callers, Chatbots & Automation That Speaks, Writes & Sells</title>
 <meta name="description" content="AI by AO automates the work that slows businesses down: custom n8n workflows, AI phone callers, chatbots, web design and an AI operations layer for DecoNetwork businesses. Automation that speaks, writes and sells, 24/7.">
 <meta name="theme-color" content="#04050d">
-<meta property="og:title" content="AI by AO | Automation That Speaks, Writes & Sells">
-<meta property="og:description" content="AI phone callers, chatbots, email systems and DAN, the AI operations brain for print shops.">
+<link rel="canonical" href="https://grobler96.github.io/AI-by-AO/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="AI by AO">
+<meta property="og:title" content="AI by AO | Automation That Speaks, Writes & Sells">
+<meta property="og:description" content="If it's repetitive, we automate it. Custom n8n workflows, AI phone callers, chatbots and websites that work while you sleep.">
+<meta property="og:url" content="https://grobler96.github.io/AI-by-AO/">
+<meta property="og:image" content="https://grobler96.github.io/AI-by-AO/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI by AO: If it's repetitive, we automate it.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI by AO | Automation That Speaks, Writes & Sells">
+<meta name="twitter:description" content="If it's repetitive, we automate it. Custom n8n workflows, AI phone callers, chatbots and websites that work while you sleep.">
+<meta name="twitter:image" content="https://grobler96.github.io/AI-by-AO/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<script>document.documentElement.classList.add('js','loading')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -360,7 +376,7 @@ h2{font-family:var(--disp);font-size:clamp(34px,5.4vw,70px);line-height:1.04;let
 .or{margin-top:22px;color:var(--muted);font-size:14px}.or a{color:var(--cyan);border-bottom:1px solid currentColor}
 
 footer{border-top:1px solid var(--line);padding:40px clamp(18px,4vw,48px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px;max-width:1360px;margin:0 auto}
-footer .links{gap:22px}
+footer .flinks{display:flex;gap:22px;flex-wrap:wrap}footer .flinks a{color:var(--muted);transition:color .2s}footer .flinks a:hover{color:#fff}
 
 /* ===== scroll experience ===== */
 html.lenis,html.lenis body{height:auto}
@@ -398,6 +414,51 @@ html.gs{scroll-behavior:auto!important}
 .hz-prog{width:min(420px,70vw);height:3px;margin:30px auto 0;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
 .hz-prog i{display:block;height:100%;background:var(--grad);transform-origin:0 50%;transform:scaleX(0)}
 @media (max-width:640px){.hz-track{padding:20px calc(50vw - 130px);gap:20px}.ci.hc{width:260px;height:310px}.ci.hc .big{font-size:72px}}
+
+/* ===== loader ===== */
+#loader{display:none;position:fixed;inset:0;z-index:600;background:radial-gradient(circle at 50% 45%,#140c34,#04050d 70%);place-items:center;transition:opacity .7s ease,visibility .7s}
+.js #loader{display:grid}
+.js.ready #loader{opacity:0;visibility:hidden}
+.ld{display:grid;justify-items:center;gap:26px}
+.ld-mark{width:64px;height:64px;position:relative;transform-style:preserve-3d;animation:cube 2.4s linear infinite}
+.ld-mark span{position:absolute;inset:0;border:2px solid var(--cyan);border-radius:16px;box-shadow:0 0 20px rgba(56,225,255,.5)}
+.ld-mark span:nth-child(2){transform:rotateY(60deg);border-color:var(--violet)}.ld-mark span:nth-child(3){transform:rotateY(120deg);border-color:var(--pink)}
+.ld-bar{width:180px;height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.ld-bar i{display:block;height:100%;width:100%;background:var(--grad);transform-origin:0 50%;transform:scaleX(0);animation:ldfill 1.6s cubic-bezier(.3,.8,.3,1) forwards}
+.ready .ld-bar i{transform:scaleX(1);animation:none;transition:transform .3s}
+@keyframes ldfill{to{transform:scaleX(.9)}}
+.ld-txt{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+.loading .hero .w,.loading .hero .lead,.loading .cta-row,.loading .hero-stats,.loading .stage{animation-play-state:paused}
+
+/* ===== form states ===== */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld .err{display:none;font-size:13px;color:#ff8a9b;padding-left:4px}
+.fld.bad .err{display:block;animation:pop .3s}
+.fld.bad input,.fld.bad textarea{border-color:#ff5c7a;box-shadow:0 0 0 4px rgba(255,92,122,.13);animation:shake .4s}
+.fld.ok input,.fld.ok textarea{border-color:rgba(125,255,178,.5)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+.form-status{grid-column:1/-1;display:none;padding:14px 16px;border-radius:14px;font-size:14px;line-height:1.5}
+.form-status.show{display:block;animation:pop .35s}
+.form-status.err{background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.45);color:#ffd0d8}
+.form-status a{color:#fff}
+.btn .spin{display:none;width:18px;height:18px;border:2.5px solid rgba(5,6,15,.25);border-top-color:#05060f;border-radius:50%;animation:rot .7s linear infinite}
+.btn.loading .spin{display:inline-block}
+.btn.loading{pointer-events:none;opacity:.9}
+.legal-note{margin-top:14px;font-size:12.5px;color:var(--muted)}.legal-note a{color:var(--cyan)}
+
+/* ===== sticky mobile CTA ===== */
+.mcta{display:none}
+@media (max-width:900px){
+  .mcta{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:150;gap:10px;padding:9px;border-radius:20px;background:rgba(8,10,26,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);box-shadow:0 20px 50px -14px rgba(0,0,0,.9);transform:translateY(170%);transition:transform .5s cubic-bezier(.2,.9,.2,1)}
+  .mcta.show{transform:none}
+  .consent-open .mcta{transform:translateY(170%)}
+  .mcta .btn{flex:1;justify-content:center;padding:13px 16px}
+  .mcta-mail{width:50px;display:grid;place-items:center;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:20px}
+  footer{padding-bottom:110px}
+}
 
 /* ===== responsive ===== */
 @media (max-width:1100px){
@@ -437,10 +498,11 @@ html.gs{scroll-behavior:auto!important}
 </style>
 </head>
 <body>
+<div id="loader" aria-hidden="true"><div class="ld"><div class="ld-mark"><span></span><span></span><span></span></div><div class="ld-bar"><i></i></div><div class="ld-txt">AI by AO</div></div></div>
 <div id="progress"></div>
 <div class="cursor"></div><div class="cursor-dot"></div>
-<canvas id="bg"></canvas>
-<div class="aurora"><i></i><i></i><i></i></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 <div class="noise"></div>
 
 <nav id="nav">
@@ -451,7 +513,7 @@ html.gs{scroll-behavior:auto!important}
     <a href="#demo">Live Demo</a>
     <a href="#web">Web Design</a>
     <a href="#ops">Ops Layer</a>
-    <a href="#contact" class="btn primary sm mag">Get started →</a>
+    <a href="#contact" class="btn primary sm mag" data-track="cta_click">Get started →</a>
   </div>
   <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
 </nav>
@@ -467,7 +529,7 @@ html.gs{scroll-behavior:auto!important}
     </h1>
     <p class="lead">We automate the work that slows your business down. Custom <b style="color:#fff">n8n workflows</b> that connect every tool you use, AI phone callers, chatbots and websites that answer, follow up and close while you sleep.</p>
     <div class="cta-row">
-      <a href="#contact" class="btn primary mag">Book a free demo <span>→</span></a>
+      <a href="#contact" class="btn primary mag" data-track="cta_click">Book a free demo <span>→</span></a>
       <a href="#automation" class="btn ghost mag">▶ See automation run</a>
     </div>
     <div class="hero-stats">
@@ -482,7 +544,7 @@ html.gs{scroll-behavior:auto!important}
     <div class="stage-in" id="stageIn">
       <div class="orb-core"></div>
       <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
-      <canvas id="globe"></canvas>
+      <canvas id="globe" role="img" aria-label="Animated 3D network globe with glowing data pulses travelling between connected points"></canvas>
       <div class="fcard" style="--z:140px;--c:#8b5cf6;left:-4%;top:12%;--dl:0s;--rz:-2deg"><div class="ic">📞</div><div><small>AI Caller</small><strong>Appointment booked</strong></div></div>
       <div class="fcard" style="--z:210px;--c:#38e1ff;right:-6%;top:22%;--dl:-1.5s;--rz:2deg"><div class="ic">💬</div><div><small>Chatbot · 0.8s reply</small><strong>Lead qualified</strong></div></div>
       <div class="fcard" style="--z:90px;--c:#ff4fd8;left:2%;bottom:20%;--dl:-3s;--rz:2deg"><div class="ic">⚡</div><div><small>n8n workflow · 7 steps</small><strong>Invoice sent · CRM updated</strong></div></div>
@@ -535,7 +597,7 @@ html.gs{scroll-behavior:auto!important}
     <div class="flip rv" style="--d:.1s"><div class="flip-in"><div class="face"><span class="ti">📦</span><b>Stock &amp; order alerts</b></div><div class="face back">Know about low stock and late orders before your customers do.</div></div></div>
     <div class="flip rv" style="--d:.15s"><div class="flip-in"><div class="face"><span class="ti">🔌</span><b>Literally anything else</b></div><div class="face back">If you do it more than twice a week, it can almost certainly run itself. Ask us.</div></div></div>
   </div>
-  <div class="auto-cta rv"><a href="#contact" class="btn primary mag">Tell us what to automate →</a></div>
+  <div class="auto-cta rv"><a href="#contact" class="btn primary mag" data-track="cta_click">Tell us what to automate →</a></div>
 </section>
 
 <!-- ================= BIG WORD ================= -->
@@ -596,7 +658,7 @@ html.gs{scroll-behavior:auto!important}
       <div class="phone"><div class="screen"><div class="notch"></div>
         <div class="pane on" id="p0">
           <div class="callhead"><div class="avatar">🤖</div><b>AI by AO · Voice Agent</b><span id="timer">● 00:00 connected</span></div>
-          <canvas id="wave" width="640" height="160"></canvas>
+          <canvas id="wave" width="640" height="160" role="img" aria-label="Live voice waveform of the AI phone call"></canvas>
           <div class="tx" id="tx0"></div>
           <div class="endcall" id="end0"></div>
         </div>
@@ -627,13 +689,13 @@ html.gs{scroll-behavior:auto!important}
     <h2 class="sh-title">Built to be<br><span class="grad">remembered.</span></h2>
     <p>Websites that move, react and come alive as you scroll.</p>
   </div>
-  <div class="sh-tiles" id="shTiles"></div>
+  <div class="sh-tiles" id="shTiles" aria-hidden="true"></div>
 </section>
 
 <!-- ================= WEB DESIGN ================= -->
 <section id="web">
   <div class="web">
-    <div class="browsers rv" id="browsers">
+    <div class="browsers rv" id="browsers" role="img" aria-label="3D mockup of a website shown on a desktop browser and a phone">
       <div class="br-in" id="brIn">
         <div class="br b1"><div class="br-top"><i></i><i></i><i></i><span>yourbusiness.com</span></div><div class="br-body"><div class="scroller"><div class="mk-nav"><div class="sk" style="width:60px;height:12px;background:var(--grad)"></div><div><span class="sk"></span><span class="sk"></span><span class="sk"></span></div></div>
 <div class="mk-hero"><div><div class="sk h"></div><div class="sk h" style="width:55%"></div><div class="sk"></div><div class="sk" style="width:80%"></div><div class="sk btn"></div></div><div class="mk-orb"></div></div>
@@ -657,7 +719,7 @@ html.gs{scroll-behavior:auto!important}
         <div class="feat"><div class="fi">📱</div><div><b>Flawless on every screen</b><span>Fast loading and pixel perfect on phones, tablets and desktops.</span></div></div>
         <div class="feat"><div class="fi">⚡</div><div><b>Connected to your automations</b><span>Forms, bookings and chat feed straight into your CRM, inbox and workflows.</span></div></div>
       </div>
-      <a href="#contact" class="btn primary mag" style="margin-top:34px">Start your website →</a>
+      <a href="#contact" class="btn primary mag" data-track="cta_click" style="margin-top:34px">Start your website →</a>
     </div>
   </div>
 </section>
@@ -686,7 +748,7 @@ html.gs{scroll-behavior:auto!important}
         <div class="feat"><div class="fi">👥</div><div><b>Customer reorder monitor</b><span>Spots who's gone quiet and shows the £ value at risk before they leave.</span></div></div>
         <div class="feat"><div class="fi">📦</div><div><b>Stock intelligence</b><span>See what's genuinely free to use, checked against next week's orders.</span></div></div>
       </div>
-      <a href="#contact" class="btn primary mag" style="margin-top:34px">Book an Ops Layer demo →</a>
+      <a href="#contact" class="btn primary mag" data-track="cta_click" style="margin-top:34px">Book an Ops Layer demo →</a>
     </div>
 
     <div class="dash rv" id="dash" style="--d:.2s">
@@ -726,14 +788,19 @@ html.gs{scroll-behavior:auto!important}
     <div class="eyebrow"><span class="dot"></span>Let's build yours</div>
     <h2>Ready to put AI<br>to <span class="grad">work</span>?</h2>
     <p class="lead" style="margin:0 auto">Tell us what slows your business down. We'll show you a live version before you commit to anything.</p>
-    <form class="form" id="form">
-      <input name="name" placeholder="Your name" required>
-      <input name="email" type="email" placeholder="Email address" required>
-      <select name="topic"><option>Business Automation</option><option>Web Design</option><option>AI Phone Caller</option><option>Chatbot</option><option>AI Operations Layer (DecoNetwork)</option><option>Something else</option></select>
-      <input name="company" placeholder="Company">
-      <textarea name="msg" placeholder="What would you like to automate?"></textarea>
-      <button class="btn primary mag" type="submit">Send message 🚀</button>
+    <form class="form" id="form" novalidate>
+      <div class="fld"><label class="sr" for="f-name">Your name</label><input id="f-name" name="name" placeholder="Your name" autocomplete="name" required aria-describedby="e-name"><span class="err" id="e-name"></span></div>
+      <div class="fld"><label class="sr" for="f-email">Email address</label><input id="f-email" name="email" type="email" placeholder="Email address" autocomplete="email" required aria-describedby="e-email"><span class="err" id="e-email"></span></div>
+      <div class="fld"><label class="sr" for="f-topic">What are you interested in?</label><select id="f-topic" name="topic"><option>Business Automation</option><option>Web Design</option><option>AI Phone Caller</option><option>Chatbot</option><option>AI Operations Layer (DecoNetwork)</option><option>Something else</option></select></div>
+      <div class="fld"><label class="sr" for="f-company">Company</label><input id="f-company" name="company" placeholder="Company (optional)" autocomplete="organization"></div>
+      <div class="fld full"><label class="sr" for="f-message">What would you like to automate?</label><textarea id="f-message" name="message" placeholder="What would you like to automate?" required aria-describedby="e-message"></textarea><span class="err" id="e-message"></span></div>
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="_subject" value="New enquiry from the AI by AO website">
+      <input type="hidden" name="_template" value="table">
+      <div class="form-status" id="formStatus" role="alert" aria-live="assertive"></div>
+      <button class="btn primary mag" type="submit" id="formBtn"><span class="spin" aria-hidden="true"></span><span class="lbl">Send message 🚀</span></button>
     </form>
+    <p class="legal-note">By sending this form you agree to us using your details to reply to you, as explained in our <a href="privacy.html">privacy policy</a>.</p>
     <p class="or">Or email us directly: <a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a></p>
   </div>
 </section>
@@ -742,8 +809,11 @@ html.gs{scroll-behavior:auto!important}
 <footer>
   <a href="#top" class="logo"><span class="logo-mark" style="animation-duration:14s"><span></span><span></span><span></span></span>AI by <b>AO</b></a>
   <div>© 2026 AI by AO. All rights reserved.</div>
-  <div class="links"><a href="#services">Services</a><a href="#ops">Ops Layer</a><a href="mailto:grobleroliver@gmail.com">Contact</a></div>
+  <div class="flinks"><a href="#services">Services</a><a href="#contact">Contact</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms</a><a href="#" data-cookie-settings>Cookie settings</a><a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a></div>
 </footer>
+
+<div class="mcta" id="mcta"><a href="#contact" class="btn primary" data-track="sticky_cta_click">Book a free demo →</a><a href="mailto:grobleroliver@gmail.com" class="mcta-mail" aria-label="Email AI by AO" data-track="email_click">✉️</a></div>
+<script src="assets/site.js" defer></script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
@@ -1151,12 +1221,56 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
   addEventListener('load',()=>ScrollTrigger.refresh());
 })();
 
-/* ---------- contact form -> mailto ---------- */
-$('#form').addEventListener('submit',e=>{
-  e.preventDefault();const f=new FormData(e.target);
-  const body=`Name: ${f.get('name')}\nEmail: ${f.get('email')}\nCompany: ${f.get('company')||'-'}\nInterested in: ${f.get('topic')}\n\n${f.get('msg')||''}`;
-  location.href=`mailto:grobleroliver@gmail.com?subject=${encodeURIComponent('AI by AO enquiry: '+f.get('topic'))}&body=${encodeURIComponent(body)}`;
-});
+/* ---------- contact form: validation, loading and error states ---------- */
+(()=>{
+  const FORM_ENDPOINT='https://formsubmit.co/ajax/grobleroliver@gmail.com';
+  const form=$('#form'),btn=$('#formBtn'),lbl=$('.lbl',btn),status=$('#formStatus');
+  const rules={
+    name:v=>v.trim().length>=2||'Please tell us your name.',
+    email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())||(v.trim()?"That email address doesn't look quite right.":'We need your email so we can reply.'),
+    message:v=>v.trim().length>=10||'Tell us a little more, at least 10 characters.'
+  };
+  const check=n=>{const el=form.elements[n],f=el.closest('.fld'),r=rules[n](el.value),ok=r===true;
+    f.classList.toggle('bad',!ok);f.classList.toggle('ok',ok);el.setAttribute('aria-invalid',String(!ok));$('.err',f).textContent=ok?'':r;return ok};
+  Object.keys(rules).forEach(n=>{const el=form.elements[n];
+    el.addEventListener('blur',()=>{if(el.value.trim())check(n)});
+    el.addEventListener('input',()=>{if(el.closest('.fld').classList.contains('bad'))check(n)})});
+  const fail=html=>{status.className='form-status show err';status.innerHTML=html};
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();status.className='form-status';
+    const bad=Object.keys(rules).filter(n=>!check(n));
+    if(bad.length){form.elements[bad[0]].focus();fail('Please fix the highlighted fields and try again.');return}
+    if(form.elements._honey.value)return;
+    btn.classList.add('loading');lbl.textContent='Sending…';
+    try{
+      const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||j.success===false||j.success==='false')throw new Error(j.message||'Send failed');
+      window.aiaoTrack&&window.aiaoTrack('generate_lead',{topic:form.elements.topic.value});
+      location.href='thank-you.html';
+    }catch(err){
+      btn.classList.remove('loading');lbl.textContent='Send message 🚀';
+      fail('Sorry, your message didn\'t send. Please try again, or email us directly at <a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a>.');
+    }
+  });
+})();
+
+/* ---------- sticky mobile CTA: appears after the hero, hides at the contact form ---------- */
+(()=>{
+  const bar=$('#mcta');let nearForm=false;
+  new IntersectionObserver(es=>{nearForm=es[0].isIntersecting;upd()},{threshold:0}).observe($('#contact'));
+  function upd(){bar.classList.toggle('show',scrollY>innerHeight*.7&&!nearForm)}
+  addEventListener('scroll',upd,{passive:true});upd();
+})();
+
+/* ---------- loader ---------- */
+(()=>{
+  const html=document.documentElement,t0=performance.now();let done=false;
+  const finish=()=>{if(done)return;done=true;setTimeout(()=>{html.classList.add('ready');html.classList.remove('loading');setTimeout(()=>{const l=$('#loader');l&&l.remove()},900)},Math.max(0,650-(performance.now()-t0)))};
+  if(document.readyState==='complete')finish();else addEventListener('load',finish);
+  setTimeout(finish,4000);
+})();
+
 
 /* ---------- marquee duplicate ---------- */
 const tr=$('#track');tr.innerHTML+=tr.innerHTML;

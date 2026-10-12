@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /thank-you.html
+
+Sitemap: https://grobler96.github.io/AI-by-AO/sitemap.xml
