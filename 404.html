@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>/* works at any depth: on GitHub Pages the site lives under /AI-by-AO/, elsewhere at the root */(function(){var p=location.pathname,k='/AI-by-AO/',i=p.indexOf(k);document.write('<base href="'+(i>-1?p.slice(0,i+k.length):'/')+'">')})();</script>
 <title>Page not found | AI by AO</title>
 <meta name="description" content="This page doesn't exist. Head back to AI by AO for business automation, AI phone callers, chatbots and web design.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#04050d">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="icon" href="favicon.ico" sizes="48x48">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/pages.css">
-<script src="assets/site.js" defer></script>
+<link rel="stylesheet" href="/assets/pages.css">
+<script src="/assets/pages.js"></script>
+<script src="/assets/site.js" defer></script>
 <style>
 .nf{min-height:calc(100vh - 68px - 90px);display:grid;place-items:center;text-align:center;padding:50px 18px;perspective:1200px;overflow:hidden}
 .scene{position:relative;width:min(560px,90vw);height:min(300px,52vw);margin:0 auto 26px;transform-style:preserve-3d;transition:transform .3s ease-out}
@@ -44,7 +44,7 @@
 <body>
 <div class="aurora" aria-hidden="true"><i></i><i></i></div>
 <div class="stars" aria-hidden="true"></div>
-<nav><a href="./" class="logo"><img src="favicon.svg" alt="" width="30" height="30">AI by <b>AO</b></a><a href="./#contact" class="btn primary sm" data-track="cta_click">Book a free demo →</a></nav>
+<nav><a href="/" class="logo"><img src="/favicon.svg" alt="" width="30" height="30">AI by <b>AO</b></a><div class="nav-links"><a href="/business-automation">Automation</a><a href="/ai-phone-callers">Phone callers</a><a href="/ai-chatbots">Chatbots</a><a href="/web-design">Web design</a><a href="/west-yorkshire">Areas</a><a href="/#contact" class="btn primary sm" data-track="cta_click">Book a free demo →</a></div></nav>
 <main class="nf">
   <div>
     <div class="scene" id="scene" aria-hidden="true">
@@ -55,11 +55,19 @@
     <div class="eyebrow">Error 404</div>
     <h1>This page drifted <span class="grad">off the grid.</span></h1>
     <p class="lead">The link might be old or mistyped. Even our automations can't find it, so let's get you somewhere useful.</p>
-    <div class="row"><a href="./" class="btn primary">Take me home →</a><a href="./#contact" class="btn ghost">Contact us</a></div>
-    <div class="quick"><a href="./#automation">Business automation</a><a href="./#services">Services</a><a href="./#demo">Live demo</a><a href="./#web">Web design</a></div>
+    <div class="row"><a href="/" class="btn primary">Take me home →</a><a href="/#contact" class="btn ghost">Contact us</a></div>
+    <div class="quick"><a href="/business-automation">Business automation</a><a href="/ai-phone-callers">AI phone callers</a><a href="/ai-chatbots">AI chatbots</a><a href="/web-design">Web design</a><a href="/leeds">Leeds</a></div>
   </div>
 </main>
-<footer><div>© 2026 AI by AO. All rights reserved.</div><div class="fl"><a href="./">Home</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms</a><a href="#" data-cookie-settings>Cookie settings</a></div></footer>
+<footer class="site-foot">
+  <div class="foot">
+    <div><a href="/" class="logo"><img src="/favicon.svg" alt="" width="30" height="30">AI by <b>AO</b></a><p style="margin-top:14px">Business automation, AI phone callers, chatbots and web design. Based in Leeds, working across West Yorkshire and the rest of the UK.</p><p style="margin-top:10px"><a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a></p></div>
+    <div><h4>Services</h4><a href="/business-automation">Business automation</a><a href="/ai-phone-callers">AI phone callers</a><a href="/ai-chatbots">AI chatbots</a><a href="/web-design">Web design</a><a href="/deconetwork-ai-operations">AI Operations Layer</a></div>
+    <div><h4>Areas</h4><a href="/leeds">Leeds</a><a href="/west-yorkshire">West Yorkshire</a><a href="/west-yorkshire#towns">Bradford</a><a href="/west-yorkshire#towns">Wakefield</a><a href="/west-yorkshire#towns">Huddersfield</a></div>
+    <div><h4>Company</h4><a href="/#contact">Contact</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms</a><a href="#" data-cookie-settings>Cookie settings</a></div>
+  </div>
+  <div class="foot-bottom"><span>© 2026 AI by AO. All rights reserved.</span><span>Leeds, West Yorkshire</span></div>
+</footer>
 <script>
 (function(){var s=document.getElementById('scene');if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
 addEventListener('pointermove',function(e){var x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;s.style.transform='rotateY('+(x*24)+'deg) rotateX('+(-y*18)+'deg)'});

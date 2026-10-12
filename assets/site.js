@@ -26,7 +26,7 @@
     if(!box){
       var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
       box=document.createElement('div');box.className='cc';box.setAttribute('role','dialog');box.setAttribute('aria-live','polite');box.setAttribute('aria-label','Cookie preferences');
-      box.innerHTML='<h4><span aria-hidden="true">🍪</span> Cookies, your choice</h4><p>We use optional analytics cookies to understand which parts of the site are useful. They only switch on if you accept. Read our <a href="privacy.html#cookies">privacy policy</a>.</p><div class="row"><button class="yes" type="button">Accept analytics</button><button class="no" type="button">Reject</button></div>';
+      box.innerHTML='<h4><span aria-hidden="true">🍪</span> Cookies, your choice</h4><p>We use optional analytics cookies to understand which parts of the site are useful. They only switch on if you accept. Read our <a href="/privacy#cookies">privacy policy</a>.</p><div class="row"><button class="yes" type="button">Accept analytics</button><button class="no" type="button">Reject</button></div>';
       document.body.appendChild(box);
       box.querySelector('.yes').onclick=function(){decide('granted')};
       box.querySelector('.no').onclick=function(){decide('denied')};
