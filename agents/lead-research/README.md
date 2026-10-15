@@ -1,18 +1,27 @@
 # AI by AO lead research agent
 
-A Claude Managed Agent that runs every weekday at 07:15 UK time. It finds up to 8 new West Yorkshire small businesses that show evidenced signs they'd benefit from AI by AO's services, researches each one, and drafts personalised outreach for Oliver to review. It never contacts anyone itself.
+A Claude Managed Agent that runs every weekday at 07:15 UK time. It finds up to 8 new West Yorkshire small businesses that show evidenced signs they'd benefit from AI by AO's services, researches each one, and drafts personalised outreach for Oliver to review. It never contacts anyone itself: email drafts land in Oliver's Gmail drafts folder (through an n8n workflow) for him to review and send.
 
 | File | What it is |
 |---|---|
 | `agent.md` | The agent: model, tools (web search and fetch on) and its instructions |
 | `environment.yaml` | The cloud sandbox it runs in |
 | `memory_store-history.yaml` | Memory of every business already suggested, so nothing repeats |
+| `vault.yaml` | Secure container for the n8n webhook secret (the secret itself is never stored in this repo) |
 | `deployment-weekday.yaml` | The weekday schedule, the $5 per run cost cap, and the quality checklist each report must pass |
 | `scripts/leads.py` | Start a run now, or download the latest report |
 
-Each run writes `leads-YYYY-MM-DD.md` (full report with email drafts) and `leads-YYYY-MM-DD.csv` (for a spreadsheet or CRM).
+Each run writes `leads-YYYY-MM-DD.md` (full report with email drafts) and `leads-YYYY-MM-DD.csv` (for a spreadsheet or CRM), and sends the email drafts to Gmail via n8n.
 
 Sector rotation: Mon trades, Tue professional services, Wed health and beauty, Thu hospitality and retail, Fri print and decoration (DecoNetwork users) plus manufacturing.
+
+## Gmail drafts (n8n)
+
+The n8n workflow **AI by AO: Lead agent to Gmail drafts** (https://atamcpi.app.n8n.cloud/workflow/RGEswlwdsvFEJMHh) receives each run's email leads and creates one Gmail draft per lead. It never sends. Before it works:
+
+1. In n8n, open **Create Gmail Draft**, replace the credential with a **new** Gmail connection for the AI by AO account (not the existing ATAM ones), and re-enable the node.
+2. Open **Receive Leads From Agent** and create a **Header Auth** credential: Name `X-Lead-Secret`, Value a long random secret (for example the output of `openssl rand -hex 32`). Keep that value for step 5 below.
+3. Publish the workflow.
 
 ## One time setup
 
@@ -33,7 +42,24 @@ ant apply agents/lead-research/deployment-weekday.yaml &&
   ant beta:deployments pause --deployment-id "$DEPLOYMENT_ID"
 ```
 
-5. Commit `claude-lock.json` (it holds the IDs so future `ant apply` runs update instead of duplicating).
+5. Store the webhook secret in the vault (it is filled in on outbound requests only, the agent never sees it):
+
+```sh
+ant apply agents/lead-research/vault.yaml
+VAULT_ID=$(jq -r '.resources["./agents/lead-research/vault.yaml"].id' claude-lock.json)
+ant beta:vaults:credentials create --vault-id "$VAULT_ID" <<'YAML'
+display_name: n8n lead drafts webhook secret
+auth:
+  type: environment_variable
+  secret_name: LEAD_WEBHOOK_SECRET
+  secret_value: PASTE_THE_SAME_SECRET_AS_IN_N8N
+  networking: {type: limited, allowed_hosts: [atamcpi.app.n8n.cloud]}
+YAML
+```
+
+   Then put that `vlt_...` ID into `vault_ids` in `deployment-weekday.yaml` and run `ant apply agents/lead-research/deployment-weekday.yaml` again.
+
+6. Commit `claude-lock.json` (it holds the IDs so future `ant apply` runs update instead of duplicating).
 
 ## Test, then switch on
 

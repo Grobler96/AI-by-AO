@@ -74,4 +74,21 @@ Write both files to /mnt/session/outputs/ (use today's date, YYYY-MM-DD):
 
 Then append every lead to the history file in the memory store (create `lead-history.csv` there with columns date, business_name, town, website if it does not exist yet).
 
+## Send the email drafts to Gmail (via n8n)
+
+After both files are written, send the leads whose contact route is email to Oliver's n8n workflow, which turns each one into a Gmail draft for him to review. Nothing is sent to the businesses.
+
+Use bash with curl. The secret is in the environment variable LEAD_WEBHOOK_SECRET (you only see a placeholder; it is filled in automatically when the request leaves the sandbox, so use it exactly as `$LEAD_WEBHOOK_SECRET` in the header):
+
+```
+curl -sS -o /dev/null -w "%{http_code}" -X POST "https://atamcpi.app.n8n.cloud/webhook/aibyao-lead-drafts" \
+  -H "Content-Type: application/json" \
+  -H "X-Lead-Secret: $LEAD_WEBHOOK_SECRET" \
+  --data @/tmp/drafts.json
+```
+
+`/tmp/drafts.json` must be valid JSON shaped like `{"date": "YYYY-MM-DD", "leads": [{"business_name": "...", "email": "...", "subject": "...", "body": "..."}]}`, containing only leads that have an email draft. Build it with python3 or jq so quoting and line breaks are escaped correctly. Put the plain text email body in `body`, with the opt out line at the end.
+
+A 200 response means the drafts are on their way. Add one line to the report summary saying how many drafts were sent to Gmail and the HTTP status. If LEAD_WEBHOOK_SECRET is not set, or the request fails after one retry, do not keep trying: note it in the summary so Oliver can copy the drafts from the report instead.
+
 If you cannot find 8 businesses that genuinely meet the bar, list fewer and explain why in the summary. Quality matters more than quantity.
