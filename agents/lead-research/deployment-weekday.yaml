@@ -4,6 +4,8 @@ agent: ./agent.md
 environment_id: ./environment.yaml
 resources:
   - ./memory_store-history.yaml
+# Fill in the vlt_... ID from claude-lock.json after applying vault.yaml (see README). Leave [] to run without Gmail drafts.
+vault_ids: []
 schedule: {type: cron, expression: "15 7 * * 1-5", timezone: Europe/London}
 budget: {type: limit, max_list_cost: {amount: "500", currency: USD}}
 initial_events:
@@ -23,4 +25,5 @@ initial_events:
         - Contact details come only from the business's own published business contact points; sole traders and partnerships are marked for phone or contact form, not email.
         - Each email draft is 60 to 120 words, references something specific and true about that business, proposes one concrete improvement, offers a free 20 minute call, signs off as Oliver from AI by AO, and ends with the opt out line.
         - Drafts use British English and contain no em dashes, no hyphenated words, and no invented claims, results or prices about AI by AO.
+        - The summary states how many email drafts were posted to the Gmail drafts workflow and the HTTP status, or why they were not posted.
         - Each lead has an opportunity score from 1 to 10 with a one line reason and a best service fit from AI by AO's services.
