@@ -1,4 +1,0 @@
-# Cloud sandbox. Networking is unrestricted because the agent reads competitor pages,
-# Google's documentation and PageSpeed Insights, and installs Playwright to test pages.
-name: aibyao-seo-env
-config: {type: cloud, networking: {type: unrestricted}}
