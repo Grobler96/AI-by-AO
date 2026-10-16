@@ -1,3 +1,0 @@
-# The container for the agent's GitHub token. Never put a secret in this file.
-type: vault
-display_name: aibyao-seo
