@@ -1,0 +1,2 @@
+name: aibyao-seo-log
+description: Running log of every change the AI by AO SEO agent has proposed (seo-log.md), with the reason, the audit and PageSpeed numbers at the time, and what to re-check later. Read it before choosing changes so nothing is repeated or undone, and append a dated section after each run.
