@@ -909,9 +909,9 @@ setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi])},2800);
 /* ---------- background network ---------- */
 (()=>{
   const cv=$('#bg'),g=cv.getContext('2d');let W,H,pts=[];
-  const dpr=Math.min(devicePixelRatio||1,2);
+  const dpr=Math.min(devicePixelRatio||1,2),LIM2=(150*dpr)*(150*dpr);
   function rs(){W=cv.width=innerWidth*dpr;H=cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';
-    const n=Math.min(110,Math.floor(innerWidth*innerHeight/16000));pts=[...Array(n)].map(()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35*dpr,vy:(Math.random()-.5)*.35*dpr,z:Math.random()}))}
+    const n=Math.min(fine?110:55,Math.floor(innerWidth*innerHeight/16000));pts=[...Array(n)].map(()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35*dpr,vy:(Math.random()-.5)*.35*dpr,z:Math.random()}))}
   rs();addEventListener('resize',rs);
   function draw(){
     g.clearRect(0,0,W,H);const mx=mouse.x*dpr,my=mouse.y*dpr,sy=scrollY*.05*dpr;
@@ -920,8 +920,8 @@ setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi])},2800);
       const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);if(d<170*dpr){const f=(1-d/(170*dpr))*1.2;p.x+=dx/d*f;p.y+=dy/d*f}
     }
     for(let i=0;i<pts.length;i++){const a=pts[i];
-      for(let j=i+1;j<pts.length;j++){const b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
-        if(d<150*dpr){g.strokeStyle=`rgba(120,140,255,${(1-d/(150*dpr))*.22})`;g.lineWidth=dpr*.7;g.beginPath();g.moveTo(a.x,(a.y-sy*a.z+H)%H);g.lineTo(b.x,(b.y-sy*b.z+H)%H);g.stroke()}}
+      for(let j=i+1;j<pts.length;j++){const b=pts[j],ex=a.x-b.x,ey=a.y-b.y,d2=ex*ex+ey*ey;
+        if(d2<LIM2){const d=Math.sqrt(d2);g.strokeStyle=`rgba(120,140,255,${(1-d/(150*dpr))*.22})`;g.lineWidth=dpr*.7;g.beginPath();g.moveTo(a.x,(a.y-sy*a.z+H)%H);g.lineTo(b.x,(b.y-sy*b.z+H)%H);g.stroke()}}
       g.fillStyle=`rgba(${a.z>.5?'56,225,255':'180,140,255'},${.35+a.z*.5})`;g.beginPath();g.arc(a.x,(a.y-sy*a.z+H)%H,(1+a.z*1.4)*dpr,0,6.283);g.fill();
     }
     if(!reduce)requestAnimationFrame(draw)
@@ -937,7 +937,7 @@ setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi])},2800);
   for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=i*2.399963;P.push({x:Math.cos(t)*r,y,z:Math.sin(t)*r,s:Math.random(),r:Math.random()})}
   const E=[];for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,dz=P[i].z-P[j].z;if(dx*dx+dy*dy+dz*dz<.062)E.push([i,j])}
   const pulses=[...Array(26)].map(()=>({e:Math.floor(Math.random()*E.length),t:Math.random(),v:.008+Math.random()*.014}));
-  let ry=0,rx=.35,vy=.0045,tx=0;
+  let ry=0,rx=.35,vy=.0045,tx=0,vis=true,gRun=true,tRun=true;
   function frame(){
     g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.scale(dpr,dpr);
     vy+=((.0045+mouse.nx*.006)-vy)*.05;ry+=vy;tx+=((.35+mouse.ny*.35)-rx)*.04;rx+=((.35+mouse.ny*.35)-rx)*.04;
@@ -951,12 +951,14 @@ setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi])},2800);
       g.fillStyle=`rgba(255,255,255,${al})`;g.shadowColor='#38e1ff';g.shadowBlur=14;g.beginPath();g.arc(x,y,2.2,0,6.283);g.fill();g.shadowBlur=0}
     for(let i=0;i<N;i++){const q=Q[i],a=(.25+(q.z+1)*.4)*(1-hp*.4),r=(1.1+P[i].s*1.4)*q.k;
       g.fillStyle=i%7===0?`rgba(255,79,216,${a})`:`rgba(${q.z>0?'160,235,255':'170,140,255'},${a})`;g.beginPath();g.arc(q.x,q.y,r,0,6.283);g.fill()}
-    if(!reduce)requestAnimationFrame(frame)
+    if(!reduce&&vis)requestAnimationFrame(frame);else gRun=false
   }
   frame();
   /* stage tilt with mouse */
   const st=$('#stageIn');
-  if(!reduce)(function t(){st.style.transform=`rotateY(${mouse.nx*14}deg) rotateX(${-mouse.ny*12}deg)`;requestAnimationFrame(t)})();
+  function tilt(){st.style.transform=`rotateY(${mouse.nx*14}deg) rotateX(${-mouse.ny*12}deg)`;if(vis)requestAnimationFrame(tilt);else tRun=false}
+  if(!reduce){tilt();
+    new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(!vis)return;if(!gRun){gRun=true;requestAnimationFrame(frame)}if(!tRun){tRun=true;requestAnimationFrame(tilt)}},{rootMargin:'100px'}).observe(cv)}
 })();
 
 /* ---------- live demos ---------- */
@@ -1290,7 +1292,8 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
   const html=document.documentElement,t0=performance.now();let done=false;
   const finish=()=>{if(done)return;done=true;setTimeout(()=>{html.classList.add('ready');html.classList.remove('loading');setTimeout(()=>{const l=$('#loader');l&&l.remove()},900)},Math.max(0,650-(performance.now()-t0)))};
   if(document.readyState==='complete')finish();else addEventListener('load',finish);
-  setTimeout(finish,4000);
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(finish);
+  setTimeout(finish,2000);
 })();
 
 
