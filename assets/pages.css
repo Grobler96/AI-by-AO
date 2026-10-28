@@ -162,3 +162,14 @@ a.card .go{display:inline-block;margin-top:14px;color:var(--cyan);font-weight:60
 @media (max-width:900px){.vis{transform:none;max-width:560px;width:100%;margin:0 auto}}
 @media (max-width:600px){.vnode{font-size:10.5px;padding:7px 9px;gap:6px;border-radius:11px}.vnode i{width:22px;height:22px;font-size:12px;border-radius:7px}}
 @media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none}}
+
+/* ===== guides ===== */
+.article{max-width:780px}
+.article h2{font-family:var(--disp);font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;line-height:1.15;margin:44px 0 6px}
+.article h3{font-family:var(--disp);font-size:20px;margin:26px 0 4px}
+.article p,.article li{color:#c6cce6;font-size:16.5px}
+.article p{margin-top:12px}
+.article ul,.article ol{margin:12px 0 0 22px;display:grid;gap:8px}
+.article .meta{color:var(--muted);font-size:14px;margin-top:0}
+.article .faq{margin-top:16px}
+.guide-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
