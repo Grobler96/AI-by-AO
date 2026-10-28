@@ -173,3 +173,13 @@ a.card .go{display:inline-block;margin-top:14px;color:var(--cyan);font-weight:60
 .article .meta{color:var(--muted);font-size:14px;margin-top:0}
 .article .faq{margin-top:16px}
 .guide-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+
+/* ===== case studies ===== */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0}
+.facts div{padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}
+.facts dt{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.facts dd{margin:0;color:#e4e8fb;font-size:15px}
+.shots{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:20px;align-items:start;margin:34px 0 10px}
+.shots .m{width:100%;height:auto}
+.narrow{max-width:780px}
+@media (max-width:760px){.shots{grid-template-columns:1fr}.shots .m{max-width:240px}}
