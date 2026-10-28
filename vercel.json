@@ -3,7 +3,6 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/services", "destination": "/#services", "permanent": true },
-    { "source": "/about", "destination": "/", "permanent": true },
     { "source": "/contact", "destination": "/#contact", "permanent": true },
     { "source": "/home", "destination": "/", "permanent": true }
   ]
