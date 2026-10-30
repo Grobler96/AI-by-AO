@@ -55,6 +55,7 @@ h1{font-family:var(--disp);font-size:clamp(38px,6vw,64px);line-height:1.05;lette
 .foot .logo{display:flex}
 .foot p{color:var(--muted);font-size:14px;line-height:1.6;max-width:320px}
 .foot-bottom{max-width:1360px;margin:0 auto;padding:18px clamp(16px,4vw,48px) 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px}
+.gpref{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;transition:border-color .2s,background .2s}.gpref:hover{border-color:#fff;background:rgba(255,255,255,.06)}
 @media (max-width:900px){.foot{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.foot{grid-template-columns:1fr}}
 
