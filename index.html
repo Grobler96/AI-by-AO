@@ -1249,6 +1249,7 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
 /* ---------- contact form: validation, loading and error states ---------- */
 (()=>{
   const FORM_ENDPOINT='https://formsubmit.co/ajax/grobleroliver@gmail.com';
+  const formT0=Date.now();
   const form=$('#form'),btn=$('#formBtn'),lbl=$('.lbl',btn),status=$('#formStatus');
   const rules={
     name:v=>v.trim().length>=2||'Please tell us your name.',
@@ -1266,6 +1267,9 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
     const bad=Object.keys(rules).filter(n=>!check(n));
     if(bad.length){form.elements[bad[0]].focus();fail('Please fix the highlighted fields and try again.');return}
     if(form.elements._honey.value)return;
+    /* spam filter: known cold-outreach senders, or a form filled faster than a human can. Fake success so bots aren't tipped off. */
+    const blocked=/voice4yourstack|elevenlabs voice library/i.test(form.elements.email.value+' '+form.elements.company.value+' '+form.elements.message.value);
+    if(blocked||Date.now()-formT0<4000){location.href='/thank-you';return}
     btn.classList.add('loading');lbl.textContent='Sending…';
     try{
       const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
