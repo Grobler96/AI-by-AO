@@ -816,6 +816,7 @@ html.gs{scroll-behavior:auto!important}
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="_subject" value="New enquiry from the AI by AO website">
       <input type="hidden" name="_template" value="table">
+      <div class="fld full" id="ts"></div>
       <div class="form-status" id="formStatus" role="alert" aria-live="assertive"></div>
       <button class="btn primary mag" type="submit" id="formBtn"><span class="spin" aria-hidden="true"></span><span class="lbl">Send message 🚀</span></button>
     </form>
@@ -1248,7 +1249,8 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
 
 /* ---------- contact form: validation, loading and error states ---------- */
 (()=>{
-  const FORM_ENDPOINT='https://formsubmit.co/ajax/grobleroliver@gmail.com';
+  const FORM_ENDPOINT='/api/contact';
+  const TURNSTILE_SITE_KEY=''; /* paste the Cloudflare Turnstile site key here to turn the captcha on */
   const formT0=Date.now();
   const form=$('#form'),btn=$('#formBtn'),lbl=$('.lbl',btn),status=$('#formStatus');
   const rules={
@@ -1261,6 +1263,12 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
   Object.keys(rules).forEach(n=>{const el=form.elements[n];
     el.addEventListener('blur',()=>{if(el.value.trim())check(n)});
     el.addEventListener('input',()=>{if(el.closest('.fld').classList.contains('bad'))check(n)})});
+  let tsId=null;
+  if(TURNSTILE_SITE_KEY){
+    const sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;
+    sc.onload=()=>{tsId=turnstile.render('#ts',{sitekey:TURNSTILE_SITE_KEY,theme:'dark'})};
+    document.head.appendChild(sc);
+  }
   const fail=html=>{status.className='form-status show err';status.innerHTML=html};
   form.addEventListener('submit',async e=>{
     e.preventDefault();status.className='form-status';
@@ -1272,13 +1280,13 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
     if(blocked||Date.now()-formT0<4000){location.href='/thank-you';return}
     btn.classList.add('loading');lbl.textContent='Sending…';
     try{
-      const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
+      const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({...Object.fromEntries(new FormData(form)),elapsed:Date.now()-formT0,turnstile:tsId!==null?turnstile.getResponse(tsId):''})});
       const j=await r.json().catch(()=>({}));
       if(!r.ok||j.success===false||j.success==='false')throw new Error(j.message||'Send failed');
       window.aiaoTrack&&window.aiaoTrack('generate_lead',{topic:form.elements.topic.value});
       location.href='/thank-you';
     }catch(err){
-      btn.classList.remove('loading');lbl.textContent='Send message 🚀';
+      btn.classList.remove('loading');lbl.textContent='Send message 🚀';if(tsId!==null)turnstile.reset(tsId);
       fail('Sorry, your message didn\'t send. Please try again, or email us directly at <a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a>.');
     }
   });
