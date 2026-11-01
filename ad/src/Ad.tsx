@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Sequence, interpolate, random, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
+import { AbsoluteFill, Audio, Sequence, interpolate, random, spring, staticFile, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { C, disp, mono } from "./theme";
 
 export const FPS = 30;
@@ -179,10 +179,10 @@ const Typed: React.FC<{ segs: Seg[]; start: number; size: number; cps?: number }
 
 const TypeScene: React.FC = () => {
   const f = useCurrentFrame();
-  const l2 = interpolate(f, [58, 74], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
+  const l2 = interpolate(f, [80, 94], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
   return (
     <AbsoluteFill style={{ justifyContent: "center", padding: "260px 70px 0" }}>
-      <Typed segs={[{ t: "You just got " }, { t: "booked", hl: true }, { t: " a job at 2am" }]} start={4} size={92} cps={0.9} />
+      <Typed segs={[{ t: "Your AI just " }, { t: "booked", hl: true }, { t: " a job at 2am" }]} start={4} size={92} cps={0.9} />
       <div style={{ marginTop: 70, textAlign: "center", fontFamily: disp, fontWeight: 500, fontSize: 64, color: C.muted, opacity: l2, transform: `translateY(${(1 - l2) * 40}px)` }}>
         …while you were asleep 😴
       </div>
@@ -331,6 +331,7 @@ export const Ad: React.FC = () => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ background: C.bg, overflow: "hidden" }}>
+      <Audio src={staticFile("audio/soundtrack.wav")} />
       <Background />
       {f < 8.9 * FPS && <Hook />}
       <Sequence from={0} durationInFrames={80}><Scene len={80}><MissedCall /></Scene></Sequence>
