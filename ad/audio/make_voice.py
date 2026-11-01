@@ -1,24 +1,45 @@
-"""Generates the voiceover lines in vo/ with Kokoro (pip install kokoro-onnx soundfile). Usage: python make_voice.py [voice]"""
-import numpy as np, soundfile as sf, sys
+"""Generates the voiceover lines for an ad with Kokoro (pip install kokoro-onnx soundfile).
+Reads the lines from ../src/ads.json and writes vo/<ad id>/a.wav ... f.wav.
+Usage: python make_voice.py [ad id | all] [voice]   (default: all ads, voice af_heart)
+Model files (kokoro-v1.0.int8.onnx, voices-v1.0.bin) come from github.com/thewh1teagle/kokoro-onnx releases (model-files-v1.0)."""
+import json, os, re, sys
+import numpy as np, soundfile as sf
 from kokoro_onnx import Kokoro
-voice=sys.argv[1] if len(sys.argv)>1 else "bm_george"
-k=Kokoro("kokoro-v1.0.int8.onnx","voices-v1.0.bin")  # model files: github.com/thewh1teagle/kokoro-onnx releases (model-files-v1.0)
-voice_lang = "en-us" if voice.startswith("a") else "en-gb"
-ph = lambda t: k.tokenizer.phonemize(t, voice_lang)
-# The letter "A" is read as the word "a", so spell out "A M" and "A O" with explicit phonemes.
-LETTER_A, LETTER_M, LETTER_O = "ˈeɪ", "ˈɛm", "ˈoʊ"
-lines={"a":("Missed calls cost you jobs.",2.4,False),
-"b":(ph("Your AI just booked a job at two")+f" {LETTER_A} {LETTER_M},",2.65,True),
-"c":("while you were asleep.",1.6,False),
-"d":("It answers, replies, sends invoices.",2.8,False),
-"e":(ph("Meet...")+" "+ph("AI by")+f" {LETTER_A} {LETTER_O}.",1.9,True),
-"f":("Book your free demo.",1.6,False)}
-import os; os.makedirs("vo",exist_ok=True)
-for key,(t,mx,isph) in lines.items():
-    sp=1.08
-    while True:
-        s,sr=k.create(t,voice=voice,speed=sp,lang=voice_lang,is_phonemes=isph)
-        idx=np.where(np.abs(s)>0.01)[0]; s=s[max(idx[0]-int(.02*sr),0):idx[-1]+int(.06*sr)]
-        if len(s)/sr<=mx or sp>1.4: break
-        sp+=0.04
-    sf.write(f"vo/{key}.wav",s,sr); print(key,f"{len(s)/sr:.2f}s (max {mx}) speed {sp:.2f}",t)
+
+here = os.path.dirname(os.path.abspath(__file__))
+ads = json.load(open(os.path.join(here, "..", "src", "ads.json")))
+which = sys.argv[1] if len(sys.argv) > 1 else "all"
+voice = sys.argv[2] if len(sys.argv) > 2 else "af_heart"
+model_dir = os.environ.get("KOKORO_DIR", ".")
+k = Kokoro(os.path.join(model_dir, "kokoro-v1.0.int8.onnx"), os.path.join(model_dir, "voices-v1.0.bin"))
+lang = "en-us" if voice.startswith("a") else "en-gb"
+
+# The letter "A" is read as the word "a", so spelled-out letters like [[A]] get explicit phonemes.
+LETTERS = {"A": "ˈeɪ", "M": "ˈɛm", "O": "ˈoʊ", "I": "ˈaɪ"}
+# longest each line may run so it fits its scene (seconds)
+MAX = {"a": 2.4, "b": 2.65, "c": 1.6, "d": 2.8, "e": 1.9, "f": 1.6}
+
+def to_phonemes(text):
+    parts = re.split(r"(\[\[[A-Z]\]\])", text)
+    out = []
+    for p in parts:
+        m = re.fullmatch(r"\[\[([A-Z])\]\]", p)
+        if m: out.append(LETTERS[m.group(1)])
+        elif p.strip(): out.append(k.tokenizer.phonemize(p.strip(), lang))
+    return " ".join(out)
+
+for ad in ads:
+    if which not in ("all", ad["id"]): continue
+    outdir = os.path.join(here, "vo", ad["id"]); os.makedirs(outdir, exist_ok=True)
+    for key, text in ad["voice"].items():
+        spelled = "[[" in text
+        t = to_phonemes(text) if spelled else text
+        sp = 1.08
+        while True:
+            s, sr = k.create(t, voice=voice, speed=sp, lang=lang, is_phonemes=spelled)
+            idx = np.where(np.abs(s) > 0.01)[0]
+            s = s[max(idx[0] - int(.02 * sr), 0): idx[-1] + int(.06 * sr)]
+            if len(s) / sr <= MAX[key] or sp > 1.5: break
+            sp += 0.04
+        sf.write(os.path.join(outdir, f"{key}.wav"), s, sr)
+        print(ad["id"], key, f"{len(s)/sr:.2f}s (max {MAX[key]}) x{sp:.2f}", text)
