@@ -140,7 +140,13 @@ def load_vo(name):
     x = resample_poly(x, SR, sr)
     x = hp(x, 90)
     x = np.tanh(x * 2.2) / np.tanh(2.2)          # gentle compression
-    return x / np.max(np.abs(x)) * 0.85
+    x = x / np.max(np.abs(x)) * 0.85
+    # light room reverb so the voice sits in the mix instead of sounding pasted on
+    n = int(SR * 0.28)
+    ir = rng.standard_normal(n) * np.exp(-np.arange(n) / (SR * 0.07))
+    ir = lp(ir, 5000)
+    wet = np.convolve(x, ir / np.sqrt(np.sum(ir ** 2)))[: len(x)]
+    return (x + 0.12 * wet) / 1.0
 
 vo = np.zeros(N)
 for name, t0 in (("a", 0.3), ("b", 2.5), ("c", 5.15), ("d", 6.75), ("e", 9.6), ("f", 11.3)):
