@@ -14,11 +14,13 @@ npm run render -- chatbot       # renders just one
 
 Each ad is one entry in `src/ads.json`: the hook line, the first "problem" card, the typed headline, the three feature cards and the six voiceover lines. `missed-calls`, `chatbot`, `automation` and `web-design` are included.
 
-To make a new one: copy an entry in `src/ads.json` with a new `id`, then build its voice and soundtrack:
+`night-shift` is a different, story-style ad (`src/PhoneStory.tsx`, copy in `src/stories.json`): a phone on a nightstand fills with enquiries at 2am, the AI handles them, and you wake up to booked jobs. It has word-by-word captions timed to the voice. Its score is built by `audio/make_audio_story.py`.
+
+To make a new template ad: copy an entry in `src/ads.json` with a new `id`, then build its voice and soundtrack:
 
 ```
 pip install kokoro-onnx soundfile numpy scipy
-python audio/make_voice.py <id>      # voiceover lines -> audio/vo/<id>/   (model files via KOKORO_DIR)
+python audio/make_voice.py <id>      # voiceover lines -> audio/vo/<id>/ and src/voice-durations.json   (model files via KOKORO_DIR)
 python audio/make_audio.py <id>      # music + effects + voice -> public/audio/<id>.wav
 npm run render -- <id>
 ```

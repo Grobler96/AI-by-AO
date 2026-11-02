@@ -1,5 +1,5 @@
 """Generates the voiceover lines for an ad with Kokoro (pip install kokoro-onnx soundfile).
-Reads the lines from ../src/ads.json and writes vo/<ad id>/a.wav ... f.wav.
+Reads the lines from ../src/ads.json and ../src/stories.json, writes vo/<id>/a.wav, b.wav, ... and each line's length to ../src/voice-durations.json (used for captions).
 Usage: python make_voice.py [ad id | all] [voice]   (default: all ads, voice af_heart)
 Model files (kokoro-v1.0.int8.onnx, voices-v1.0.bin) come from github.com/thewh1teagle/kokoro-onnx releases (model-files-v1.0)."""
 import json, os, re, sys
@@ -7,7 +7,10 @@ import numpy as np, soundfile as sf
 from kokoro_onnx import Kokoro
 
 here = os.path.dirname(os.path.abspath(__file__))
-ads = json.load(open(os.path.join(here, "..", "src", "ads.json")))
+src = os.path.join(here, "..", "src")
+ads = json.load(open(os.path.join(src, "ads.json"))) + json.load(open(os.path.join(src, "stories.json")))
+durations_path = os.path.join(src, "voice-durations.json")
+durations = json.load(open(durations_path))
 which = sys.argv[1] if len(sys.argv) > 1 else "all"
 voice = sys.argv[2] if len(sys.argv) > 2 else "af_heart"
 model_dir = os.environ.get("KOKORO_DIR", ".")
@@ -39,7 +42,9 @@ for ad in ads:
             s, sr = k.create(t, voice=voice, speed=sp, lang=lang, is_phonemes=spelled)
             idx = np.where(np.abs(s) > 0.01)[0]
             s = s[max(idx[0] - int(.02 * sr), 0): idx[-1] + int(.06 * sr)]
-            if len(s) / sr <= MAX[key] or sp > 1.5: break
+            if len(s) / sr <= ad.get("voiceMax", MAX).get(key, 3.0) or sp > 1.5: break
             sp += 0.04
         sf.write(os.path.join(outdir, f"{key}.wav"), s, sr)
-        print(ad["id"], key, f"{len(s)/sr:.2f}s (max {MAX[key]}) x{sp:.2f}", text)
+        durations.setdefault(ad["id"], {})[key] = round(len(s) / sr, 2)
+        print(ad["id"], key, f"{len(s)/sr:.2f}s x{sp:.2f}", text)
+json.dump(durations, open(durations_path, "w"), indent=1)

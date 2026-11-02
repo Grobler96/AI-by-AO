@@ -288,7 +288,7 @@ const Meet: React.FC = () => {
 };
 
 /* ---------- logo reveal ---------- */
-const LogoMark: React.FC<{ size: number }> = ({ size }) => {
+export const LogoMark: React.FC<{ size: number }> = ({ size }) => {
   const f = useCurrentFrame();
   const cols = [C.cyan, C.violet, C.pink];
   return (
@@ -302,7 +302,7 @@ const LogoMark: React.FC<{ size: number }> = ({ size }) => {
   );
 };
 
-const Reveal: React.FC = () => {
+export const Reveal: React.FC = () => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const logo = spring({ frame: f, fps, config: { damping: 11, stiffness: 100 } });
