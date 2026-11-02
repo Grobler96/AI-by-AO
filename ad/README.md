@@ -16,6 +16,8 @@ Each ad is one entry in `src/ads.json`: the hook line, the first "problem" card,
 
 `night-shift` is a different, story-style ad (`src/PhoneStory.tsx`, copy in `src/stories.json`): a phone on a nightstand fills with enquiries at 2am, the AI handles them, and you wake up to booked jobs. It has word-by-word captions timed to the voice. Its score is built by `audio/make_audio_story.py`.
 
+`brand-film` ("The Orb", 38s) is the long brand film (`src/BrandFilm.tsx`, copy and timing marks in `src/stories.json`). The brand orb morphs into a phone call, a chat window, a workflow graph and a website, then becomes the logo. Its score and sound design come from `audio/make_audio_brand.py`, timed from the same marks as the animation.
+
 To make a new template ad: copy an entry in `src/ads.json` with a new `id`, then build its voice and soundtrack:
 
 ```

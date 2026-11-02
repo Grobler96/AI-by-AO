@@ -212,10 +212,11 @@ const Morning: React.FC = () => {
 /* ---------- captions timed to the voiceover ---------- */
 const spoken = (t: string) => t.replace(/\[\[A\]\] \[\[O\]\]/g, "AO").replace(/\[\[([A-Z])\]\]/g, "$1");
 
-const Captions: React.FC = () => {
+export const Captions: React.FC<{ storyId: string }> = ({ storyId }) => {
   const f = useCurrentFrame() / STORY_FPS;
-  const story = stories[0];
-  const keys = Object.keys(story.voice) as (keyof typeof story.voice)[];
+  const story = stories.find((x) => x.id === storyId) ?? stories[0];
+  const voice = story.voice as Record<string, string>;
+  const keys = Object.keys(voice);
   const k = keys.find((key) => {
     const s = (story.voiceStart as Record<string, number>)[key];
     const d = (voiceDurations as Record<string, Record<string, number>>)[story.id]?.[key] ?? 2;
@@ -224,7 +225,7 @@ const Captions: React.FC = () => {
   if (!k) return null;
   const s = (story.voiceStart as Record<string, number>)[k];
   const d = (voiceDurations as Record<string, Record<string, number>>)[story.id]?.[k] ?? 2;
-  const words = spoken(story.voice[k]).split(" ");
+  const words = spoken(voice[k]).split(" ");
   const cur = Math.min(words.length - 1, Math.max(0, Math.floor(((f - s) / (d * 0.95)) * words.length)));
   const fadeIn = interpolate(f, [s - 0.05, s + 0.1], [0, 1], clamp);
   return (
@@ -255,7 +256,7 @@ export const PhoneStory: React.FC<{ storyId: string }> = ({ storyId }) => {
           <Reveal />
         </AbsoluteFill>
       </Sequence>
-      <Captions />
+      <Captions storyId={id} />
     </AbsoluteFill>
   );
 };
