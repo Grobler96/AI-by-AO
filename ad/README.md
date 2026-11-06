@@ -34,3 +34,30 @@ Keep typed lines short (about 35 characters) and the spoken lines close to the l
 - `src/Ad.tsx` holds the timeline and scenes. `src/theme.ts` holds the brand palette and fonts (bundled in `public/fonts`, so renders work offline).
 - The voice is the free Kokoro text-to-speech model (`af_heart`, Apache 2.0). Spelled-out letters are written like `[[A]] [[M]]` in the voice lines so she says the letters, not the word "a". To use a recorded or ElevenLabs voice, replace `a.wav` to `f.wav` in `audio/vo/<id>/` and re-run `make_audio.py`.
 - The music and sound effects are synthesized by `audio/make_audio.py`.
+
+## SpinPix UK client videos
+
+Four 15-second vertical promos for SpinPix UK (spinpixuk.co.uk), a photo booth hire client. They use their own brand, not AI by AO's: `src/theme-spinpix.ts` holds the SpinPix palette (near-black, hot pink, electric blue, violet neon) and fonts (Bungee + Fredoka, bundled in `public/fonts`). `src/theme.ts` is untouched.
+
+| id | what happens |
+| --- | --- |
+| `spinpix-360` | A guest drops onto the 360 platform, the camera orbits, slow motion with confetti and a glowing ring, ending on "Spin the fun." |
+| `spinpix-quiz` | A booth-finder quiz on a phone picks the Magic Mirror for a wedding and the 360 Spin for a prom, then the date picker says "Your date is free ✓". |
+| `spinpix-montage` | Beat-synced cuts through weddings, proms, parties and work events, then the hero shape morphs through the Magic Mirror, Selfie Pod, 360 Spin, Classic Booth and Props Table. |
+| `spinpix-qr` | Guests' phones go up, they scan the table card (a real QR code for spinpixuk.co.uk, `src/spinpix/qr.json`), photos fly into one private gallery. Only £35. |
+
+Code is in `src/spinpix/` (one file per video, shared parts in `kit.tsx`). Copy, voice lines and every timing mark are in `src/spinpix/spinpix.json`; the animation and the sound both read the same marks.
+
+```
+pip install kokoro-onnx soundfile numpy scipy sherpa-onnx
+python audio/make_voice.py spinpix-360          # af_bella at 1.15x (set per video by voiceName / voiceSpeed in spinpix.json)
+python audio/check_voice.py spinpix-360         # Whisper speech recognition on each line, flags mispronunciations
+python audio/make_audio_spinpix.py spinpix-360  # 120 bpm party beat + shutters, flashes, whooshes, confetti pops + voice
+python audio/check_mix.py spinpix-360           # loudness, peaks, voice-over-music level, Whisper on the finished mix, spectrogram
+node scripts/stills.mjs spinpix-360             # contact sheet of stills across the timeline -> out/stills/
+npm run render -- spinpix-360                   # -> out/spinpix-360.mp4
+```
+
+Whisper (`sherpa-onnx-whisper-base.en`) comes from the k2-fsa/sherpa-onnx GitHub releases (`asr-models`); point `WHISPER_DIR` at it. Spelled-out letters work as before (`[[U]] [[K]]`, `[[Q]] [[R]]`). Where the spoken words differ from what should be on screen (e.g. "three-sixty" vs "360"), `caption` in spinpix.json overrides the caption text, and `captionOff` hides captions for lines already shown as big on-screen type.
+
+To use real event photos or video instead of the drawn booths, drop them in `public/spinpix/` and swap the shape art for Remotion's `<Img>` or `<OffthreadVideo>` in the scene that needs it.
