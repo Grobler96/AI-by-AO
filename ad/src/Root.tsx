@@ -2,6 +2,7 @@ import { Composition } from "remotion";
 import { Ad, DURATION, FPS, ads } from "./Ad";
 import { PhoneStory, STORY_DURATION, STORY_FPS, stories } from "./PhoneStory";
 import { BrandFilm, BRAND_DURATION, BRAND_FPS } from "./BrandFilm";
+import { SpinPixFilms } from "./spinpix/SpinPixRoot";
 
 export const Root = () => (
   <>
@@ -15,5 +16,6 @@ export const Root = () => (
         <Composition key={s.id} id={s.id} component={PhoneStory} durationInFrames={STORY_DURATION} fps={STORY_FPS} width={1080} height={1920} defaultProps={{ storyId: s.id }} />
       )
     )}
+    <SpinPixFilms />
   </>
 );
