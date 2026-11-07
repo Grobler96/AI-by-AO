@@ -1,0 +1,82 @@
+[
+  {
+    "id": "missed-calls",
+    "hook": "What if your missed calls turned into booked jobs?",
+    "call": { "ring": true, "icon": "📞", "incoming": "Incoming call…", "missed": "Missed call", "sub": "02:14 am · Unknown", "missedIcon": "✕" },
+    "type": { "segs": [{ "t": "Your AI just " }, { "t": "booked", "hl": true }, { "t": " a job at 2am" }], "line2": "…while you were asleep 😴" },
+    "cardsHeader": { "pre": "AI handles it ", "pill": "instantly" },
+    "cards": [
+      { "icon": "📞", "title": "AI picked up", "sub": "Quote booked · Thu 9am", "accent": "cyan" },
+      { "icon": "💬", "title": "Chatbot replied", "sub": "Lead qualified in 12s", "accent": "violet" },
+      { "icon": "🧾", "title": "Invoice sent ✓", "sub": "Paid before you woke up", "accent": "pink" }
+    ],
+    "voice": {
+      "a": "Missed calls cost you jobs.",
+      "b": "Your AI just booked a job at two [[A]] [[M]],",
+      "c": "while you were asleep.",
+      "d": "It answers, replies, sends invoices.",
+      "e": "Meet... AI by [[A]] [[O]].",
+      "f": "Book your free demo."
+    }
+  },
+  {
+    "id": "chatbot",
+    "hook": "What if your website answered customers while you slept?",
+    "call": { "ring": false, "icon": "💬", "incoming": "New website chat…", "missed": "Nobody replied", "sub": "11:48 pm · Price query", "missedIcon": "✕" },
+    "type": { "segs": [{ "t": "Your chatbot just " }, { "t": "booked", "hl": true }, { "t": " a demo" }], "line2": "…at 11pm on a Sunday 🌙" },
+    "cardsHeader": { "pre": "It replies ", "pill": "instantly" },
+    "cards": [
+      { "icon": "💬", "title": "Question answered", "sub": "Pricing sent in seconds", "accent": "cyan" },
+      { "icon": "📋", "title": "Lead captured", "sub": "Name · email · budget", "accent": "violet" },
+      { "icon": "📅", "title": "Demo booked ✓", "sub": "Tue 10am · in your diary", "accent": "pink" }
+    ],
+    "voice": {
+      "a": "Website visitors don't wait.",
+      "b": "Your chatbot just booked a demo,",
+      "c": "at eleven P M on a Sunday.",
+      "d": "It answers, captures, books.",
+      "e": "Meet... AI by [[A]] [[O]].",
+      "f": "Book your free demo."
+    }
+  },
+  {
+    "id": "automation",
+    "hook": "What if your admin did itself?",
+    "call": { "ring": false, "icon": "✉️", "incoming": "New enquiry…", "missed": "Still unread", "sub": "6:02 pm · New quote", "missedIcon": "✕" },
+    "type": { "segs": [{ "t": "Your automation just " }, { "t": "sent", "hl": true }, { "t": " a quote" }], "line2": "…while you were on the tools 🛠" },
+    "cardsHeader": { "pre": "No admin ", "pill": "at all" },
+    "cards": [
+      { "icon": "📨", "title": "Quote sent ✓", "sub": "Sent within a minute", "accent": "cyan" },
+      { "icon": "🧾", "title": "Invoice created", "sub": "Job done · invoice out", "accent": "violet" },
+      { "icon": "🔔", "title": "Follow-up set", "sub": "Chased automatically", "accent": "pink" }
+    ],
+    "voice": {
+      "a": "Admin eats your evenings.",
+      "b": "Your automation just sent a quote,",
+      "c": "while you were on the tools.",
+      "d": "Quotes, invoices, follow-ups. Done.",
+      "e": "Meet... AI by [[A]] [[O]].",
+      "f": "Book your free demo."
+    }
+  },
+  {
+    "id": "web-design",
+    "hook": "What if your website brought in jobs, not just visitors?",
+    "call": { "ring": false, "icon": "🔍", "incoming": "Found you on Google…", "missed": "Left, no enquiry", "sub": "9:14 pm · Leeds plumber", "missedIcon": "✕" },
+    "type": { "segs": [{ "t": "Your new site just " }, { "t": "booked", "hl": true }, { "t": " a quote" }], "line2": "…from a Google search 🔎" },
+    "cardsHeader": { "pre": "A site that ", "pill": "converts" },
+    "cards": [
+      { "icon": "⚡", "title": "Loads in a flash", "sub": "Fast on every phone", "accent": "cyan" },
+      { "icon": "📝", "title": "Enquiry sent", "sub": "Straight to your inbox", "accent": "violet" },
+      { "icon": "📅", "title": "Quote booked ✓", "sub": "Fri 2pm · confirmed", "accent": "pink" }
+    ],
+    "voice": {
+      "a": "Visitors don't pay the bills.",
+      "b": "Your new site just booked a quote,",
+      "c": "from a Google search.",
+      "d": "Fast, clear, built to convert.",
+      "e": "Meet... AI by [[A]] [[O]].",
+      "f": "Book your free demo."
+    }
+  }
+]

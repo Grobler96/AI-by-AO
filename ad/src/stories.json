@@ -1,0 +1,134 @@
+[
+  {
+    "id": "night-shift",
+    "voice": {
+      "a": "It's two in the morning.",
+      "b": "Your phone's going mad.",
+      "c": "Calls. Messages. Quote requests.",
+      "d": "And you're fast asleep.",
+      "e": "But your AI isn't.",
+      "f": "It answers. It replies. It books the job.",
+      "g": "You wake up to booked jobs.",
+      "h": "AI by [[A]] [[O]]. Book your free demo."
+    },
+    "voiceStart": {
+      "a": 0.4,
+      "b": 2.3,
+      "c": 4.1,
+      "d": 6.9,
+      "e": 8.5,
+      "f": 9.6,
+      "g": 12.8,
+      "h": 15.3
+    },
+    "voiceMax": {
+      "a": 1.8,
+      "b": 1.6,
+      "c": 2.4,
+      "d": 1.6,
+      "e": 1.4,
+      "f": 2.7,
+      "g": 1.9,
+      "h": 2.7
+    },
+    "kind": "phone"
+  },
+  {
+    "id": "brand-film",
+    "kind": "brand",
+    "voice": {
+      "a": "Every business has the same problem.",
+      "b": "Too much to do. Not enough of you.",
+      "c": "Meet the voice that answers every call.",
+      "d": "Day, night, bank holiday. In one ring.",
+      "e": "And the chat that never leaves anyone waiting.",
+      "f": "It answers. It qualifies. It books.",
+      "g": "Behind the scenes, workflows that run themselves.",
+      "h": "Quotes. Invoices. Follow-ups. Done.",
+      "i": "And a website that doesn't just look good.",
+      "j": "It brings in the work.",
+      "k": "One partner. Every part of your business.",
+      "l": "AI by [[A]] [[O]].",
+      "m": "Book your free demo."
+    },
+    "voiceStart": {
+      "a": 0.7,
+      "b": 3.0,
+      "c": 6.3,
+      "d": 8.9,
+      "e": 12.1,
+      "f": 14.8,
+      "g": 18.0,
+      "h": 20.8,
+      "i": 24.4,
+      "j": 27.1,
+      "k": 31.0,
+      "l": 33.7,
+      "m": 35.3
+    },
+    "voiceMax": {
+      "a": 2.3,
+      "b": 2.6,
+      "c": 2.4,
+      "d": 2.3,
+      "e": 2.6,
+      "f": 2.3,
+      "g": 2.75,
+      "h": 2.3,
+      "i": 2.5,
+      "j": 1.6,
+      "k": 2.6,
+      "l": 1.4,
+      "m": 1.6
+    },
+    "marks": {
+      "morph": [
+        5.2,
+        11.0,
+        16.8,
+        23.2,
+        29.6
+      ],
+      "absorb": 4.4,
+      "phone": {
+        "call": 6.4,
+        "caller": 7.2,
+        "ai": 8.0,
+        "booked": 10.2
+      },
+      "chat": [
+        12.7,
+        13.2,
+        13.9,
+        14.4,
+        15.0,
+        15.6,
+        16.0
+      ],
+      "pulses": [
+        19.6,
+        20.9,
+        21.4,
+        22.0,
+        22.6
+      ],
+      "web": {
+        "type": 25.0,
+        "image": 25.5,
+        "cta": 26.1,
+        "click": 26.9,
+        "toasts": [
+          27.2,
+          27.9,
+          28.6
+        ]
+      },
+      "finale": {
+        "tokens": 31.2,
+        "merge": 33.4,
+        "logo": 33.7,
+        "cta": 35.3
+      }
+    }
+  }
+]
