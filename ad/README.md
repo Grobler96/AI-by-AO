@@ -37,7 +37,7 @@ Keep typed lines short (about 35 characters) and the spoken lines close to the l
 
 ## SpinPix UK client videos
 
-Four 15-second vertical promos for SpinPix UK (spinpixuk.co.uk), a photo booth hire client. They use their own brand, not AI by AO's: `src/theme-spinpix.ts` holds the SpinPix palette (near-black, hot pink, electric blue, violet neon) and fonts (Bungee + Fredoka, bundled in `public/fonts`). `src/theme.ts` is untouched.
+Four 15-second vertical promos, plus a 22-second brand film, for SpinPix UK (spinpixuk.co.uk), a photo booth hire client. They use their own brand, not AI by AO's: `src/theme-spinpix.ts` holds the SpinPix palette (near-black, hot pink, electric blue, violet neon) and fonts (Bungee + Fredoka, bundled in `public/fonts`). `src/theme.ts` is untouched.
 
 | id | what happens |
 | --- | --- |
@@ -45,6 +45,7 @@ Four 15-second vertical promos for SpinPix UK (spinpixuk.co.uk), a photo booth h
 | `spinpix-quiz` | A booth-finder quiz on a phone picks the Magic Mirror for a wedding and the 360 Spin for a prom, then the date picker says "Your date is free ✓". |
 | `spinpix-montage` | Beat-synced cuts through weddings, proms, parties and work events, then the hero shape morphs through the Magic Mirror, Selfie Pod, 360 Spin, Classic Booth and Props Table. |
 | `spinpix-qr` | Guests' phones go up, they scan the table card (a real QR code for spinpixuk.co.uk, `src/spinpix/qr.json`), photos fly into one private gallery. Only £35. |
+| `spinpix-brand` | 22s concept ad for the whole business, in a premium, minimal style: a thin pink line splits into supplier nodes, chaos builds around "Is my date free?", a hush pulls everything into a loading ring that blooms into a neon orb and the name, a "What's the occasion?" prompt types out and the orb sends it, then a burst of service cards and the end card. Calmer voice (af_bella at 1.04x), subtler captions. |
 
 Code is in `src/spinpix/` (one file per video, shared parts in `kit.tsx`). Copy, voice lines and every timing mark are in `src/spinpix/spinpix.json`; the animation and the sound both read the same marks.
 
@@ -57,6 +58,8 @@ python audio/check_mix.py spinpix-360           # loudness, peaks, voice-over-mu
 node scripts/stills.mjs spinpix-360             # contact sheet of stills across the timeline -> out/stills/
 npm run render -- spinpix-360                   # -> out/spinpix-360.mp4
 ```
+
+A film's length is its `"seconds"` in spinpix.json (default 15); the compositions and `make_audio_spinpix.py` both read it. Set `BROWSER` to a Chromium headless shell for `stills.mjs` and `npm run render` if Remotion can't download one.
 
 Whisper (`sherpa-onnx-whisper-base.en`) comes from the k2-fsa/sherpa-onnx GitHub releases (`asr-models`); point `WHISPER_DIR` at it. Spelled-out letters work as before (`[[U]] [[K]]`, `[[Q]] [[R]]`). Where the spoken words differ from what should be on screen (e.g. "three-sixty" vs "360"), `caption` in spinpix.json overrides the caption text, and `captionOff` hides captions for lines already shown as big on-screen type.
 

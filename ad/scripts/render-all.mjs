@@ -4,5 +4,5 @@ import { readFileSync } from "node:fs";
 
 const ids = process.argv.length > 2 ? process.argv.slice(2) : ["src/ads.json", "src/stories.json", "src/spinpix/spinpix.json"].flatMap((f) => JSON.parse(readFileSync(f, "utf8")).map((a) => a.id));
 for (const id of ids) {
-  execSync(`npx remotion render src/index.ts ${id} out/${id.startsWith("spinpix-") ? id : "aibyao-" + id}.mp4 --crf=18 --audio-codec=aac`, { stdio: "inherit" });
+  execSync(`npx remotion render src/index.ts ${id} out/${id.startsWith("spinpix-") ? id : "aibyao-" + id}.mp4 --crf=18 --audio-codec=aac${process.env.BROWSER ? ` --browser-executable=${process.env.BROWSER}` : ""}`, { stdio: "inherit" });
 }

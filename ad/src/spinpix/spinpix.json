@@ -224,5 +224,63 @@
       "price": 11.2,
       "cta": 13.2
     }
+  },
+  {
+    "id": "spinpix-brand",
+    "title": "One place for the whole party",
+    "seconds": 22,
+    "voiceName": "af_bella",
+    "voiceSpeed": 1.04,
+    "voice": {
+      "a": "Booth quotes. Props. Prints. Galleries.",
+      "b": "Five suppliers, and you're still not sure your date is free.",
+      "c": "What if it all came from one place?",
+      "d": "Meet, SpinPix [[U]] [[K]].",
+      "e": "Tell us the occasion. We'll bring the whole party.",
+      "f": "Mirrors. Three-sixty spins. Selfie pods. Props.",
+      "g": "Capture the moment. Spin the fun."
+    },
+    "caption": {
+      "f": "Mirrors. 360 spins. Selfie pods. Props."
+    },
+    "captionOff": [
+      "g"
+    ],
+    "voiceStart": {
+      "a": 1.4,
+      "b": 4.4,
+      "c": 8.0,
+      "d": 10.6,
+      "e": 12.2,
+      "f": 15.2,
+      "g": 18.4
+    },
+    "voiceMax": {
+      "a": 2.8,
+      "b": 3.0,
+      "c": 2.3,
+      "d": 1.5,
+      "e": 2.9,
+      "f": 3.1,
+      "g": 2.4
+    },
+    "prompt": "Our wedding · Sat 12 June · 120 guests",
+    "marks": {
+      "line": 0.2,
+      "split": 1.4,
+      "chaos": 4.4,
+      "hush": 7.3,
+      "ring": 8.0,
+      "bloom": 9.7,
+      "name": 10.6,
+      "prompt": 12.2,
+      "type": 12.9,
+      "typeEnd": 14.3,
+      "send": 14.6,
+      "burst": 15.2,
+      "end": 18.4,
+      "fun": 19.3,
+      "cta": 19.9
+    }
   }
 ]

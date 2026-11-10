@@ -1,6 +1,7 @@
 """Builds public/audio/<id>.wav for the SpinPix UK videos: a bouncy 120 bpm party beat, sound effects
 (camera shutters, flashes, whooshes, confetti pops, UI taps) and the voiceover in vo/<id>/.
 Every effect is timed from the marks in src/spinpix/spinpix.json, the same ones the animation uses.
+Each film's length comes from its "seconds" in spinpix.json (default 15).
 Usage: python make_audio_spinpix.py [id | all]   (needs numpy + scipy)"""
 import json, os, sys, wave
 import numpy as np
@@ -9,7 +10,7 @@ from scipy.signal import butter, lfilter, resample_poly
 HERE = os.path.dirname(os.path.abspath(__file__))
 FILMS = json.load(open(os.path.join(HERE, "..", "src", "spinpix", "spinpix.json")))
 SR = 44100
-DUR = 15.0
+DUR = 15.0   # set per film in the main loop below
 N = int(SR * DUR)
 BPM = 120
 BEAT = 60 / BPM
@@ -32,6 +33,7 @@ class Mix:
     def __init__(self, seed):
         self.music = np.zeros(N); self.sfx = np.zeros(N); self.vo = np.zeros(N)
         self.rng = np.random.default_rng(seed)
+        self.pump_from = 0.0   # the kick-style sidechain pump only starts here (the brand film is calm until its burst)
 
     def noise(self, dur): return self.rng.standard_normal(int(SR * dur))
 
@@ -166,6 +168,45 @@ class Mix:
         f = np.geomspace(300, 60, n) if down else np.geomspace(60, 300, n)
         self.put(self.sfx, lp(self.tone(f, 0.7, 0.01, 0.5, "saw"), 1200), t, g)
 
+    def drone(self, t0, t1, freqs, amp, g=0.1, cutoff=500):
+        """dark ambient drone: detuned saws through a low-pass; amp(t) shapes it over time"""
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR
+        x = sum(2 * ((f * (1 + d) * tt + 0.17 * k) % 1) - 1 for k, f in enumerate(freqs) for d in (-0.004, 0.0, 0.004))
+        x = lp(x, cutoff) + 0.5 * sum(np.sin(2 * np.pi * f * 0.5 * tt) for f in freqs[:1])
+        self.put(self.music, x * amp(tt + t0) * g, t0)
+
+    def swell(self, t0, t1, notes, peak, g=0.05, bright=2400):
+        """soft chord that swells in to `peak` and rings out to t1"""
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR + t0
+        x = sum(2 * ((midi(nn) * (1 + d) * (tt - t0) + 0.31 * k) % 1) - 1 for k, nn in enumerate(notes) for d in (-0.005, 0.0, 0.005))
+        x = lp(x, bright) + 0.4 * sum(np.sin(2 * np.pi * midi(nn) * (tt - t0)) for nn in notes)
+        e = np.where(tt < peak, ((tt - t0) / max(peak - t0, 1e-3)) ** 2.2, np.exp(-(tt - peak) / 1.6))
+        self.put(self.music, x * e * g, t0)
+
+    def tick(self, t, g=0.12, f=None):
+        """glitchy digital tick: a bright click plus a tiny bit-crushed blip"""
+        self.click(t, g)
+        f = f or float(self.rng.uniform(1800, 5200))
+        n = int(SR * 0.018); tt = np.arange(n) / SR
+        b = np.sign(np.sin(2 * np.pi * f * tt)) * env(n, 0.0005, 0.006)
+        self.put(self.sfx, b, t, g * 0.7)
+
+    def beep(self, t, f=360, g=0.07, dur=0.09):
+        n = int(SR * dur); tt = np.arange(n) / SR
+        self.put(self.sfx, lp(np.sign(np.sin(2 * np.pi * f * tt)), 2200) * env(n, 0.002, dur * 0.5), t, g)
+
+    def shimmer(self, t, dur=1.0, g=0.1):
+        """bright rising sparkle wash (the line drawing)"""
+        n = int(SR * dur)
+        w = hp(self.noise(dur), 5000) * hann(n) ** 1.5
+        self.put(self.sfx, w, t, g)
+        for k in range(10):
+            self.ping(t + dur * k / 10, 88 + [0, 4, 7, 11, 12, 16, 19, 23, 24, 28][k], g * 0.5, 0.22)
+
+    def sub_pulse(self, t, g=0.3, dur=1.2):
+        n = int(SR * dur)
+        self.put(self.sfx, lp(self.tone(np.linspace(70, 38, n), dur, 0.01, dur * 0.45), 200), t, g)
+
     # ---------------- the beat ----------------
     PROG = [(52, (64, 68, 71)), (59, (63, 66, 71)), (49, (61, 64, 68)), (57, (61, 64, 69))]  # E B C#m A
 
@@ -225,7 +266,7 @@ class Mix:
         talk = np.convolve(talk, np.ones(hold), "same") > 0
         e = np.clip(lp(talk.astype(float), 6), 0, 1)
         # sidechain pump from the kick feel (every beat) plus ducking under the voice
-        pump = 1 - 0.25 * np.exp(-((T % BEAT) / 0.09))
+        pump = 1 - 0.25 * np.exp(-((T % BEAT) / 0.09)) * (T >= self.pump_from)
         music = self.music * pump * (1 - 0.68 * e)
         # take the vocal range out of the music while she talks, so the words cut through
         scoop = music - 0.6 * e * bp(music, 900, 4000)
@@ -243,7 +284,7 @@ class Mix:
         print("wrote", os.path.normpath(out))
 
 
-# ================= the four videos =================
+# ================= the videos =================
 def spin360(m, M):
     m.beat(0.0, M["spin"], intensity=lambda t: 0.3 + 0.2 * (t / M["spin"]))                       # filtered intro
     m.beat(M["spin"], DUR, intensity=lambda t: 0.85 if t < M["slowmo"] else 1.0,
@@ -312,12 +353,83 @@ def qr(m, M):
     m.success(M["price"] + 0.1, 0.12); m.sparkle(M["price"] + 0.8, 0.05)
     m.pop(M["cta"], 500, 1500, 0.2); m.ping(M["cta"] + 0.05, 88, 0.12)
 
-BUILD = {"spinpix-360": spin360, "spinpix-quiz": quiz, "spinpix-montage": montage, "spinpix-qr": qr}
+def brand(m, M):
+    """spinpix-brand: dark tension -> hush -> swelling chord -> calm typing -> party burst. Voice lines: 1.4 / 4.4 / 8.0 / 10.6 / 12.2 / 15.2 / 18.4"""
+    m.pump_from = M["burst"]
+    E1 = midi(28)
+    # --- dark drone, building through the chaos, gone at the hush
+    def d_amp(t):
+        up = np.clip((t - 0.3) / 1.2, 0, 1) * (0.5 + 0.5 * np.clip((t - M["chaos"]) / (M["hush"] - M["chaos"]), 0, 1))
+        cut = 1 - np.clip((t - (M["hush"] - 0.08)) / 0.12, 0, 1)
+        return up * cut * (0.8 + 0.2 * np.sin(2 * np.pi * 0.25 * t))
+    m.drone(0.2, M["hush"] + 0.1, [E1, E1 * 1.5, E1 * 2.38], d_amp, 0.1, 380)
+    # a dissonant second layer creeps in with the chaos
+    m.drone(M["chaos"], M["hush"] + 0.1, [midi(41), midi(47.5)], lambda t: np.clip((t - M["chaos"]) / 2.5, 0, 1) ** 1.5 * (1 - np.clip((t - (M["hush"] - 0.08)) / 0.12, 0, 1)), 0.06, 900)
+    # --- the line, then the branches
+    m.shimmer(M["line"], 1.0, 0.11); m.ping(M["line"] + 0.05, 96, 0.07, 0.6)
+    m.whoosh(M["split"] + 0.1, 0.7, 400, 4500, 0.12)
+    for i in range(6):
+        m.pop(M["split"] + i * 0.18 + 0.6, 500 + 60 * i, 1100 + 80 * i, 0.07)
+    # glitchy ticks: sparse at first, then accelerating through the chaos
+    t = M["split"] + 0.4
+    while t < M["chaos"]:
+        m.tick(t, 0.05 + 0.04 * (t - M["split"]) / 3); t += float(m.rng.uniform(0.35, 0.8))
+    t = M["chaos"]
+    while t < M["hush"] - 0.05:
+        p = (t - M["chaos"]) / (M["hush"] - M["chaos"])
+        m.tick(t, 0.07 + 0.2 * p)
+        t += max(0.05, 0.32 * (1 - p) ** 1.5 + 0.05) * float(m.rng.uniform(0.7, 1.3))
+    # "Is my date free?" blinks red: a low beep on each blink
+    for k in range(int((M["hush"] - M["chaos"]) / 0.4)):
+        p = k * 0.4 / (M["hush"] - M["chaos"])
+        m.beep(M["chaos"] + k * 0.4, 330, 0.05 + 0.05 * p)
+    m.riser(M["hush"] - 0.05, 1.2, 0.1)
+    # --- the hush: near silence, then everything is pulled to the centre
+    m.whoosh(M["hush"] + 0.45, 0.7, 5000, 300, 0.1)
+    m.sub_pulse(M["hush"] + 0.1, 0.12, 1.0)
+    # --- loading ring: small ticks that climb
+    k = 0; t = M["ring"] + 0.1
+    while t < M["bloom"] - 0.05:
+        p = (t - M["ring"]) / (M["bloom"] - M["ring"]); m.pop(t, 700 + 900 * p, 900 + 1100 * p, 0.045 + 0.05 * p); t += 0.14 - 0.06 * p; k += 1
+    m.riser(M["bloom"], 1.5, 0.12)
+    # --- the swelling chord under the ring, bloom and name (E major add9)
+    m.swell(M["ring"], M["prompt"] + 1.0, (40, 52, 59, 64, 66, 71), M["name"] - 0.25, 0.045, 1800)
+    m.swell(M["bloom"] - 0.4, M["prompt"] + 1.0, (68, 71, 76, 80), M["name"] - 0.2, 0.02, 2500)
+    # --- orb bloom, then the name
+    m.thud(M["bloom"], 0.45, 110, 38); m.sparkle(M["bloom"] + 0.02, 0.07, 7, 79); m.shimmer(M["bloom"] + 0.05, 0.9, 0.06)
+    m.ping(M["name"] - 0.05, 88, 0.06, 0.8); m.sparkle(M["name"] - 0.05, 0.025, 5, 88)
+    # --- the prompt: whoosh in, typing clicks, send
+    m.whoosh(M["prompt"] + 0.1, 0.6, 500, 4000, 0.1)
+    m.pad(M["prompt"], (64, 68, 71, 75), 3.0, 0.02, 1400)
+    prompt = "Our wedding · Sat 12 June · 120 guests"
+    n = len(prompt)
+    for k in range(n):
+        if prompt[k] == " ": continue
+        tk = M["type"] + k * (M["typeEnd"] - M["type"]) / n + float(m.rng.uniform(-0.01, 0.01))
+        m.click(tk, 0.2 + 0.08 * float(m.rng.random())); m.put(m.sfx, m.tone(float(m.rng.uniform(900, 1300)), 0.025, 0.0005, 0.01), tk, 0.05)
+    m.tap(M["send"], 0.35); m.ping(M["send"] + 0.04, 91, 0.1, 0.4); m.whoosh(M["send"] + 0.5, 0.6, 300, 6000, 0.12)
+    m.riser(M["burst"], M["burst"] - M["send"], 0.3)
+    # --- the burst: star flash, huge impact, cards fly out, confetti, then the party beat
+    m.beat(M["burst"], M["end"], intensity=lambda t: 0.95)
+    m.beat(M["end"], DUR, intensity=lambda t: 1.0)
+    m.impact(M["burst"], 0.95); m.flash(M["burst"], 0.2); m.confetti(M["burst"] + 0.02, 0.7, rustle=2.0)
+    m.whoosh(M["burst"] + 0.25, 0.7, 300, 7000, 0.3); m.sparkle(M["burst"] + 0.05, 0.08, 7, 86)
+    for k in range(8):
+        m.pop(M["burst"] + 0.05 + k * 0.035, 400 + 90 * k, 1000 + 160 * k, 0.12)
+    m.shutter(M["burst"] + 0.02, 0.3)
+    # --- end card
+    m.riser(M["end"], 0.6, 0.2); m.impact(M["end"], 0.8); m.flash(M["end"], 0.12); m.sparkle(M["end"] + 0.05, 0.09, 7, 84); m.shimmer(M["end"] + 0.1, 0.8, 0.07)
+    m.ping(M["end"] + 0.35, 83, 0.1); m.neon_buzz(M["end"] + 0.35, 0.4, 0.06)
+    m.neon_buzz(M["fun"], 0.4, 0.08); m.pop(M["fun"], 400, 1200, 0.2); m.sparkle(M["fun"] + 0.1, 0.06)
+    m.pop(M["cta"], 500, 1500, 0.2); m.ping(M["cta"] + 0.05, 88, 0.12); m.sparkle(M["cta"] + 0.15, 0.05, 5, 91)
+
+BUILD = {"spinpix-360": spin360, "spinpix-quiz": quiz, "spinpix-montage": montage, "spinpix-qr": qr, "spinpix-brand": brand}
 
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "all"
     for i, fl in enumerate(FILMS):
         if which not in ("all", fl["id"]): continue
+        DUR = float(fl.get("seconds", 15)); N = int(SR * DUR)   # each film's own length
         m = Mix(seed=11 + i)
         BUILD[fl["id"]](m, fl["marks"])
         m.voice(fl["id"], fl["voiceStart"])

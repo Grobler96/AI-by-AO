@@ -15,7 +15,8 @@ rec = sherpa_onnx.OfflineRecognizer.from_whisper(
 
 # Whisper writes numbers as digits and brand names as it hears them, so both sides are normalised.
 SAME = {"360": "three sixty", "35": "thirty five", "£35": "thirty five pounds", "spin pics": "spinpix", "spin pix": "spinpix", "spinpics": "spinpix",
-        "u k": "uk", "q r": "qr", "a o": "ao", "slomo": "slow mo", "slowmo": "slow mo", "spin picks": "spinpix", "dues": "dos", "do's": "dos"}
+        "u k": "uk", "q r": "qr", "a o": "ao", "slomo": "slow mo", "slowmo": "slow mo", "spin picks": "spinpix", "dues": "dos", "do's": "dos",
+        "spinpixuk": "spinpix uk", "spenpax": "spinpix", "meat": "meet"}  # Whisper hears "meet" as its homophone "meat", and runs the brand name together
 def norm(s):
     s = re.sub(r"\[\[([A-Z])\]\]", r"\1", s).lower().replace("-", " ").replace(".", " ")
     s = re.sub(r"[^a-z0-9£' ]", " ", s)

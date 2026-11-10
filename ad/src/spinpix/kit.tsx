@@ -7,11 +7,13 @@ import voiceDurations from "../voice-durations.json";
 /* Shared parts for the SpinPix UK videos: backdrop, neon type, wordmark, end card, captions, confetti, flashes. */
 
 export const FPS = 30;
-export const DURATION = 15 * FPS;
+export const DURATION = 15 * FPS; // default length; a film can set its own with "seconds" in spinpix.json
 export const spinpixFilms = films;
 
-export type Film = (typeof films)[number] & { caption?: Record<string, string>; captionOff?: string[]; marks: Record<string, unknown> };
+export type Film = (typeof films)[number] & { seconds?: number; caption?: Record<string, string>; captionOff?: string[]; marks: Record<string, unknown> };
 export const film = (id: string) => (films.find((f) => f.id === id) ?? films[0]) as Film;
+/** a film's length in frames: its own "seconds", or 15s */
+export const filmFrames = (id: string) => Math.round((film(id).seconds ?? DURATION / FPS) * FPS);
 
 export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 export const ez = Easing.bezier(0.76, 0, 0.24, 1);
@@ -242,7 +244,9 @@ const wordStarts = (words: string[]) => {
   return w.map((x) => { const s = acc / total; acc += x; return s; });
 };
 
-export const SpinCaptions: React.FC<{ id: string; bottom?: number; size?: number }> = ({ id, bottom = 170, size = 80 }) => {
+/** `subtle` = smaller, lighter captions with a soft glow instead of the neon pop (for the calmer brand film). */
+export const SpinCaptions: React.FC<{ id: string; bottom?: number; size?: number; subtle?: boolean }> = ({ id, bottom = 170, size, subtle = false }) => {
+  size = size ?? (subtle ? 50 : 80);
   const t = useT();
   const fl = film(id);
   const voice = fl.voice as Record<string, string>;
@@ -258,11 +262,14 @@ export const SpinCaptions: React.FC<{ id: string; bottom?: number; size?: number
   const fadeIn = interpolate(t, [s - 0.05, s + 0.08], [0, 1], clamp);
   return (
     <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: bottom, pointerEvents: "none" }}>
-      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 480, background: "linear-gradient(180deg,transparent,rgba(7,5,12,.85))" }} />
-      <div style={{ position: "relative", width: 960, textAlign: "center", fontFamily: round, fontWeight: 700, fontSize: size, lineHeight: 1.15, color: "#fff", opacity: fadeIn, transform: `translateY(${(1 - fadeIn) * 20}px)` }}>
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: subtle ? 360 : 480, background: `linear-gradient(180deg,transparent,rgba(7,5,12,${subtle ? 0.6 : 0.85}))` }} />
+      <div style={{ position: "relative", width: 960, textAlign: "center", fontFamily: round, fontWeight: subtle ? 600 : 700, fontSize: size, lineHeight: subtle ? 1.25 : 1.15, color: "#fff", opacity: fadeIn, transform: `translateY(${(1 - fadeIn) * 20}px)` }}>
         {words.map((w, i) => {
           const on = i === cur;
           const popIn = interpolate(p - ws[i], [0, 0.06], [0.7, 1], clamp);
+          if (subtle) return (
+            <span key={i} style={{ display: "inline-block", margin: "0 7px", opacity: i <= cur ? 1 : 0.38, color: on ? "#fff" : "#f1e4f5", textShadow: on ? "0 0 16px rgba(255,92,192,.6), 0 2px 12px rgba(0,0,0,.8)" : "0 2px 12px rgba(0,0,0,.8)" }}>{w}</span>
+          );
           return (
             <span key={i} style={{ display: "inline-block", marginRight: 20, opacity: i <= cur ? 1 : 0.3, color: on ? "#fff" : i < cur ? "#ffe3f4" : "#fff", textShadow: on ? neon(SP.pink, 0.9) : "0 4px 24px rgba(0,0,0,.8)", transform: on ? `scale(${1.08 * popIn}) rotate(-2deg)` : "none" }}>{w}</span>
           );
