@@ -64,3 +64,15 @@ A film's length is its `"seconds"` in spinpix.json (default 15); the composition
 Whisper (`sherpa-onnx-whisper-base.en`) comes from the k2-fsa/sherpa-onnx GitHub releases (`asr-models`); point `WHISPER_DIR` at it. Spelled-out letters work as before (`[[U]] [[K]]`, `[[Q]] [[R]]`). Where the spoken words differ from what should be on screen (e.g. "three-sixty" vs "360"), `caption` in spinpix.json overrides the caption text, and `captionOff` hides captions for lines already shown as big on-screen type.
 
 To use real event photos or video instead of the drawn booths, drop them in `public/spinpix/` and swap the shape art for Remotion's `<Img>` or `<OffthreadVideo>` in the scene that needs it.
+
+## Rave advert (`rave-leeds`)
+
+A 23-second vertical advert for United Sounds Event 3 at Beaverworks, Leeds (Sat 5 Dec 2026, 6pm–2am, bassline / house / harder rooms). It has its own look, separate from the AI by AO and SpinPix ads: `src/theme-rave.ts` (acid lime, UV purple, orange, Anton type), code in `src/rave/RaveAd.tsx`, copy, voice lines and timing marks in `src/rave/rave.json`.
+
+```
+python audio/make_voice.py rave-leeds      # Kokoro bm_george at 1.1x
+python audio/check_voice.py rave-leeds
+python audio/make_audio_rave.py            # intro riser, then 138 bpm bassline, 126 bpm house, 170 bpm hardcore, 140 bpm finale
+python audio/check_mix.py rave-leeds
+npm run render -- rave-leeds               # -> out/rave-leeds.mp4
+```

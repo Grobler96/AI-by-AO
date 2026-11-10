@@ -1,5 +1,5 @@
 """Generates the voiceover lines for an ad with Kokoro (pip install kokoro-onnx soundfile).
-Reads the lines from ../src/ads.json, ../src/stories.json and ../src/spinpix/spinpix.json, writes vo/<id>/a.wav, b.wav, ... and each line's length to ../src/voice-durations.json (used for captions).
+Reads the lines from ../src/ads.json, ../src/stories.json, ../src/spinpix/spinpix.json and ../src/rave/rave.json, writes vo/<id>/a.wav, b.wav, ... and each line's length to ../src/voice-durations.json (used for captions).
 Usage: python make_voice.py [ad id | all] [voice]   (default: all ads, voice af_heart)
 An entry can set its own "voiceName" and "voiceSpeed" (the starting speed, default 1.08); a voice given on the command line wins.
 Model files (kokoro-v1.0.int8.onnx, voices-v1.0.bin) come from github.com/thewh1teagle/kokoro-onnx releases (model-files-v1.0)."""
@@ -9,7 +9,7 @@ from kokoro_onnx import Kokoro
 
 here = os.path.dirname(os.path.abspath(__file__))
 src = os.path.join(here, "..", "src")
-ads = json.load(open(os.path.join(src, "ads.json"))) + json.load(open(os.path.join(src, "stories.json"))) + json.load(open(os.path.join(src, "spinpix", "spinpix.json")))
+ads = json.load(open(os.path.join(src, "ads.json"))) + json.load(open(os.path.join(src, "stories.json"))) + json.load(open(os.path.join(src, "spinpix", "spinpix.json"))) + json.load(open(os.path.join(src, "rave", "rave.json")))
 durations_path = os.path.join(src, "voice-durations.json")
 durations = json.load(open(durations_path))
 which = sys.argv[1] if len(sys.argv) > 1 else "all"

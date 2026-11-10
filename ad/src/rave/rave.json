@@ -1,0 +1,33 @@
+[
+  {
+    "id": "rave-leeds",
+    "title": "United Sounds Event 3, Beaverworks Leeds",
+    "seconds": 23,
+    "voiceName": "bm_george",
+    "voiceSpeed": 1.1,
+    "voice": {
+      "a": "United Sounds is back. Event three!",
+      "b": "Pure bassline!",
+      "c": "House music!",
+      "d": "Harder!",
+      "e": "Three rooms. One night. Saturday the fifth of December.",
+      "f": "Beaverworks, Leeds. Tickets on Skiddle."
+    },
+    "voiceStart": { "a": 0.4, "b": 3.53, "c": 6.78, "d": 10.72, "e": 16.25, "f": 19.7 },
+    "voiceMax": { "a": 2.6, "b": 1.4, "c": 1.4, "d": 1.1, "e": 3.4, "f": 2.9 },
+    "bpm": { "bass": 138, "house": 126, "harder": 170, "finale": 140 },
+    "marks": {
+      "title": 0.3,
+      "event": 1.9,
+      "drop": 3.2,
+      "house": 6.678,
+      "harder": 10.488,
+      "finale": 16.135,
+      "date": 17.6,
+      "venue": 19.7,
+      "times": 20.3,
+      "ticket": 21.0,
+      "small": 21.6
+    }
+  }
+]
