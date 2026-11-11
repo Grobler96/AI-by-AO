@@ -37,7 +37,7 @@ Keep typed lines short (about 35 characters) and the spoken lines close to the l
 
 ## SpinPix UK client videos
 
-Four 15-second vertical promos for SpinPix UK (spinpixuk.co.uk), a photo booth hire client. They use their own brand, not AI by AO's: `src/theme-spinpix.ts` holds the SpinPix palette (near-black, hot pink, electric blue, violet neon) and fonts (Bungee + Fredoka, bundled in `public/fonts`). `src/theme.ts` is untouched.
+Four 15-second vertical promos, plus a 22-second brand film, for SpinPix UK (spinpixuk.co.uk), a photo booth hire client. They use their own brand, not AI by AO's: `src/theme-spinpix.ts` holds the SpinPix palette (near-black, hot pink, electric blue, violet neon) and fonts (Bungee + Fredoka, bundled in `public/fonts`). `src/theme.ts` is untouched.
 
 | id | what happens |
 | --- | --- |
@@ -45,6 +45,8 @@ Four 15-second vertical promos for SpinPix UK (spinpixuk.co.uk), a photo booth h
 | `spinpix-quiz` | A booth-finder quiz on a phone picks the Magic Mirror for a wedding and the 360 Spin for a prom, then the date picker says "Your date is free ✓". |
 | `spinpix-montage` | Beat-synced cuts through weddings, proms, parties and work events, then the hero shape morphs through the Magic Mirror, Selfie Pod, 360 Spin, Classic Booth and Props Table. |
 | `spinpix-qr` | Guests' phones go up, they scan the table card (a real QR code for spinpixuk.co.uk, `src/spinpix/qr.json`), photos fly into one private gallery. Only £35. |
+| `spinpix-brand` | 22s concept ad for the whole business, in a premium, minimal style: a thin pink line splits into supplier nodes, chaos builds around "Is my date free?", a hush pulls everything into a loading ring that blooms into a neon orb and the name, a "What's the occasion?" prompt types out and the orb sends it, then a burst of service cards and the end card. Calmer voice (af_bella at 1.04x), subtler captions. |
+| `spinpix-launch` | 25s launch film cut from seven Veo 3 clips (`public/clips/spinpix-launch/`): spark, family team and Magic Mirror, 360 Spin, Selfie Pod, prints, props, then the glowing-screen payoff into the end card. Cuts sit on the 120 bpm grid; labels, grade, grain and end card are done in `src/spinpix/Launch.tsx`. The Veo prompts are in `veo3-prompts.md`. |
 
 Code is in `src/spinpix/` (one file per video, shared parts in `kit.tsx`). Copy, voice lines and every timing mark are in `src/spinpix/spinpix.json`; the animation and the sound both read the same marks.
 
@@ -58,6 +60,20 @@ node scripts/stills.mjs spinpix-360             # contact sheet of stills across
 npm run render -- spinpix-360                   # -> out/spinpix-360.mp4
 ```
 
+A film's length is its `"seconds"` in spinpix.json (default 15); the compositions and `make_audio_spinpix.py` both read it. Set `BROWSER` to a Chromium headless shell for `stills.mjs` and `npm run render` if Remotion can't download one.
+
 Whisper (`sherpa-onnx-whisper-base.en`) comes from the k2-fsa/sherpa-onnx GitHub releases (`asr-models`); point `WHISPER_DIR` at it. Spelled-out letters work as before (`[[U]] [[K]]`, `[[Q]] [[R]]`). Where the spoken words differ from what should be on screen (e.g. "three-sixty" vs "360"), `caption` in spinpix.json overrides the caption text, and `captionOff` hides captions for lines already shown as big on-screen type.
 
 To use real event photos or video instead of the drawn booths, drop them in `public/spinpix/` and swap the shape art for Remotion's `<Img>` or `<OffthreadVideo>` in the scene that needs it.
+
+## Rave advert (`rave-leeds`)
+
+A 23-second vertical advert for United Sounds Event 3 at Beaverworks, Leeds (Sat 5 Dec 2026, 6pm–2am, bassline / house / harder rooms). It has its own look, separate from the AI by AO and SpinPix ads: `src/theme-rave.ts` (acid lime, UV purple, orange, Anton type), code in `src/rave/RaveAd.tsx`, copy, voice lines and timing marks in `src/rave/rave.json`.
+
+```
+python audio/make_voice.py rave-leeds      # Kokoro bm_george at 1.1x
+python audio/check_voice.py rave-leeds
+python audio/make_audio_rave.py            # intro riser, then 138 bpm bassline, 126 bpm house, 170 bpm hardcore, 140 bpm finale
+python audio/check_mix.py rave-leeds
+npm run render -- rave-leeds               # -> out/rave-leeds.mp4
+```

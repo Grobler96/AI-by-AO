@@ -3,6 +3,7 @@ import { Ad, DURATION, FPS, ads } from "./Ad";
 import { PhoneStory, STORY_DURATION, STORY_FPS, stories } from "./PhoneStory";
 import { BrandFilm, BRAND_DURATION, BRAND_FPS } from "./BrandFilm";
 import { SpinPixFilms } from "./spinpix/SpinPixRoot";
+import { RAVE_FPS, RAVE_FRAMES, RAVE_ID, RaveAd } from "./rave/RaveAd";
 
 export const Root = () => (
   <>
@@ -17,5 +18,6 @@ export const Root = () => (
       )
     )}
     <SpinPixFilms />
+    <Composition id={RAVE_ID} component={RaveAd} durationInFrames={RAVE_FRAMES} fps={RAVE_FPS} width={1080} height={1920} />
   </>
 );

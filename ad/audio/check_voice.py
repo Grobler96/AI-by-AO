@@ -7,7 +7,7 @@ import numpy as np, soundfile as sf, sherpa_onnx
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "..", "src")
-ALL = json.load(open(os.path.join(SRC, "ads.json"))) + json.load(open(os.path.join(SRC, "stories.json"))) + json.load(open(os.path.join(SRC, "spinpix", "spinpix.json")))
+ALL = json.load(open(os.path.join(SRC, "ads.json"))) + json.load(open(os.path.join(SRC, "stories.json"))) + json.load(open(os.path.join(SRC, "spinpix", "spinpix.json"))) + json.load(open(os.path.join(SRC, "rave", "rave.json")))
 W = os.environ.get("WHISPER_DIR", "sherpa-onnx-whisper-base.en")
 rec = sherpa_onnx.OfflineRecognizer.from_whisper(
     encoder=os.path.join(W, "base.en-encoder.int8.onnx"), decoder=os.path.join(W, "base.en-decoder.int8.onnx"),
@@ -15,7 +15,8 @@ rec = sherpa_onnx.OfflineRecognizer.from_whisper(
 
 # Whisper writes numbers as digits and brand names as it hears them, so both sides are normalised.
 SAME = {"360": "three sixty", "35": "thirty five", "£35": "thirty five pounds", "spin pics": "spinpix", "spin pix": "spinpix", "spinpics": "spinpix",
-        "u k": "uk", "q r": "qr", "a o": "ao", "slomo": "slow mo", "slowmo": "slow mo", "spin picks": "spinpix", "dues": "dos", "do's": "dos"}
+        "u k": "uk", "q r": "qr", "a o": "ao", "slomo": "slow mo", "slowmo": "slow mo", "spin picks": "spinpix", "dues": "dos", "do's": "dos",
+        "spinpixuk": "spinpix uk", "base line": "bassline", "baseline": "bassline", "5th": "fifth", "leads": "leeds", "skittle": "skiddle", "skidel": "skiddle", "bass line": "bassline", "spenpax": "spinpix", "meat": "meet"}  # Whisper hears "meet" as its homophone "meat", and runs the brand name together
 def norm(s):
     s = re.sub(r"\[\[([A-Z])\]\]", r"\1", s).lower().replace("-", " ").replace(".", " ")
     s = re.sub(r"[^a-z0-9£' ]", " ", s)
