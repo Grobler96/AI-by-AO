@@ -55,7 +55,7 @@ If a clip shows text or logos anyway, add "the screen is completely blank" to th
 **Shot 7: the family team**
 > Cinematic commercial, shot on ARRI Alexa 35 with a 35mm anamorphic lens, shallow depth of field, soft volumetric haze, glossy black reflective surfaces, hot-pink key glow with violet and electric-blue rim light, subtle film grain, slow smooth motion, 9:16 vertical. Gentle handheld-smooth shot of a small friendly team (two women and a man in black T-shirts) setting up a magic mirror in an empty ballroom before an event, fairy lights glowing, warm and calm, one of them smiles at the camera. The mirror's pink LED frame glows softly. Audio: quiet room tone, a soft clunk as the mirror is set down. No music, no speech. No text, no logos on the shirts.
 
-*VO:* "Family-run in West Yorkshire. Serving the whole UK." *Text:* FAMILY-RUN · WEST YORKSHIRE · UK-WIDE
+*VO:* "Family-run in West Yorkshire." *Text:* FAMILY-RUN · WEST YORKSHIRE
 
 **Shot 8: the payoff**
 > Cinematic commercial, shot on ARRI Alexa 35 with a 35mm anamorphic lens, shallow depth of field, soft volumetric haze, glossy black reflective surfaces, hot-pink key glow with violet and electric-blue rim light, subtle film grain, slow smooth motion, 9:16 vertical. Slow push-in on a tablet standing on a polished black table, its blank screen glowing soft pink-white. Beside it a glass sphere releases drifting pink, violet and blue light particles. The camera pushes in until the glowing screen fills the whole frame, a clean luminous surface ready for a title. Audio: a soft rising whoosh and a sparkle. No music, no speech. The screen is completely blank, no text, no logos.

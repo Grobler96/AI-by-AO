@@ -33,6 +33,8 @@ class Mix:
     def __init__(self, seed):
         self.music = np.zeros(N); self.sfx = np.zeros(N); self.vo = np.zeros(N)
         self.rng = np.random.default_rng(seed)
+        self.vo_gain = 1.6        # how loud the voice sits in the final mix
+        self.voice_clean = False   # True: natural voice processing (no saturation) instead of the punchy default
         self.pump_from = 0.0   # the kick-style sidechain pump only starts here (the brand film is calm until its burst)
 
     def noise(self, dur): return self.rng.standard_normal(int(SR * dur))
@@ -250,12 +252,23 @@ class Mix:
             with wave.open(path) as w:
                 x = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(float) / 32768
                 sr = w.getframerate()
-            x = hp(resample_poly(x, SR, sr), 100)
-            x = np.tanh(x * 2.5) / np.tanh(2.5)                # a little bite so it sits on top of the beat
-            x = x / np.max(np.abs(x)) * 0.85
-            n = int(SR * 0.22)
-            ir = lp(self.rng.standard_normal(n) * np.exp(-np.arange(n) / (SR * 0.05)), 6000)
-            x = x + 0.1 * np.convolve(x, ir / np.sqrt(np.sum(ir ** 2)))[: len(x)]
+            x = hp(resample_poly(x, SR, sr), 100 if not self.voice_clean else 80)
+            if self.voice_clean:
+                # natural: no saturation. A touch of low-end warmth, gentle presence, a small room, and slow level-riding so quiet words aren't lost
+                x = x + 0.18 * lp(x, 260) + 0.1 * bp(x, 2200, 5200)
+                env_ = lp(np.abs(x), 8) + 0.02
+                x = x * np.clip(0.18 / env_, 0.6, 2.2)
+                x = np.tanh(x * 1.1) / np.tanh(1.1)
+                x = x / np.max(np.abs(x)) * 0.85
+                n = int(SR * 0.3)
+                ir = lp(self.rng.standard_normal(n) * np.exp(-np.arange(n) / (SR * 0.085)), 5500)
+                x = x + 0.16 * np.convolve(x, ir / np.sqrt(np.sum(ir ** 2)))[: len(x)]
+            else:
+                x = np.tanh(x * 2.5) / np.tanh(2.5)                # a little bite so it sits on top of the beat
+                x = x / np.max(np.abs(x)) * 0.85
+                n = int(SR * 0.22)
+                ir = lp(self.rng.standard_normal(n) * np.exp(-np.arange(n) / (SR * 0.05)), 6000)
+                x = x + 0.1 * np.convolve(x, ir / np.sqrt(np.sum(ir ** 2)))[: len(x)]
             self.put(self.vo, x, t0)
 
     def write(self, fid):
@@ -270,7 +283,7 @@ class Mix:
         music = self.music * pump * (1 - 0.68 * e)
         # take the vocal range out of the music while she talks, so the words cut through
         scoop = music - 0.6 * e * bp(music, 900, 4000)
-        mix = scoop * 0.8 + self.sfx * (1 - 0.55 * e) + self.vo * 1.6
+        mix = scoop * 0.8 + self.sfx * (1 - 0.55 * e) + self.vo * self.vo_gain
         mix *= np.minimum(T / 0.05, 1) * np.minimum((DUR - T) / 0.6, 1)
         mix = np.tanh(mix * 0.9)
         mix = mix / np.max(np.abs(mix)) * 0.84
@@ -423,23 +436,80 @@ def brand(m, M):
     m.neon_buzz(M["fun"], 0.4, 0.08); m.pop(M["fun"], 400, 1200, 0.2); m.sparkle(M["fun"] + 0.1, 0.06)
     m.pop(M["cta"], 500, 1500, 0.2); m.ping(M["cta"] + 0.05, 88, 0.12); m.sparkle(M["cta"] + 0.15, 0.05, 5, 91)
 
+# Uplifting dance score for the launch film: vi-IV-I-V in G (Em C G D), 120 bpm to match the cuts.
+PROG_UP = [(40, (64, 67, 71)), (36, (60, 64, 67)), (43, (59, 62, 67)), (38, (62, 66, 69))]
+
+def supersaw(m, t, notes, dur, g, bright=6000, rel=0.45):
+    """bright stack of detuned saws (the classic uplifting-dance chord sound)"""
+    n = int(SR * dur); tt = np.arange(n) / SR
+    x = 0
+    for nn in notes:
+        f = midi(nn)
+        for d in (-0.012, -0.006, 0.0, 0.006, 0.012):
+            x = x + 2 * ((f * (1 + d) * tt + float(m.rng.random())) % 1) - 1
+    m.put(m.music, lp(x, bright) * np.minimum(tt / 0.004, 1) * np.exp(-tt / (dur * rel)), t, g)
+
+def snare(m, t, g=0.3):
+    n = int(SR * 0.2)
+    m.put(m.music, bp(m.noise(0.2), 1500, 9000) * env(n, 0.001, 0.07) + 0.6 * m.tone(190, 0.2, 0.001, 0.05), t, g)
+
+def crash(m, t, g=0.12):
+    n = int(SR * 1.6)
+    m.put(m.sfx, hp(m.noise(1.6), 4500) * env(n, 0.002, 0.5), t, g)
+
+def uplift(m, start, end, level_fn, lift=0):
+    """level 1 = kick, hats, bass, pad; 2 adds claps and chord stabs; 3 adds arps, shaker, snare fills and crashes"""
+    beat = 0.5
+    for k in range(int(round((end - start) / beat))):
+        t = start + k * beat; bar, b = divmod(k, 4)
+        root, ch = PROG_UP[bar % 4]; root += lift; ch = tuple(c + lift for c in ch)
+        lv = level_fn(t)
+        m.kick(t, 0.78)
+        m.hat(t + beat / 2, 0.09, True)
+        if lv >= 1:
+            m.hat(t + beat / 4, 0.03); m.hat(t + 3 * beat / 4, 0.03)
+            m.bass(t + beat / 2, root + (12 if b % 2 else 0), 0.2, 0.3)
+            m.bass(t, root, 0.14, 0.2)
+            if b == 0: m.pad(t, tuple(c + 12 for c in ch), 2.0, 0.03, 2600)
+        if lv >= 2:
+            if b in (1, 3): m.clap(t, 0.32)
+            supersaw(m, t + beat / 2, tuple(c + 12 for c in ch), 0.24, 0.05, 5500)
+            if b in (0, 2): supersaw(m, t, tuple(c + 12 for c in ch), 0.16, 0.035, 4500)
+        if lv >= 3:
+            for sx in range(4): m.pluck(t + sx * beat / 4, ch[(k * 4 + sx) % 3] + 24, 0.045, 0.12)
+            for sx in (1, 3): m.hat(t + sx * beat / 4, 0.045)
+            if b == 0 and bar % 4 == 0: crash(m, t, 0.1)
+            if bar % 4 == 3 and b >= 2:
+                for sx in range(4): snare(m, t + sx * beat / 4, 0.08 + 0.05 * sx + 0.05 * (b - 2))
+
 def launch(m, M):
-    """spinpix-launch: Veo footage cut on the 120 bpm grid. Dark riser over the spark, the beat drops on the first cut, breakdown into the payoff, full beat on the wordmark."""
-    m.pump_from = M["drop"]
-    E1 = midi(28)
-    m.drone(0.0, M["drop"] - 0.05, [E1, E1 * 1.5, E1 * 2.38], lambda t: np.clip(t / 2.8, 0, 1) * (1 - np.clip((t - (M["drop"] - 0.2)) / 0.15, 0, 1)), 0.12, 420)
-    m.sub_pulse(M["spark"] - 0.1, 0.25, 1.2)
-    m.ping(M["spark"], 96, 0.1, 0.8); m.sparkle(M["spark"] + 0.05, 0.05, 6, 90); m.shimmer(M["spark"] + 0.2, 1.6, 0.08)
+    """spinpix-launch: Veo footage cut on the 120 bpm grid. A shimmering build over the spark, the beat drops on the first cut, full energy from the 360,
+    a breakdown into the payoff, then everything again one step higher (key lift) on the wordmark."""
+    m.pump_from = M["drop"]; m.voice_clean = True; m.vo_gain = 2.6
+    # intro: a bright, hopeful chord swell and a snare roll build into the drop
+    m.swell(0.0, M["drop"], (52, 59, 64, 67, 71), M["drop"] - 0.1, 0.06, 2600)
+    m.swell(0.4, M["drop"], (71, 74, 79, 83), M["drop"] - 0.1, 0.025, 4200)
+    m.ping(M["spark"], 96, 0.1, 0.8); m.sparkle(M["spark"] + 0.05, 0.06, 6, 90); m.shimmer(M["spark"] + 0.2, 1.6, 0.08)
     m.whoosh(M["spark"] + 1.1, 1.0, 300, 6000, 0.15)                       # the pink smoke floods in
     m.riser(M["drop"] - 0.05, 2.4, 0.3)
-    m.beat(M["drop"], M["cut3"], intensity=lambda t: 0.5)                   # filtered while the team sets up the mirror
-    m.beat(M["cut3"], M["cut8"], intensity=lambda t: 0.85)
-    m.beat(M["cut8"], M["name"], halftime=lambda t: True)                  # breakdown into the payoff
-    m.beat(M["name"], DUR, intensity=lambda t: 1.0)
-    # cuts: whoosh in, thud on the downbeat
-    m.impact(M["drop"], 0.9); m.flash(M["drop"], 0.18)
-    for t, g in ((M["cut3"], 0.5), (M["cut4"], 0.4), (M["cut5"], 0.3), (M["cut6"], 0.3)):
+    t = 2.4; gap = 0.25
+    while t < M["drop"] - 0.12:
+        snare(m, t, 0.07 + 0.25 * (t - 2.4) / 1.1); t += gap; gap = max(0.06, gap * 0.8)
+    # the beat: lighter on the team shot, everything on from the 360
+    uplift(m, M["drop"], M["cut8"], lambda t: 2 if t < M["cut3"] else 3)
+    # breakdown into the payoff: just the pad, arps and a snare roll
+    m.swell(M["cut8"], M["name"], (59, 62, 67, 71, 74), M["name"] - 0.1, 0.06, 3200)
+    for sx in range(8): m.pluck(M["cut8"] + sx * 0.25, (67, 71, 74, 79)[sx % 4] + 12, 0.05, 0.2)
+    t = 20.0; gap = 0.25
+    while t < M["name"] - 0.08:
+        snare(m, t, 0.08 + 0.25 * (t - 20.0)); t += gap; gap = max(0.05, gap * 0.82)
+    # the last section, a tone up (A major / F#m) for the lift
+    uplift(m, M["name"], DUR, lambda t: 3, lift=2)
+    # hits and sound effects on the marks
+    m.impact(M["drop"], 0.9); m.flash(M["drop"], 0.18); crash(m, M["drop"], 0.12)
+    for t, g in ((M["cut3"], 0.5), (M["cut4"], 0.35), (M["cut5"], 0.25), (M["cut6"], 0.25)):
         m.whoosh(t - 0.05, 0.45, 400, 6000, 0.2); m.thud(t, g); m.flash(t, 0.1)
+    crash(m, M["cut3"], 0.1)
     m.sparkle(5.6, 0.06, 6, 86)                                             # the mirror glows, she smiles
     m.riser(M["cut3"], 0.8, 0.2)
     m.shutter(M["flash"], 0.5); m.flash(M["flash"], 0.2)                    # the selfie pod flash
@@ -450,7 +520,7 @@ def launch(m, M):
     for dt in (0.0, 0.3, 0.65): m.pop(M["grab"] + dt, 500 + 200 * dt, 1300 + 300 * dt, 0.14)   # props grabbed
     m.sparkle(M["wand"], 0.08, 7, 86)                                       # the star wand
     m.riser(M["name"], 1.9, 0.35)                                           # payoff: screen fills with light, then the name
-    m.impact(M["name"], 1.0); m.flash(M["name"], 0.2); m.confetti(M["name"] + 0.02, 0.5); m.sparkle(M["name"] + 0.05, 0.1, 7, 84); m.shimmer(M["name"] + 0.1, 0.9, 0.07)
+    m.impact(M["name"], 1.0); m.flash(M["name"], 0.2); m.confetti(M["name"] + 0.02, 0.6); m.sparkle(M["name"] + 0.05, 0.1, 7, 84); m.shimmer(M["name"] + 0.1, 0.9, 0.07); crash(m, M["name"], 0.15)
     m.neon_buzz(M["tag1"], 0.4, 0.07); m.ping(M["tag1"], 83, 0.1)
     m.neon_buzz(M["tag2"], 0.4, 0.08); m.pop(M["tag2"], 400, 1200, 0.2)
     m.pop(M["cta"], 500, 1500, 0.2); m.ping(M["cta"] + 0.05, 88, 0.12); m.sparkle(M["contact"], 0.05, 5, 91)

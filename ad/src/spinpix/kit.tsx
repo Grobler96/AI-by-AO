@@ -145,13 +145,13 @@ export const Cta: React.FC<{ at: number; top: number; label: string; press?: num
 };
 
 /** Phone number and website line under the CTA. */
-export const Contact: React.FC<{ at: number; top: number }> = ({ at, top }) => {
+export const Contact: React.FC<{ at: number; top: number; sub?: string }> = ({ at, top, sub = "spinpixuk.co.uk · West Yorkshire · UK-wide" }) => {
   const t = useT();
   const o = interpolate(t, [at, at + 0.4], [0, 1], clamp);
   return (
     <div style={{ position: "absolute", top, left: 0, right: 0, textAlign: "center", opacity: o, transform: `translateY(${(1 - o) * 30}px)` }}>
       <div style={{ fontFamily: round, fontWeight: 700, fontSize: 60, color: "#fff", textShadow: neon(SP.blue, 0.7) }}>📞 07985 732238</div>
-      <div style={{ fontFamily: round, fontWeight: 600, fontSize: 42, color: SP.muted, marginTop: 8 }}>spinpixuk.co.uk · West Yorkshire · UK-wide</div>
+      <div style={{ fontFamily: round, fontWeight: 600, fontSize: 42, color: SP.muted, marginTop: 8 }}>{sub}</div>
     </div>
   );
 };

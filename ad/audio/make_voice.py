@@ -1,7 +1,7 @@
 """Generates the voiceover lines for an ad with Kokoro (pip install kokoro-onnx soundfile).
 Reads the lines from ../src/ads.json, ../src/stories.json, ../src/spinpix/spinpix.json and ../src/rave/rave.json, writes vo/<id>/a.wav, b.wav, ... and each line's length to ../src/voice-durations.json (used for captions).
 Usage: python make_voice.py [ad id | all] [voice]   (default: all ads, voice af_heart)
-An entry can set its own "voiceName" and "voiceSpeed" (the starting speed, default 1.08); a voice given on the command line wins.
+An entry can set its own "voiceName" (a voice, or a blend like "af_heart:0.6,af_sarah:0.4") and "voiceSpeed" (the starting speed, default 1.08); a voice given on the command line wins.
 Model files (kokoro-v1.0.int8.onnx, voices-v1.0.bin) come from github.com/thewh1teagle/kokoro-onnx releases (model-files-v1.0)."""
 import json, os, re, sys
 import numpy as np, soundfile as sf
@@ -31,10 +31,17 @@ def to_phonemes(text, lang):
         elif p.strip(): out.append(k.tokenizer.phonemize(p.strip(), lang))
     return " ".join(out)
 
+def resolve_voice(name):
+    """A voice name, or a blend such as "af_heart:0.6,af_sarah:0.4" (mixes the voices' style vectors for a more natural, less uniform read)."""
+    if ":" not in name: return name
+    parts = [x.split(":") for x in name.split(",")]
+    return sum(float(w) * k.get_voice_style(v) for v, w in parts) / sum(float(w) for _, w in parts)
+
 for ad in ads:
     if which not in ("all", ad["id"]): continue
-    voice = voice_arg or ad.get("voiceName", "af_heart")
-    lang = "en-us" if voice.startswith("a") else "en-gb"
+    voice_name = voice_arg or ad.get("voiceName", "af_heart")
+    voice = resolve_voice(voice_name)
+    lang = "en-us" if voice_name.startswith("a") else "en-gb"
     outdir = os.path.join(here, "vo", ad["id"]); os.makedirs(outdir, exist_ok=True)
     for key, text in ad["voice"].items():
         spelled = "[[" in text

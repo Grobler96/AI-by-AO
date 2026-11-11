@@ -97,19 +97,19 @@ export const Launch: React.FC = () => {
       <Flashes at={[M.drop, M.cut3, M.cut4, M.cut5, M.cut6]} strength={0.45} />
       <Flashes at={[M.name - 0.05]} strength={0.85} />
       <Label at={M.drop + 0.5} dur={1.9} lines={["MAGIC MIRROR"]} />
-      <Label at={M.drop + 2.6} dur={2.3} lines={["FAMILY-RUN", "WEST YORKSHIRE"]} />
+      <Label at={M.drop + 2.6} dur={2.3} lines={["FAMILY-RUN TEAM"]} />
       <Label at={M.cut3 + 0.3} dur={2.4} lines={["360 SPIN"]} />
       <Label at={M.cut4 + 0.2} dur={2.1} lines={["SELFIE POD"]} />
       <Label at={M.cut5 + 0.2} dur={2.1} lines={["PRINTS · GALLERIES"]} />
       <Label at={M.cut6 + 0.2} dur={2.1} lines={["PROPS"]} />
-      <Label at={M.cut8 + 0.3} dur={1.6} lines={["SERVING THE", "WHOLE UK"]} />
+      <Label at={M.cut8 + 0.3} dur={1.6} lines={["SERVING FROM", "WEST YORKSHIRE"]} />
       {/* end card: the glowing screen darkens to violet under the wordmark */}
       <AbsoluteFill style={{ background: `radial-gradient(75% 48% at 50% 38%, rgba(105,18,120,${0.93 * dim}), rgba(8,3,18,${0.985 * dim}))` }} />
       <Wordmark at={M.name} top={330} scale={0.88} />
       <Neon on={M.tag1} top={780} size={74} color={SP.blue} font={round}>Capture the moment.</Neon>
       <Neon on={M.tag2} top={900} size={140} color={SP.pink}>Spin the<br />fun.</Neon>
       <Cta at={M.cta} top={1290} label="Check my date" />
-      <Contact at={M.contact} top={1480} />
+      <Contact at={M.contact} top={1480} sub="spinpixuk.co.uk · West Yorkshire" />
     </AbsoluteFill>
   );
 };
