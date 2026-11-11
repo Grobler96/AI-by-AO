@@ -423,7 +423,39 @@ def brand(m, M):
     m.neon_buzz(M["fun"], 0.4, 0.08); m.pop(M["fun"], 400, 1200, 0.2); m.sparkle(M["fun"] + 0.1, 0.06)
     m.pop(M["cta"], 500, 1500, 0.2); m.ping(M["cta"] + 0.05, 88, 0.12); m.sparkle(M["cta"] + 0.15, 0.05, 5, 91)
 
-BUILD = {"spinpix-360": spin360, "spinpix-quiz": quiz, "spinpix-montage": montage, "spinpix-qr": qr, "spinpix-brand": brand}
+def launch(m, M):
+    """spinpix-launch: Veo footage cut on the 120 bpm grid. Dark riser over the spark, the beat drops on the first cut, breakdown into the payoff, full beat on the wordmark."""
+    m.pump_from = M["drop"]
+    E1 = midi(28)
+    m.drone(0.0, M["drop"] - 0.05, [E1, E1 * 1.5, E1 * 2.38], lambda t: np.clip(t / 2.8, 0, 1) * (1 - np.clip((t - (M["drop"] - 0.2)) / 0.15, 0, 1)), 0.12, 420)
+    m.sub_pulse(M["spark"] - 0.1, 0.25, 1.2)
+    m.ping(M["spark"], 96, 0.1, 0.8); m.sparkle(M["spark"] + 0.05, 0.05, 6, 90); m.shimmer(M["spark"] + 0.2, 1.6, 0.08)
+    m.whoosh(M["spark"] + 1.1, 1.0, 300, 6000, 0.15)                       # the pink smoke floods in
+    m.riser(M["drop"] - 0.05, 2.4, 0.3)
+    m.beat(M["drop"], M["cut3"], intensity=lambda t: 0.5)                   # filtered while the team sets up the mirror
+    m.beat(M["cut3"], M["cut8"], intensity=lambda t: 0.85)
+    m.beat(M["cut8"], M["name"], halftime=lambda t: True)                  # breakdown into the payoff
+    m.beat(M["name"], DUR, intensity=lambda t: 1.0)
+    # cuts: whoosh in, thud on the downbeat
+    m.impact(M["drop"], 0.9); m.flash(M["drop"], 0.18)
+    for t, g in ((M["cut3"], 0.5), (M["cut4"], 0.4), (M["cut5"], 0.3), (M["cut6"], 0.3)):
+        m.whoosh(t - 0.05, 0.45, 400, 6000, 0.2); m.thud(t, g); m.flash(t, 0.1)
+    m.sparkle(5.6, 0.06, 6, 86)                                             # the mirror glows, she smiles
+    m.riser(M["cut3"], 0.8, 0.2)
+    m.shutter(M["flash"], 0.5); m.flash(M["flash"], 0.2)                    # the selfie pod flash
+    for k in range(18):                                                      # printer whirr
+        m.click(M["printer"] + k * 0.065, 0.12 + 0.05 * (k % 3))
+    n = int(SR * 1.2)
+    m.put(m.sfx, lp(m.tone(np.linspace(170, 260, n), 1.2, 0.1, 0.9, "saw"), 700), M["printer"], 0.1)
+    for dt in (0.0, 0.3, 0.65): m.pop(M["grab"] + dt, 500 + 200 * dt, 1300 + 300 * dt, 0.14)   # props grabbed
+    m.sparkle(M["wand"], 0.08, 7, 86)                                       # the star wand
+    m.riser(M["name"], 1.9, 0.35)                                           # payoff: screen fills with light, then the name
+    m.impact(M["name"], 1.0); m.flash(M["name"], 0.2); m.confetti(M["name"] + 0.02, 0.5); m.sparkle(M["name"] + 0.05, 0.1, 7, 84); m.shimmer(M["name"] + 0.1, 0.9, 0.07)
+    m.neon_buzz(M["tag1"], 0.4, 0.07); m.ping(M["tag1"], 83, 0.1)
+    m.neon_buzz(M["tag2"], 0.4, 0.08); m.pop(M["tag2"], 400, 1200, 0.2)
+    m.pop(M["cta"], 500, 1500, 0.2); m.ping(M["cta"] + 0.05, 88, 0.12); m.sparkle(M["contact"], 0.05, 5, 91)
+
+BUILD = {"spinpix-360": spin360, "spinpix-quiz": quiz, "spinpix-montage": montage, "spinpix-qr": qr, "spinpix-brand": brand, "spinpix-launch": launch}
 
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "all"

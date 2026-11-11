@@ -46,6 +46,7 @@ Four 15-second vertical promos, plus a 22-second brand film, for SpinPix UK (spi
 | `spinpix-montage` | Beat-synced cuts through weddings, proms, parties and work events, then the hero shape morphs through the Magic Mirror, Selfie Pod, 360 Spin, Classic Booth and Props Table. |
 | `spinpix-qr` | Guests' phones go up, they scan the table card (a real QR code for spinpixuk.co.uk, `src/spinpix/qr.json`), photos fly into one private gallery. Only £35. |
 | `spinpix-brand` | 22s concept ad for the whole business, in a premium, minimal style: a thin pink line splits into supplier nodes, chaos builds around "Is my date free?", a hush pulls everything into a loading ring that blooms into a neon orb and the name, a "What's the occasion?" prompt types out and the orb sends it, then a burst of service cards and the end card. Calmer voice (af_bella at 1.04x), subtler captions. |
+| `spinpix-launch` | 25s launch film cut from seven Veo 3 clips (`public/clips/spinpix-launch/`): spark, family team and Magic Mirror, 360 Spin, Selfie Pod, prints, props, then the glowing-screen payoff into the end card. Cuts sit on the 120 bpm grid; labels, grade, grain and end card are done in `src/spinpix/Launch.tsx`. The Veo prompts are in `veo3-prompts.md`. |
 
 Code is in `src/spinpix/` (one file per video, shared parts in `kit.tsx`). Copy, voice lines and every timing mark are in `src/spinpix/spinpix.json`; the animation and the sound both read the same marks.
 

@@ -6,6 +6,7 @@ import { BoothQuiz } from "./BoothQuiz";
 import { PartyMontage } from "./PartyMontage";
 import { QrGallery } from "./QrGallery";
 import { OnePlace } from "./OnePlace";
+import { Launch } from "./Launch";
 
 /* The SpinPix UK client videos (copy and timing marks in spinpix.json). */
 const COMPONENTS: Record<string, React.FC> = {
@@ -14,6 +15,7 @@ const COMPONENTS: Record<string, React.FC> = {
   "spinpix-montage": PartyMontage,
   "spinpix-qr": QrGallery,
   "spinpix-brand": OnePlace,
+  "spinpix-launch": Launch,
 };
 
 export const SpinPixFilms: React.FC = () => (
