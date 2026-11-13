@@ -184,3 +184,15 @@ a.card .go{display:inline-block;margin-top:14px;color:var(--cyan);font-weight:60
 .shots .m{width:100%;height:auto}
 .narrow{max-width:780px}
 @media (max-width:760px){.shots{grid-template-columns:1fr}.shots .m{max-width:240px}}
+
+/* Pricing tables (guides) */
+.ptable-wrap{overflow-x:auto;margin:18px 0 8px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
+.ptable{width:100%;border-collapse:collapse;font-size:15px;min-width:560px}
+.ptable th,.ptable td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.ptable thead th{font-family:var(--disp);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+.ptable tbody tr:last-child td{border-bottom:0}
+.ptable td:first-child{font-weight:600;color:#fff}
+.ptable td{color:#c6cce6}
+.pnote{font-size:13.5px;color:#8f98bd;margin-top:8px}
+.inline-cta{margin:22px 0;padding:20px 22px;border-radius:20px;border:1px solid var(--line);background:radial-gradient(circle at 0 0,rgba(139,92,246,.28),transparent 60%);display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.inline-cta p{margin:0;max-width:520px;color:#d5daf0}

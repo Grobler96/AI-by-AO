@@ -538,7 +538,7 @@ html.gs{scroll-behavior:auto!important}
     </h1>
     <p class="lead">We automate the work that slows your business down. Custom <b style="color:#fff">n8n workflows</b> that connect every tool you use, AI phone callers, chatbots and websites that answer, follow up and close while you sleep.</p>
     <div class="cta-row">
-      <a href="#contact" class="btn primary mag" data-track="cta_click">Book a free demo <span>→</span></a>
+      <a href="#contact" class="btn primary mag" data-track="cta_click">Request a quote <span>→</span></a>
       <a href="#automation" class="btn ghost mag">▶ See automation run</a>
     </div>
     <div class="hero-stats">
@@ -640,7 +640,7 @@ html.gs{scroll-behavior:auto!important}
     <article class="card tilt svc rv" style="--c1:#38e1ff;--c2:#7dffb2;--d:.25s"><i class="glare"></i>
       <span class="num">03 / CHAT</span><div class="ico">💬</div>
       <h3>Intelligent Chatbots</h3><p>24/7 assistants on your site and socials that actually understand your products and resolve questions.</p>
-      <ul><li>Trained on your content</li><li>Lead capture &amp; handoff</li><li>Website, WhatsApp &amp; more</li></ul><a class="more" href="/ai-chatbots">Learn more →</a>
+      <ul><li>Trained on your content</li><li>Lead capture &amp; handoff</li><li>Website, WhatsApp &amp; more</li></ul> <a class="more" style="margin-right:18px" href="/guides/ai-chatbot-cost-uk">Chatbot prices →</a> <a class="more" href="/ai-chatbots">Learn more →</a>
     </article>
     <article class="card tilt svc rv" style="--c1:#ff4fd8;--c2:#8b5cf6;--d:.35s"><i class="glare"></i>
       <span class="num">04 / WEB</span><div class="ico">🎨</div>
@@ -818,13 +818,14 @@ html.gs{scroll-behavior:auto!important}
       <input type="hidden" name="_template" value="table">
       <div class="fld full" id="ts"></div>
       <div class="form-status" id="formStatus" role="alert" aria-live="assertive"></div>
-      <button class="btn primary mag" type="submit" id="formBtn"><span class="spin" aria-hidden="true"></span><span class="lbl">Send message 🚀</span></button>
+      <button class="btn primary mag" type="submit" id="formBtn"><span class="spin" aria-hidden="true"></span><span class="lbl">Request my quote 🚀</span></button>
     </form>
     <p class="legal-note">By sending this form you agree to us using your details to reply to you, as explained in our <a href="/privacy">privacy policy</a>.</p>
     <p class="or">Or email us directly: <a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a></p>
   </div>
 </section>
 </main>
+<script>try{var t=new URLSearchParams(location.search).get('topic'),sel=document.getElementById('f-topic');if(t&&sel)for(var o of sel.options)if(o.text.toLowerCase()===t.toLowerCase()){sel.value=o.text;break}}catch(e){}</script>
 
 <footer class="site-foot">
   <div class="foot">
@@ -836,7 +837,7 @@ html.gs{scroll-behavior:auto!important}
   <div class="foot-bottom"><span>© 2026 AI by AO. All rights reserved.</span><span>Leeds, West Yorkshire</span><a class="gpref" href="https://www.google.com/preferences/source?q=aibyao.com" target="_blank" rel="noopener" data-track="preferred_source_click"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.5-.2-2.3H12v4.4h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.5z"/><path fill="#34A853" d="M12 23c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.8H1.8v3C3.7 20.9 7.5 23 12 23z"/><path fill="#FBBC05" d="M5.6 13.6a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4l3.8-3z"/><path fill="#EA4335" d="M12 5.4c1.7 0 3.2.6 4.4 1.7l3.3-3.3A11.4 11.4 0 0 0 12 1C7.5 1 3.7 3.1 1.8 6.2l3.8 3c.9-2.8 3.4-3.8 6.4-3.8z"/></svg>Add to Preferred Sources</a></div>
 </footer>
 
-<div class="mcta" id="mcta"><a href="#contact" class="btn primary" data-track="sticky_cta_click">Book a free demo →</a><a href="mailto:grobleroliver@gmail.com" class="mcta-mail" aria-label="Email AI by AO" data-track="email_click">✉️</a></div>
+<div class="mcta" id="mcta"><a href="#contact" class="btn primary" data-track="sticky_cta_click">Request a quote →</a><a href="mailto:grobleroliver@gmail.com" class="mcta-mail" aria-label="Email AI by AO" data-track="email_click">✉️</a></div>
 <script src="/assets/site.js" defer></script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
@@ -1286,7 +1287,7 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
       window.aiaoTrack&&window.aiaoTrack('generate_lead',{topic:form.elements.topic.value});
       location.href='/thank-you';
     }catch(err){
-      btn.classList.remove('loading');lbl.textContent='Send message 🚀';if(tsId!==null)turnstile.reset(tsId);
+      btn.classList.remove('loading');lbl.textContent='Request my quote 🚀';if(tsId!==null)turnstile.reset(tsId);
       fail('Sorry, your message didn\'t send. Please try again, or email us directly at <a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a>.');
     }
   });
