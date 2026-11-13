@@ -2,8 +2,50 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/services", "destination": "/#services", "permanent": true },
-    { "source": "/contact", "destination": "/#contact", "permanent": true },
-    { "source": "/home", "destination": "/", "permanent": true }
+    {
+      "source": "/services",
+      "destination": "/#services",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/demo/:slug",
+      "destination": "/demo.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/demo/:slug",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/demo.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
   ]
 }
