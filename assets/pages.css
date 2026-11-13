@@ -108,7 +108,7 @@ a.card .go{display:inline-block;margin-top:14px;color:var(--cyan);font-weight:60
 .quote2 p{font-family:var(--disp);font-size:clamp(20px,2.4vw,28px);line-height:1.35;letter-spacing:-.01em}
 .quote2 .by{margin-top:18px;color:var(--muted);font-size:14px}.quote2 .by b{color:#fff}
 .towns{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.towns div{padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}
+.towns div,.towns a{display:block;padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}
 .towns b{display:block;font-family:var(--disp);font-size:16px}
 .towns span{color:var(--muted);font-size:13.5px}
 @media (max-width:900px){.hero2,.grid2{grid-template-columns:1fr}.grid3,.towns{grid-template-columns:1fr 1fr}.steps2{grid-template-columns:1fr 1fr}}
@@ -196,3 +196,10 @@ a.card .go{display:inline-block;margin-top:14px;color:var(--cyan);font-weight:60
 .pnote{font-size:13.5px;color:#8f98bd;margin-top:8px}
 .inline-cta{margin:22px 0;padding:20px 22px;border-radius:20px;border:1px solid var(--line);background:radial-gradient(circle at 0 0,rgba(139,92,246,.28),transparent 60%);display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .inline-cta p{margin:0;max-width:520px;color:#d5daf0}
+
+/* Local page fact list */
+.facts{list-style:none;margin-top:10px;display:grid;gap:12px}
+.facts li{display:flex;flex-direction:column;gap:2px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.facts li:last-child{border-bottom:0;padding-bottom:0}
+.facts b{font-family:var(--disp);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+.facts span{color:#c6cce6;font-size:15px}
