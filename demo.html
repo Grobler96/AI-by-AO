@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Demo chatbot | AI by AO</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04050d;--bg2:#080b1a;--line:rgba(255,255,255,.09);--text:#eef2ff;--muted:#8b95b3;--cyan:#38e1ff;--violet:#8b5cf6;--pink:#ff4fd8;--amber:#ffc857;--grad:linear-gradient(115deg,var(--cyan),var(--violet) 55%,var(--pink));--disp:'Space Grotesk',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:radial-gradient(900px 500px at 80% -10%,rgba(139,92,246,.22),transparent 60%),radial-gradient(700px 400px at 0% 0%,rgba(56,225,255,.12),transparent 60%),var(--bg);color:var(--text);font:16px/1.55 var(--body);display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:680px;padding:20px 16px;display:flex;flex-direction:column;min-height:100%}
+.brand{display:flex;justify-content:space-between;align-items:center;font:600 14px var(--disp);color:var(--muted);margin-bottom:16px}
+.brand a{color:var(--text);text-decoration:none}
+.badge{display:inline-flex;gap:8px;align-items:center;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);font-size:13px;color:var(--amber)}
+h1{font:700 clamp(24px,5vw,34px)/1.15 var(--disp);margin:6px 0 8px;letter-spacing:-.02em}
+h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.chat{flex:1;display:flex;flex-direction:column;min-height:360px;border:1px solid var(--line);border-radius:22px;background:rgba(12,14,34,.7);backdrop-filter:blur(14px);overflow:hidden}
+.log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;max-height:56vh}
+.m{max-width:85%;padding:11px 14px;border-radius:16px;font-size:15px;white-space:pre-wrap;word-wrap:break-word}
+.m.bot{background:rgba(255,255,255,.07);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:5px}
+.m.me{background:var(--grad);color:#05060f;align-self:flex-end;border-bottom-right-radius:5px;font-weight:500}
+.m.note{align-self:center;color:var(--muted);font-size:13px;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px 12px}
+.chips button{font:500 13px var(--body);padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer}
+.chips button:hover{border-color:var(--cyan)}
+form{display:flex;gap:10px;padding:12px;border-top:1px solid var(--line)}
+input[type=text]{flex:1;min-width:0;font:16px var(--body);padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text)}
+input[type=text]:focus{outline:2px solid var(--cyan);outline-offset:1px}
+.send{font:600 15px var(--body);padding:0 20px;border:0;border-radius:14px;background:var(--grad);color:#05060f;cursor:pointer}
+.send:disabled{opacity:.5;cursor:default}
+.cta{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.04);font-size:15px}
+.cta a{color:var(--cyan)}
+.fine{color:var(--muted);font-size:12.5px;margin:14px 2px 4px}
+.state{margin:auto;text-align:center;max-width:460px;padding:40px 0}
+@media (prefers-reduced-motion:no-preference){.m{animation:in .25s ease}@keyframes in{from{opacity:0;transform:translateY(6px)}}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="brand"><a href="https://www.aibyao.com">AI by AO</a><span class="badge" id="expiry" hidden></span></div>
+  <div id="main"><p class="sub">Loading your demo…</p></div>
+</div>
+<script>
+(function(){
+  var API='https://aobosyvlhgkxhjxkfzlz.supabase.co/functions/v1/aibyao-demo';
+  var slug=(location.pathname.split('/').filter(Boolean).pop()||'').toLowerCase();
+  var main=document.getElementById('main'),expiry=document.getElementById('expiry');
+  var history=[],busy=false,log,input,btn;
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  function left(iso){var ms=new Date(iso)-new Date();if(ms<=0)return 'ended';var h=Math.floor(ms/36e5),d=Math.floor(h/24);return d>=1?d+(d===1?' day':' days')+' left':(h<1?'less than 1 hour left':h+' hours left')}
+  function state(title,text){main.replaceChildren();var s=el('div','state');s.appendChild(el('h1',null,title));s.appendChild(el('p','sub',text));var a=el('a',null,'Visit AI by AO');a.href='https://www.aibyao.com/#contact';a.style.color='var(--cyan)';s.appendChild(a);main.appendChild(s)}
+  function add(text,cls){var m=el('div','m '+cls,text);log.appendChild(m);log.scrollTop=log.scrollHeight;return m}
+  async function send(text){
+    if(busy||!text.trim())return;busy=true;btn.disabled=true;
+    add(text,'me');history.push({role:'user',content:text});input.value='';
+    var wait=add('Typing…','bot');
+    try{
+      var r=await fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({slug:slug,messages:history})});
+      var j=await r.json().catch(function(){return{}});
+      if(r.status===410){state('This demo has ended','The 5 day preview for this business has finished. If you would like it live on your site, get in touch.');return}
+      if(!r.ok||!j.reply){wait.textContent=j.error||'Something went wrong. Please try again.';wait.className='m note';history.pop()}
+      else{wait.textContent=j.reply;history.push({role:'assistant',content:j.reply})}
+    }catch(e){wait.textContent='Connection problem. Please try again.';wait.className='m note';history.pop()}
+    busy=false;btn.disabled=false;log.scrollTop=log.scrollHeight;
+  }
+  function build(c){
+    document.title=c.business_name+' chatbot demo | AI by AO';
+    expiry.hidden=false;expiry.textContent='Free preview, '+left(c.expires_at);
+    main.replaceChildren();
+    var h=el('h1');h.append('A chatbot for ');var sp=el('span',null,c.business_name);h.appendChild(sp);main.appendChild(h);
+    main.appendChild(el('p','sub','This is a free demo AI by AO built from the information on your own website. Ask it what a customer might ask. It is not live on your site, and this page closes on its own after 5 days.'));
+    var chat=el('div','chat');log=el('div','log');log.setAttribute('aria-live','polite');chat.appendChild(log);
+    var chips=el('div','chips');
+    ['What do you do?','How do I get a quote?','What areas do you cover?'].forEach(function(q){var b=el('button',null,q);b.type='button';b.onclick=function(){send(q)};chips.appendChild(b)});
+    chat.appendChild(chips);
+    var f=document.createElement('form');input=document.createElement('input');input.type='text';input.maxLength=500;input.placeholder='Type a customer question…';input.setAttribute('aria-label','Your question');
+    btn=el('button','send','Send');btn.type='submit';f.appendChild(input);f.appendChild(btn);
+    f.onsubmit=function(e){e.preventDefault();send(input.value)};chat.appendChild(f);main.appendChild(chat);
+    add(c.greeting||('Hi, I am the demo assistant for '+c.business_name+'. How can I help?'),'bot');
+    var cta=el('div','cta');cta.append('Like it? Reply to the email, or ');var a=el('a',null,'get in touch');a.href='https://www.aibyao.com/#contact';cta.appendChild(a);cta.append(' and we can put it on your site, with your own services, prices and opening hours.');main.appendChild(cta);
+    main.appendChild(el('p','fine','Demo assistant made by AI by AO. Answers come only from public information on your website, so check anything important with the business. Messages sent here are stored so we can improve the demo. Please do not type personal details.'));
+  }
+  if(!/^[a-z0-9-]{8,80}$/.test(slug)){state('Demo not found','This link is not valid.');return}
+  fetch(API+'?slug='+encodeURIComponent(slug)).then(function(r){return r.json().then(function(j){return{s:r.status,j:j}})}).then(function(x){
+    if(x.s===200&&x.j.status==='ok')build(x.j);
+    else if(x.s===410)state('This demo has ended','The 5 day preview for '+(x.j.business_name||'this business')+' has finished. If you would like it live on your site, get in touch.');
+    else state('Demo not found','This link is not valid.');
+  }).catch(function(){state('Demo unavailable','Please try again in a moment.')});
+})();
+</script>
+</body>
+</html>
