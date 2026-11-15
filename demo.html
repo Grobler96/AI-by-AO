@@ -48,7 +48,8 @@ input[type=text]:focus{outline:2px solid var(--cyan);outline-offset:1px}
 <script>
 (function(){
   var API='https://aobosyvlhgkxhjxkfzlz.supabase.co/functions/v1/aibyao-demo';
-  var slug=(location.pathname.split('/').filter(Boolean).pop()||'').toLowerCase();
+  var q=new URLSearchParams(location.search).get('s');var parts=location.pathname.split('/').filter(Boolean);var last=(parts.pop()||'').replace(/\.html$/,'');
+  var slug=(q||(last==='demo'?'':last)).toLowerCase();
   var main=document.getElementById('main'),expiry=document.getElementById('expiry');
   var history=[],busy=false,log,input,btn;
   function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
