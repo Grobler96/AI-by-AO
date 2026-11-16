@@ -1,0 +1,1103 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>BayBrief</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: a sticky 3D stage with the driver's brief beside it (stacked on phones).
+   Look: hi-vis yellow on asphalt. Blue / red / green / yellow follow ISO safety-sign meaning. */
+:root{
+  --asphalt:#0f1215; --panel:#171c20; --panel2:#1f262b; --line:#2b343a; --ink:#edf1f3; --mute:#9aa7af;
+  --hivis:#ffc400; --hivis-ink:#1a1500; --mand:#2e7de0; --stop:#e5483b; --safe:#2fb36d;
+  --f-disp:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
+  --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--asphalt);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+body{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 48px}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--hivis);outline-offset:2px}
+[hidden]{display:none!important}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.app{max-width:1280px;margin:0 auto}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.word{font:800 26px/1 var(--f-disp);letter-spacing:.06em}
+.demo{font:600 11px/1 var(--f-disp);letter-spacing:.12em;text-transform:uppercase;color:var(--hivis-ink);background:var(--hivis);padding:4px 7px;border-radius:3px}
+.top-r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px;gap:2px}
+.seg button{background:none;border:0;border-radius:6px;padding:7px 11px;font:600 13px/1 var(--f-body);color:var(--mute);white-space:nowrap}
+.seg button[aria-pressed=true]{background:var(--hivis);color:var(--hivis-ink)}
+.seg button small{display:block;font-weight:500;font-size:11px;opacity:.8;margin-top:2px}
+.sel select{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-weight:600}
+
+.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(340px,1fr);gap:20px;align-items:start}
+.stage-col{position:sticky;top:max(10px,env(safe-area-inset-top,0px));z-index:5;min-width:0}
+.stage{position:relative;border-radius:12px;overflow:hidden;background:#cfd8dc;border:1px solid var(--line);aspect-ratio:16/10;max-height:calc(100vh - 170px);width:100%}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.nogl{position:absolute;inset:0;margin:0;display:grid;place-items:center;padding:24px;text-align:center;color:#223}
+#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tag{position:absolute;left:0;top:0;transform:translate(-50%,-100%);font:600 12px/1 var(--f-body);background:rgba(15,18,21,.86);color:#fff;border-radius:6px;padding:6px 8px;white-space:nowrap;border:1px solid rgba(255,255,255,.18);will-change:transform}
+.tag::after{content:"";position:absolute;left:50%;bottom:-6px;width:2px;height:6px;background:currentColor;opacity:.6}
+.tag.hi{background:var(--hivis);color:var(--hivis-ink);border-color:transparent}
+.tag.stop{background:var(--stop);border-color:transparent}
+.tag.safe{background:var(--safe);border-color:transparent}
+.tag.mand{background:var(--mand);border-color:transparent}
+.hud{position:absolute;display:flex;gap:6px;align-items:center;z-index:2}
+.hud.tl{left:10px;top:10px}
+.hud.tr{right:10px;top:10px;background:rgba(15,18,21,.78);backdrop-filter:blur(6px)}
+.hud.tr button{padding:6px 9px;font-size:12px}
+.north{width:26px;height:26px;border-radius:50%;background:rgba(15,18,21,.8);display:grid;place-items:center;font:700 12px/1 var(--f-disp);color:var(--hivis);border:1px solid var(--line)}
+.chip{font:600 12px/1 var(--f-body);background:rgba(15,18,21,.8);color:#fff;padding:7px 9px;border-radius:6px;border:1px solid var(--line)}
+.caption{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(15,18,21,.88);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:10px;padding:9px 12px;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;z-index:2}
+.caption .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:800 17px/1 var(--f-disp);background:var(--hivis);color:var(--hivis-ink)}
+.caption h3{margin:0;font:700 17px/1.1 var(--f-disp);letter-spacing:.03em;text-transform:uppercase}
+.caption p{margin:2px 0 0;font-size:13px;color:#cfd7dc;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.k-warn .n{background:var(--hivis)} .k-stop .n{background:var(--stop);color:#fff} .k-mand .n{background:var(--mand);color:#fff} .k-safe .n{background:var(--safe);color:#04170d}
+
+.cabfx{position:absolute;inset:0;pointer-events:none;z-index:1}
+.cabfx .dash{position:absolute;left:0;right:0;bottom:0;height:16%;background:linear-gradient(#1b1f23,#0c0e10);border-top:3px solid #2a3036;clip-path:polygon(0 30%,18% 0,82% 0,100% 30%,100% 100%,0 100%)}
+.cabfx .pillL,.cabfx .pillR{position:absolute;top:0;bottom:0;width:7%;background:linear-gradient(90deg,#0c0e10,#1b1f23)}
+.cabfx .pillL{left:0;clip-path:polygon(0 0,100% 0,35% 100%,0 100%)}
+.cabfx .pillR{right:0;transform:scaleX(-1);clip-path:polygon(0 0,100% 0,35% 100%,0 100%)}
+.cabfx .roof{position:absolute;left:0;right:0;top:0;height:6%;background:#0c0e10;margin:0}
+.cabfx .mirror{position:absolute;inset:3% 3% 3% 3%;border:10px solid #0c0e10;border-radius:18px;box-shadow:inset 0 0 0 2px #333,0 0 0 2000px rgba(0,0,0,.0)}
+.cabfx .mlabel{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);font:700 11px/1 var(--f-disp);letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.6);padding:5px 8px;border-radius:4px}
+
+.transport{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:8px}
+.tr-row{display:flex;align-items:center;gap:10px}
+.play{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--hivis);color:var(--hivis-ink);display:grid;place-items:center}
+.play svg{width:18px;height:18px}
+.scrub{position:relative;flex:1;min-width:0;height:34px;display:flex;align-items:center}
+.scrub input{width:100%;margin:0;accent-color:var(--hivis);height:34px;background:none;position:relative;z-index:2}
+.marks{position:absolute;left:8px;right:8px;top:50%;height:0;pointer-events:none;z-index:1}
+.marks i{position:absolute;top:-9px;width:2px;height:18px;background:var(--line);transform:translateX(-1px)}
+.marks i.on{background:var(--hivis)}
+.time{font:600 13px/1 var(--f-body);color:var(--mute);font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+.speed{flex:none;border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:8px 10px;font-weight:600;font-variant-numeric:tabular-nums}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opt{border:1px solid var(--line);background:var(--panel2);color:var(--mute);border-radius:999px;padding:6px 11px;font:600 12px/1 var(--f-body)}
+.opt[aria-pressed=true]{background:rgba(255,196,0,.14);border-color:var(--hivis);color:var(--hivis)}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0}
+.tabs{display:flex;border-bottom:1px solid var(--line);background:var(--panel2)}
+.tabs button{flex:1;background:none;border:0;padding:13px 8px;font:700 15px/1 var(--f-disp);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);border-bottom:3px solid transparent}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--hivis)}
+.pane{padding:16px}
+.pane[hidden]{display:none}
+.h{font:800 22px/1.05 var(--f-disp);letter-spacing:.03em;text-transform:uppercase;margin:0 0 10px}
+.eyebrow{font:600 11px/1 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}
+.job{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.job div{background:var(--panel2);padding:9px 11px;min-width:0}
+.job dt{font:600 10.5px/1 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}
+.job dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.job .bay dd{font:800 26px/1 var(--f-disp);color:var(--hivis);letter-spacing:.04em}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.step{border:1px solid var(--line);border-radius:10px;background:var(--panel2);overflow:hidden}
+.step>button{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px}
+.step .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:800 15px/1 var(--f-disp);background:var(--line);color:var(--ink)}
+.step .t{font:700 16px/1.1 var(--f-disp);letter-spacing:.03em;text-transform:uppercase}
+.step .b{display:none;padding:0 12px 12px 50px;color:#cdd6db;font-size:14.5px}
+.step.cur{border-color:var(--hivis)}
+.step.cur .b{display:block}
+.step.cur .n{background:var(--hivis);color:var(--hivis-ink)}
+.step.k-stop.cur .n{background:var(--stop);color:#fff}.step.k-mand.cur .n{background:var(--mand);color:#fff}.step.k-safe.cur .n{background:var(--safe);color:#04170d}
+.step.done .n{background:#3a444b;color:var(--mute)}
+
+.progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 14px}
+.progress i{display:block;height:100%;background:var(--hivis);transition:width .3s}
+.rule{border:1px solid var(--line);border-radius:10px;background:var(--panel2);margin-bottom:6px;overflow:hidden}
+.rule>button{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px}
+.rule .ico{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:800 15px/1 var(--f-disp);color:#fff;background:var(--mand)}
+.rule .t{font:700 16px/1.1 var(--f-disp);letter-spacing:.03em;text-transform:uppercase}
+.rule .tick{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px}
+.rule.read .tick{background:var(--safe);border-color:var(--safe);color:#04170d}
+.rule .body{display:none;padding:0 12px 12px}
+.rule.cur{border-color:var(--hivis)} .rule.cur .body{display:block}
+.rule ul{margin:0 0 12px;padding-left:18px;color:#d6dde1} .rule li{margin:4px 0}
+.btn{border:0;border-radius:8px;padding:11px 16px;font:700 14px/1 var(--f-disp);letter-spacing:.08em;text-transform:uppercase;background:var(--hivis);color:var(--hivis-ink)}
+.btn.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.gate{border:1px dashed var(--line);border-radius:10px;padding:12px;color:var(--mute);font-size:14px;margin-top:14px}
+.q{margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.q p{margin:0 0 8px;font-weight:600}
+.opt-a{display:block;width:100%;text-align:left;margin:5px 0;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);}
+.opt-a.ok{border-color:var(--safe);background:rgba(47,179,109,.14)}
+.opt-a.no{border-color:var(--stop);background:rgba(229,72,59,.14)}
+.fb{font-size:13.5px;margin:6px 0 0;color:var(--mute)}
+.fb.ok{color:#6fd9a0}.fb.no{color:#ff8f84}
+.form{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}
+.form .full{grid-column:1/-1}
+.form label{display:grid;gap:5px;font:600 11px/1 var(--f-disp);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.form input[type=text]{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:11px;font-size:15px;color:var(--ink);min-width:0}
+.sig{width:100%;height:150px;background:#f4f1e8;border-radius:8px;touch-action:none;display:block}
+.receipt{border:2px solid var(--safe);border-radius:12px;padding:14px;background:rgba(47,179,109,.08)}
+.receipt dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 0}
+.receipt dt{color:var(--mute);font-size:13px}.receipt dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+
+.docket-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.paper{background:#f2efe6;color:#1b1e20;border-radius:6px;padding:20px;box-shadow:0 12px 30px rgba(0,0,0,.45);position:relative;font-family:var(--f-body)}
+.paper::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:repeating-linear-gradient(135deg,#1b1e20 0 10px,var(--hivis) 10px 20px);border-radius:6px 6px 0 0}
+.paper h2{font:800 28px/1 var(--f-disp);letter-spacing:.05em;margin:8px 0 2px;text-transform:uppercase}
+.paper .sub{color:#555c60;font-size:13px;margin:0 0 14px}
+.paper table{width:100%;border-collapse:collapse;font-size:14px}
+.paper td{padding:6px 0;border-bottom:1px solid #d6d2c6;vertical-align:top}
+.paper td:first-child{font:600 11px/1.6 var(--f-disp);letter-spacing:.12em;text-transform:uppercase;color:#5c6266;width:34%}
+.qrbox{display:grid;gap:8px;justify-items:center;padding:14px;margin-top:14px;border:2px solid #1b1e20;border-radius:8px;background:#fff}
+.qrbox svg{width:min(210px,100%);height:auto;display:block}
+.qrbox b{font:800 15px/1 var(--f-disp);letter-spacing:.08em;text-transform:uppercase;text-align:center}
+.qrbox code{font-size:11px;color:#555;overflow-wrap:anywhere;text-align:center}
+.side h3{font:800 18px/1 var(--f-disp);letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px}
+.side p,.side li{color:#cdd6db;font-size:14.5px}
+.side ul{padding-left:18px;margin:0 0 14px}
+pre.code{margin:0 0 14px;background:#0b0e10;border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c8e0cf;max-width:100%}
+.note{font-size:12.5px;color:var(--mute)}
+
+.layout[data-tab=docket]{grid-template-columns:minmax(0,1fr)}
+.layout[data-tab=docket] .stage-col{display:none}
+
+@media (max-width:959px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .stage-col{top:env(safe-area-inset-top,0px);padding-top:6px;background:var(--asphalt)}
+  .stage{aspect-ratio:4/3;max-height:40vh}
+  .docket-wrap{grid-template-columns:minmax(0,1fr)}
+  .caption p{-webkit-line-clamp:1}
+}
+@media (max-width:520px){
+  .hud.tr button{padding:6px 7px;font-size:11px}
+  #vehChip{display:none}
+  .word{font-size:22px}
+  .form{grid-template-columns:minmax(0,1fr)}
+  .caption{padding:7px 9px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="7" fill="#ffc400"/><path d="M8 25V12l9-5 9 5v13" fill="none" stroke="#1a1500" stroke-width="3" stroke-linejoin="round"/><path d="M13 25v-8h8v8" fill="#1a1500"/></svg>
+      <span class="word">BAYBRIEF</span><span class="demo" id="demoTag">Demo site</span>
+    </div>
+    <div class="top-r">
+      <div class="seg" id="vehSeg" role="group" aria-label="Vehicle">
+        <button type="button" data-k="artic" aria-pressed="true"></button>
+        <button type="button" data-k="rigid" aria-pressed="false"></button>
+      </div>
+      <label class="sel"><span class="vh">Language</span>
+        <select id="lang"><option value="en">English</option><option value="pl">Polski</option><option value="ro">Română</option></select>
+      </label>
+    </div>
+  </header>
+
+  <div class="layout" id="layout" data-tab="route">
+    <section class="stage-col" id="stageCol">
+      <div class="stage" id="stage">
+        <canvas id="gl" aria-label="3D animation of the delivery route"></canvas>
+        <div id="labels"></div>
+        <div class="cabfx" id="cabfx" hidden><div class="roof"></div><div class="pillL"></div><div class="pillR"></div><div class="dash"></div><div class="mirror" id="mirrorFx"></div><div class="mlabel" id="mirrorLbl"></div></div>
+        <div class="hud tl"><span class="north" title="North">N</span><span class="chip" id="vehChip"></span></div>
+        <div class="hud tr seg" id="viewSeg" role="group" aria-label="View">
+          <button type="button" data-v="chase" aria-pressed="true"></button>
+          <button type="button" data-v="over" aria-pressed="false"></button>
+          <button type="button" data-v="site" aria-pressed="false"></button>
+          <button type="button" data-v="cab" aria-pressed="false"></button>
+        </div>
+        <div class="caption k-warn" id="caption"></div>
+      </div>
+      <div class="transport" id="transport">
+        <div class="tr-row">
+          <button type="button" class="play" id="playBtn" aria-label="Play"><svg viewBox="0 0 18 18" id="playIco"><path d="M4 2l12 7-12 7z" fill="currentColor"/></svg></button>
+          <div class="scrub"><div class="marks" id="marks"></div><input type="range" id="scrub" min="0" max="1000" value="0" step="1" aria-label="Timeline"></div>
+          <span class="time" id="timeLbl">0:00</span>
+          <button type="button" class="speed" id="speedBtn">1×</button>
+        </div>
+        <div class="opts" id="opts">
+          <button type="button" class="opt" id="optLine" aria-pressed="true"></button>
+          <button type="button" class="opt" id="optSwept" aria-pressed="false"></button>
+          <button type="button" class="opt" id="optVoice" aria-pressed="false"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel">
+      <nav class="tabs" role="tablist" id="tabs">
+        <button type="button" role="tab" data-t="route" aria-selected="true"></button>
+        <button type="button" role="tab" data-t="rules" aria-selected="false"></button>
+        <button type="button" role="tab" data-t="docket" aria-selected="false"></button>
+      </nav>
+      <div class="pane" id="p-route"></div>
+      <div class="pane" id="p-rules" hidden></div>
+      <div class="pane" id="p-docket" hidden></div>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)), lerp=(a,b,t)=>a+(b-a)*t, ss=t=>{t=clamp(t,0,1);return t*t*(3-2*t)};
+const PI=Math.PI, TAU=PI*2;
+
+/* =====================================================================
+   TEXT (English, Polski, Română). Translations are working drafts and
+   need checking by a native speaker before real use.
+   ===================================================================== */
+const I18N={
+en:{code:'en-GB',
+ tabs:['Route','Site rules','Docket'],
+ ui:{artic:'Class 1 · Artic',articS:'C+E',rigid:'Class 2 · Rigid',rigidS:'C',vChase:'Follow',vOver:'Above',vSite:'Site',vCab:'Cab',
+  play:'Play',pause:'Pause',replay:'Replay',line:'Route line',swept:'Swept path',voice:'Read aloud',demo:'Demo site',
+  mirror:'Offside mirror',cabView:'Cab view',
+  job:'Your delivery',jobRef:'Job',slot:'Slot',bay:'Bay',load:'Load',gate:'Gatehouse',
+  rulesHead:'Site rules (SSOW)',rulesIntro:'Safe System of Work SSOW-014, revision 7. Open each rule, watch the scene, then tap Got it.',
+  gotIt:'Got it',read:'Read',progress:'{n} of {m} rules read',
+  quizHead:'Quick check',quizIntro:'Five questions. Every answer must be right before you can sign.',quizLocked:'Read all six rules to unlock the quick check.',
+  right:'Correct.',wrong:'Not quite. Try another answer.',
+  signHead:'Sign the SSOW',signLocked:'Pass the quick check to unlock signing.',
+  fName:'Full name',fCo:'Haulier',fReg:'Vehicle reg',fSig:'Signature',clear:'Clear',signBtn:'Sign and send to site',phName:'e.g. A. Driver',phCo:'e.g. Demo Haulage',phReg:'e.g. AB12 CDE',
+  signedHead:'Signed and logged',signedNote:'Demo only. Nothing was sent. In use, this goes to the site log with the SSOW version, time and your quiz result.',
+  rName:'Driver',rCo:'Haulier',rReg:'Vehicle',rDoc:'Document',rWhen:'Signed',rRef:'Receipt',rQuiz:'Quick check',again:'Start again',
+  docketHead:'Delivery note',scanHead:'Scan for the site brief',scan:'Simulate driver scan',
+  howHead:'How a site is set up',
+  how:['The transport office marks the route, stops, bays and hazards on a map. The animation is drawn from that data.','The vehicle class changes the route, the bay and the swept path.','Change the site layout and the animation changes with it. Nobody re-films anything.','Every SSOW signature is stored against the document version, so a new revision asks drivers to sign again.'],
+  nogl:'The 3D view needs WebGL, which this browser does not offer.'},
+ lb:{entrance:'Entrance, on your left',gate:'Gatehouse',cross:'Give way: staff crossing',car:'Car park: no HGVs',yard:'Yard: one way, 5 mph',bay:'BAY {bay}',stop:'Stop here, then reverse',lounge:'Driver lounge',fork:'Forklifts working',assembly:'Assembly point A',banks:'Banksman',walk:'Green walkway only',ppe1:'Hi-vis',ppe2:'Safety boots',speed:'5 mph'},
+ steps:[
+  ['Approach on Aire Road','Head east on Aire Road. The site entrance is on your left, 300 m after the roundabout. There is no right turn in.'],
+  ['Turn left into the site','Signal early and swing wide into the entrance. It is 10 m wide with kerbs both sides. If the barrier is closed, queue on the entrance road, not on Aire Road.'],
+  ['Stop at the gatehouse','Stop at the barrier. The gatehouse is on your right, the driver\'s side. Give your name, company and job ref J48213. Collect your pass. Your bay is Bay {bay}.'],
+  ['Give way at the crossing','Staff cross the site road here to reach reception. Stop, let them cross, then move off. The limit on site is 5 mph.'],
+  ['Yard: one way, keep left','Follow the road to the yard and turn left, heading west. The car park on your left is no-go for HGVs. Follow the green arrows.'],
+  ['Pull past Bay {bay}','Drive past Bay {bay} until your whole vehicle is clear of it, then stop at the marker. The bay is on your right, the driver\'s side.'],
+  ['Reverse to Bay {bay}','Hazards on. Reverse on the driver\'s side with your banksman. If you lose sight of them, stop. Stop when the bumper touches the dock. Nobody stands in the red zone behind you.'],
+  ['Unload: stay out of the dock','Engine off, handbrake on. Forklifts will work inside your trailer. Walk to the driver lounge on the green walkway. Collect your paperwork from the dock office.']],
+ rules:[
+  ['Speed and routes',['5 mph everywhere on site.','Follow the one-way yard system and the green arrows.','Stay out of the car park. No HGVs.']],
+  ['PPE',['Hi-vis and safety boots on every time you leave the cab.','Put them on before you step down. Use three points of contact on the steps.','Forgotten yours? Ask at the gatehouse.']],
+  ['Walking on site',['Walk only on the green walkways.','Cross the yard only at marked crossings. Never walk behind a moving vehicle.','Never walk between a trailer and the dock.']],
+  ['Reversing',['Hazards on. Reverse only with a banksman or a working camera.','Lose sight of your banksman and you stop.','Everyone else stays out of the red zone behind you.']],
+  ['Unloading',['Engine off, handbrake on. Wait for the dock controller\'s go-ahead.','Forklifts work inside your trailer. Do not enter the dock or the trailer.','Wait in the driver lounge. Use the green walkway to get there.']],
+  ['Emergencies',['Fire alarm: leave your vehicle where it is and walk to Assembly Point A.','No smoking or vaping anywhere on site.','Report every incident and near miss at the dock office, ext. 214.']]],
+ quiz:[
+  {q:'What is the speed limit on site?',o:['5 mph','10 mph','15 mph'],a:0,e:'5 mph everywhere, including the yard and the site road.'},
+  {q:'Your trailer is on the bay. Where do you wait?',o:['Next to the open trailer doors, to keep an eye on the load','In the driver lounge, reached by the green walkway','Between the trailer and the dock, to chat to the forklift driver'],a:1,e:'Forklifts work inside your trailer. Stay out of the dock and the trailer.'},
+  {q:'You lose sight of your banksman while reversing. What do you do?',o:['Stop','Carry on slowly until they reappear','Sound the horn and keep reversing'],a:0,e:'If nobody can see you, you do not move. Stop and wait.'},
+  {q:'What do you wear when you leave the cab?',o:['Hi-vis only','Hi-vis and safety boots','Nothing extra if you are only out for a minute'],a:1,e:'Hi-vis and safety boots, every time.'},
+  {q:'The fire alarm sounds. What do you do?',o:['Move your vehicle out of the yard','Go to the dock office and ask what is happening','Leave your vehicle where it is and walk to Assembly Point A'],a:2,e:'Do not move it. Walk to Assembly Point A on the green route.'}]},
+pl:{code:'pl-PL',
+ tabs:['Trasa','Zasady','Dokument'],
+ ui:{artic:'Klasa 1 · Ciągnik z naczepą',articS:'C+E',rigid:'Klasa 2 · Solówka',rigidS:'C',vChase:'Za pojazdem',vOver:'Z góry',vSite:'Teren',vCab:'Kabina',
+  play:'Odtwórz',pause:'Pauza',replay:'Jeszcze raz',line:'Linia trasy',swept:'Ślad skrętu',voice:'Czytaj na głos',demo:'Teren demo',
+  mirror:'Lusterko po stronie kierowcy',cabView:'Widok z kabiny',
+  job:'Twoja dostawa',jobRef:'Zlecenie',slot:'Okno',bay:'Rampa',load:'Ładunek',gate:'Portiernia',
+  rulesHead:'Zasady na terenie (SSOW)',rulesIntro:'Bezpieczny system pracy SSOW-014, wersja 7. Otwórz każdą zasadę, obejrzyj scenę i dotknij „Rozumiem”.',
+  gotIt:'Rozumiem',read:'Przeczytane',progress:'Przeczytano {n} z {m} zasad',
+  quizHead:'Krótki test',quizIntro:'Pięć pytań. Aby podpisać, wszystkie odpowiedzi muszą być poprawne.',quizLocked:'Przeczytaj wszystkie sześć zasad, aby odblokować test.',
+  right:'Dobrze.',wrong:'Nie do końca. Wybierz inną odpowiedź.',
+  signHead:'Podpisz SSOW',signLocked:'Zaliczony test odblokuje podpis.',
+  fName:'Imię i nazwisko',fCo:'Firma transportowa',fReg:'Numer rejestracyjny',fSig:'Podpis',clear:'Wyczyść',signBtn:'Podpisz i wyślij do obiektu',phName:'np. A. Kierowca',phCo:'np. Demo Haulage',phReg:'np. AB12 CDE',
+  signedHead:'Podpisano i zapisano',signedNote:'Tylko demo. Nic nie zostało wysłane. W użyciu trafia to do rejestru obiektu razem z wersją SSOW, czasem i wynikiem testu.',
+  rName:'Kierowca',rCo:'Firma',rReg:'Pojazd',rDoc:'Dokument',rWhen:'Podpisano',rRef:'Potwierdzenie',rQuiz:'Test',again:'Zacznij od nowa',
+  docketHead:'List przewozowy',scanHead:'Zeskanuj, aby zobaczyć instrukcję',scan:'Symuluj skan kierowcy',
+  howHead:'Jak konfiguruje się obiekt',
+  how:['Biuro transportu zaznacza na mapie trasę, postoje, rampy i zagrożenia. Animacja powstaje z tych danych.','Klasa pojazdu zmienia trasę, rampę i ślad skrętu.','Zmieniasz układ obiektu, a animacja zmienia się razem z nim. Nic nie trzeba nagrywać od nowa.','Każdy podpis SSOW jest zapisany przy wersji dokumentu, więc nowa wersja wymaga ponownego podpisu.'],
+  nogl:'Widok 3D wymaga WebGL, którego ta przeglądarka nie obsługuje.'},
+ lb:{entrance:'Wjazd po lewej',gate:'Portiernia',cross:'Ustąp: przejście dla pracowników',car:'Parking: zakaz dla ciężarówek',yard:'Plac: ruch jednokierunkowy, 5 mph',bay:'RAMPA {bay}',stop:'Zatrzymaj się, potem cofaj',lounge:'Pokój kierowców',fork:'Pracują wózki widłowe',assembly:'Punkt zbiórki A',banks:'Sygnalista',walk:'Tylko zielona ścieżka',ppe1:'Kamizelka',ppe2:'Obuwie ochronne',speed:'5 mph'},
+ steps:[
+  ['Dojazd drogą Aire Road','Jedź na wschód drogą Aire Road. Wjazd na teren jest po lewej, 300 m za rondem. Nie ma skrętu w prawo.'],
+  ['Skręć w lewo na teren','Włącz kierunkowskaz wcześnie i skręć szerokim łukiem. Wjazd ma 10 m szerokości, z krawężnikami po obu stronach. Jeśli szlaban jest zamknięty, czekaj na drodze dojazdowej, nie na Aire Road.'],
+  ['Zatrzymaj się przy portierni','Zatrzymaj się przy szlabanie. Portiernia jest po Twojej prawej stronie, od strony kierowcy. Podaj imię i nazwisko, firmę i numer zlecenia J48213. Odbierz przepustkę. Twoja rampa to rampa {bay}.'],
+  ['Ustąp na przejściu','Pracownicy przechodzą tędy do recepcji. Zatrzymaj się, przepuść ich i ruszaj dalej. Na terenie obowiązuje limit 5 mph (8 km/h).'],
+  ['Plac: ruch jednokierunkowy, trzymaj się lewej','Jedź drogą na plac i skręć w lewo, na zachód. Parking po lewej jest zakazany dla pojazdów ciężarowych. Kieruj się zielonymi strzałkami.'],
+  ['Minąć rampę {bay}','Jedź za rampę {bay}, aż cały pojazd ją minie, i zatrzymaj się przy znaczniku. Rampa jest po prawej, od strony kierowcy.'],
+  ['Cofanie do rampy {bay}','Włącz światła awaryjne. Cofaj od strony kierowcy z pomocą sygnalisty. Gdy stracisz go z oczu, zatrzymaj się. Zatrzymaj się, gdy zderzak dotknie rampy. Nikt nie może stać w czerwonej strefie za pojazdem.'],
+  ['Rozładunek: nie wchodź na rampę','Wyłącz silnik, zaciągnij hamulec ręczny. Wózki widłowe będą pracować wewnątrz naczepy. Idź do pokoju kierowców zieloną ścieżką dla pieszych. Dokumenty odbierz w biurze rampy.']],
+ rules:[
+  ['Prędkość i trasy',['5 mph na całym terenie.','Jedź zgodnie z ruchem jednokierunkowym na placu i zielonymi strzałkami.','Nie wjeżdżaj na parking. Zakaz dla pojazdów ciężarowych.']],
+  ['Środki ochrony',['Kamizelka odblaskowa i obuwie ochronne za każdym razem, gdy wysiadasz z kabiny.','Załóż je, zanim zejdziesz. Przy schodzeniu trzymaj się trzema punktami podparcia.','Zapomniałeś? Zapytaj w portierni.']],
+  ['Poruszanie się pieszo',['Chodź tylko zielonymi ścieżkami dla pieszych.','Przechodź przez plac tylko w oznaczonych miejscach. Nigdy nie chodź za poruszającym się pojazdem.','Nigdy nie wchodź między naczepę a rampę.']],
+  ['Cofanie',['Światła awaryjne włączone. Cofaj tylko z sygnalistą lub sprawną kamerą.','Gdy stracisz sygnalistę z oczu, zatrzymaj się.','Wszyscy inni zostają poza czerwoną strefą za pojazdem.']],
+  ['Rozładunek',['Silnik wyłączony, hamulec ręczny zaciągnięty. Poczekaj na zgodę koordynatora rampy.','Wózki widłowe pracują w naczepie. Nie wchodź na rampę ani do naczepy.','Czekaj w pokoju kierowców. Idź tam zieloną ścieżką.']],
+  ['Sytuacje awaryjne',['Alarm pożarowy: zostaw pojazd i idź do punktu zbiórki A.','Zakaz palenia i vapowania na całym terenie.','Każdy wypadek i zdarzenie potencjalnie wypadkowe zgłoś w biurze rampy, wewn. 214.']]],
+ quiz:[
+  {q:'Jaki jest limit prędkości na terenie?',o:['5 mph','10 mph','15 mph'],a:0,e:'5 mph wszędzie, także na placu i drodze dojazdowej.'},
+  {q:'Naczepa stoi przy rampie. Gdzie czekasz?',o:['Przy otwartych drzwiach naczepy, żeby pilnować towaru','W pokoju kierowców, idąc tam zieloną ścieżką','Między naczepą a rampą, żeby pogadać z operatorem wózka'],a:1,e:'W naczepie pracują wózki widłowe. Nie wchodź na rampę ani do naczepy.'},
+  {q:'Podczas cofania tracisz sygnalistę z oczu. Co robisz?',o:['Zatrzymuję się','Jadę dalej powoli, aż się pojawi','Używam klaksonu i cofam dalej'],a:0,e:'Jeśli nikt Cię nie widzi, nie jedziesz. Zatrzymaj się i czekaj.'},
+  {q:'Co masz na sobie, gdy wysiadasz z kabiny?',o:['Tylko kamizelkę odblaskową','Kamizelkę odblaskową i obuwie ochronne','Nic dodatkowego, jeśli wysiadam na minutę'],a:1,e:'Kamizelka i obuwie ochronne, za każdym razem.'},
+  {q:'Włącza się alarm pożarowy. Co robisz?',o:['Wyjeżdżam pojazdem z placu','Idę do biura rampy zapytać, co się dzieje','Zostawiam pojazd i idę do punktu zbiórki A'],a:2,e:'Nie przestawiaj pojazdu. Idź do punktu zbiórki A zieloną trasą.'}]},
+ro:{code:'ro-RO',
+ tabs:['Traseu','Reguli','Aviz'],
+ ui:{artic:'Clasa 1 · Cap tractor',articS:'C+E',rigid:'Clasa 2 · Rigid',rigidS:'C',vChase:'În urmă',vOver:'De sus',vSite:'Amplasament',vCab:'Cabină',
+  play:'Redă',pause:'Pauză',replay:'Din nou',line:'Linia traseului',swept:'Zona de viraj',voice:'Citește cu voce tare',demo:'Amplasament demo',
+  mirror:'Oglinda din partea șoferului',cabView:'Vedere din cabină',
+  job:'Livrarea ta',jobRef:'Comandă',slot:'Interval',bay:'Rampa',load:'Marfă',gate:'Poarta',
+  rulesHead:'Reguli în incintă (SSOW)',rulesIntro:'Sistem sigur de lucru SSOW-014, revizia 7. Deschide fiecare regulă, urmărește scena, apoi apasă „Am înțeles”.',
+  gotIt:'Am înțeles',read:'Citit',progress:'{n} din {m} reguli citite',
+  quizHead:'Verificare rapidă',quizIntro:'Cinci întrebări. Toate răspunsurile trebuie să fie corecte ca să poți semna.',quizLocked:'Citește toate cele șase reguli ca să deblochezi verificarea.',
+  right:'Corect.',wrong:'Nu chiar. Încearcă alt răspuns.',
+  signHead:'Semnează SSOW',signLocked:'Promovează verificarea ca să deblochezi semnarea.',
+  fName:'Nume complet',fCo:'Firma de transport',fReg:'Număr de înmatriculare',fSig:'Semnătura',clear:'Șterge',signBtn:'Semnează și trimite la amplasament',phName:'ex. A. Șofer',phCo:'ex. Demo Haulage',phReg:'ex. AB12 CDE',
+  signedHead:'Semnat și înregistrat',signedNote:'Doar demo. Nu s-a trimis nimic. În utilizare, merge în registrul amplasamentului cu versiunea SSOW, ora și rezultatul verificării.',
+  rName:'Șofer',rCo:'Firma',rReg:'Vehicul',rDoc:'Document',rWhen:'Semnat',rRef:'Confirmare',rQuiz:'Verificare',again:'Începe din nou',
+  docketHead:'Aviz de livrare',scanHead:'Scanează pentru instrucțiuni',scan:'Simulează scanarea',
+  howHead:'Cum se configurează un amplasament',
+  how:['Biroul de transport marchează pe hartă traseul, opririle, rampele și pericolele. Animația este desenată din aceste date.','Clasa vehiculului schimbă traseul, rampa și zona de viraj.','Dacă se schimbă amplasamentul, se schimbă și animația. Nu se filmează nimic din nou.','Fiecare semnătură SSOW este salvată pe versiunea documentului, deci o revizie nouă cere o semnătură nouă.'],
+  nogl:'Vederea 3D necesită WebGL, pe care acest browser nu îl oferă.'},
+ lb:{entrance:'Intrarea, pe stânga',gate:'Poarta',cross:'Cedează: trecere angajați',car:'Parcare: interzis camioanelor',yard:'Curte: sens unic, 5 mph',bay:'RAMPA {bay}',stop:'Oprește aici, apoi cu spatele',lounge:'Camera șoferilor',fork:'Stivuitoare în lucru',assembly:'Punct de adunare A',banks:'Semnalizator',walk:'Doar poteca verde',ppe1:'Vestă reflectorizantă',ppe2:'Încălțăminte de protecție',speed:'5 mph'},
+ steps:[
+  ['Apropiere pe Aire Road','Mergi spre est pe Aire Road. Intrarea în incintă este pe stânga, la 300 m după sensul giratoriu. Nu se poate vira la dreapta.'],
+  ['Virează la stânga în incintă','Semnalizează din timp și virează larg. Intrarea are 10 m lățime, cu borduri pe ambele părți. Dacă bariera este închisă, așteaptă pe drumul de acces, nu pe Aire Road.'],
+  ['Oprește la poartă','Oprește la barieră. Postul de pază este pe dreapta, în partea șoferului. Spune numele, firma și referința comenzii J48213. Ridică permisul. Rampa ta este rampa {bay}.'],
+  ['Acordă prioritate la trecere','Angajații traversează aici drumul spre recepție. Oprește, lasă-i să treacă, apoi pornește. Limita de viteză în incintă este 5 mph (8 km/h).'],
+  ['Curtea: sens unic, ține stânga','Urmează drumul până în curte și virează la stânga, spre vest. Parcarea din stânga este interzisă camioanelor. Urmează săgețile verzi.'],
+  ['Depășește rampa {bay}','Mergi dincolo de rampa {bay} până când tot vehiculul a trecut de ea, apoi oprește la marcaj. Rampa este pe dreapta, în partea șoferului.'],
+  ['Mers cu spatele la rampa {bay}','Pornește avariile. Dă cu spatele pe partea șoferului, ghidat de semnalizator. Dacă îl pierzi din vedere, oprește. Oprește când bara de protecție atinge rampa. Nimeni nu are voie în zona roșie din spatele tău.'],
+  ['Descărcare: nu intra pe rampă','Oprește motorul și trage frâna de mână. Stivuitoarele vor lucra în remorcă. Mergi la camera șoferilor pe poteca verde. Ia documentele de la biroul rampei.']],
+ rules:[
+  ['Viteză și trasee',['5 mph peste tot în incintă.','Respectă sensul unic din curte și săgețile verzi.','Nu intra în parcare. Interzis camioanelor.']],
+  ['Echipament de protecție',['Vestă reflectorizantă și încălțăminte de protecție de fiecare dată când cobori din cabină.','Pune-le înainte să cobori. Folosește trei puncte de sprijin pe trepte.','Ai uitat? Cere la poartă.']],
+  ['Mersul pe jos',['Mergi doar pe potecile verzi.','Traversează curtea doar pe trecerile marcate. Nu merge niciodată în spatele unui vehicul în mișcare.','Nu intra niciodată între remorcă și rampă.']],
+  ['Mers cu spatele',['Avarii pornite. Dă cu spatele doar cu semnalizator sau cu cameră funcțională.','Dacă pierzi semnalizatorul din vedere, oprește.','Toți ceilalți rămân în afara zonei roșii din spatele tău.']],
+  ['Descărcare',['Motor oprit, frână de mână trasă. Așteaptă acordul coordonatorului de rampă.','Stivuitoarele lucrează în remorca ta. Nu intra pe rampă sau în remorcă.','Așteaptă în camera șoferilor. Mergi acolo pe poteca verde.']],
+  ['Urgențe',['Alarmă de incendiu: lasă vehiculul unde este și mergi la punctul de adunare A.','Fumatul și vapatul sunt interzise oriunde în incintă.','Raportează orice incident sau aproape-accident la biroul rampei, interior 214.']]],
+ quiz:[
+  {q:'Care este limita de viteză în incintă?',o:['5 mph','10 mph','15 mph'],a:0,e:'5 mph peste tot, inclusiv în curte și pe drumul de acces.'},
+  {q:'Remorca ta este la rampă. Unde aștepți?',o:['Lângă ușile deschise ale remorcii, ca să urmăresc marfa','În camera șoferilor, mergând pe poteca verde','Între remorcă și rampă, ca să vorbesc cu stivuitoristul'],a:1,e:'Stivuitoarele lucrează în remorcă. Nu intra pe rampă sau în remorcă.'},
+  {q:'Pierzi din vedere semnalizatorul când dai cu spatele. Ce faci?',o:['Opresc','Merg mai departe încet până reapare','Claxonez și continui să dau cu spatele'],a:0,e:'Dacă nimeni nu te vede, nu te miști. Oprește și așteaptă.'},
+  {q:'Ce porți când cobori din cabină?',o:['Doar vesta reflectorizantă','Vestă reflectorizantă și încălțăminte de protecție','Nimic în plus, dacă ies doar un minut'],a:1,e:'Vestă și încălțăminte de protecție, de fiecare dată.'},
+  {q:'Sună alarma de incendiu. Ce faci?',o:['Scot vehiculul din curte','Merg la biroul rampei să întreb ce se întâmplă','Las vehiculul unde este și merg la punctul de adunare A'],a:2,e:'Nu muta vehiculul. Mergi la punctul de adunare A pe traseul verde.'}]}
+};
+const STEP_KIND=['mand','warn','stop','stop','mand','mand','stop','safe'];
+let LANG='en'; try{const s=localStorage.getItem('bb-lang'); if(s&&I18N[s]) LANG=s;}catch(e){}
+let L=I18N[LANG];
+
+/* =====================================================================
+   SITE + ROUTE (all data driven: change the numbers, the animation follows)
+   x east, z south, y up. Heading angle h means direction (cos h, sin h) in x,z.
+   ===================================================================== */
+const SITE={roadZ:85,laneZ:82.8,driveX:40,barrierZ:44,crossZ:34,yardZ:3,dock:-30,loungeX:-38,loungeZ:-21,walkZ:-13,assembly:[-56,-8]};
+const bayX=n=>-27+5*(n-1);
+const KINDS={
+ artic:{id:'artic',bay:4,Lt:9.6,cargo:13.6,front:1.3,tailOH:2.7,nose:4.6,wb:3.7,Rroad:16,Ryard:14,Rrev:14,pallets:22,eye:[3.5,3.0,0.55],mir:[4.0,2.75,1.5]},
+ rigid:{id:'rigid',bay:8,Lt:0,cargo:6.4,front:4.4,tailOH:2.0,nose:6.7,wb:5.4,Rroad:12,Ryard:10,Rrev:9,pallets:10,eye:[5.6,2.95,0.55],mir:[6.0,2.7,1.45]}
+};
+const DS=0.25, HOLD=26, DT=0.04;
+
+function buildRoute(k){
+  const bx=bayX(k.bay), zEnd=SITE.dock+0.35+k.tailOH;
+  // reverse arc (relative), curvature ramps in and out so the cab swings smoothly
+  const R=k.Rrev, ramp=4, kap=1/R, arcLen=PI/2*R+ramp;
+  const arc=[{x:0,z:0,m:0,k:0}];
+  {let x=0,z=0,m=0; const n=Math.ceil(arcLen/DS), d=arcLen/n;
+   for(let i=1;i<=n;i++){const sm=(i-.5)*d, kk=kap*Math.min(1,sm/ramp,(arcLen-sm)/ramp); const mm=m-kk*d/2; x+=Math.cos(mm)*d; z+=Math.sin(mm)*d; m-=kk*d; arc.push({x,z,m,k:kk});}}
+  function gen(stopX){
+    const pts=[]; let x=-85,z=SITE.laneZ,ph=0,s=0; const mark={};
+    const push=v=>pts.push({x,z,ph,s,v,dir:1});
+    push(11);
+    const line=(len,v)=>{const n=Math.max(1,Math.ceil(len/DS)),d=len/n; for(let i=0;i<n;i++){x+=Math.cos(ph)*d;z+=Math.sin(ph)*d;s+=d;push(v);}};
+    const arcL=(Rr,ang,v)=>{const Ln=Rr*ang,n=Math.max(1,Math.ceil(Ln/DS)),d=Ln/n,dp=-d/Rr; for(let i=0;i<n;i++){const pm=ph+dp/2; x+=Math.cos(pm)*d;z+=Math.sin(pm)*d;ph+=dp;s+=d;push(v);}};
+    line(SITE.driveX-k.Rroad-x,11); mark.arcRoad=s;
+    arcL(k.Rroad,PI/2,5.5);
+    const gateHz=SITE.barrierZ+1.2+k.nose, crossHz=SITE.crossZ+2+1.0+k.nose;
+    line(z-gateHz,6); mark.gate=s;
+    line(z-crossHz,3.6); mark.cross=s;
+    line(z-(SITE.yardZ+k.Ryard),3.6); mark.yardArc=s;
+    arcL(k.Ryard,PI/2,3.4);
+    line(x-stopX,3.6); mark.fwdEnd=s;
+    // trailer follows by pursuit
+    let th=pts[0].ph; pts[0].th=th;
+    for(let i=1;i<pts.length;i++){const p=pts[i],d=p.s-pts[i-1].s; if(k.Lt>0) th+=Math.sin(p.ph-th)/k.Lt*d; else th=p.ph; p.th=th;}
+    return {pts,mark};
+  }
+  function reverse(F,sStart){
+    const th0=F.th, a=th0+PI, ca=Math.cos(a), sa=Math.sin(a);
+    let Px=F.x-k.Lt*Math.cos(th0), Pz=F.z-k.Lt*Math.sin(th0); const out=[]; let s=sStart;
+    const x0=Px,z0=Pz; let prev={x:x0,z:z0},last=null;
+    const emit=(px,pz,th,kk,v)=>{
+      if(prev) s+=Math.hypot(px-prev.x,pz-prev.z);
+      prev={x:px,z:pz};
+      const ph=k.Lt>0?th+Math.atan(k.Lt*kk):th;
+      const hx=px+k.Lt*Math.cos(th), hz=pz+k.Lt*Math.sin(th);
+      const o={x:hx,z:hz,ph,th,s,v,dir:-1,tx:px-k.tailOH*Math.cos(th),tz:pz-k.tailOH*Math.sin(th)}; out.push(o); last=o; return o;
+    };
+    for(let i=1;i<arc.length;i++){const q=arc[i]; const rx=q.x*ca-q.z*sa, rz=q.x*sa+q.z*ca; emit(x0+rx,z0+rz,th0+q.m,q.k,1.8); Px=x0+rx; Pz=z0+rz;}
+    const m=arc[arc.length-1].m, md=a+m, dx=Math.cos(md), dz=Math.sin(md);
+    const S=(zEnd-Pz)/dz; const n=Math.max(1,Math.ceil(Math.abs(S)/DS)), d=S/n;
+    for(let i=0;i<n;i++){Px+=dx*d;Pz+=dz*d;emit(Px,Pz,th0+m,0,1.8);}
+    return {out,endX:Px,endZ:Pz};
+  }
+  let stopX=bx-R-k.Lt-2, fw, rv;
+  for(let it=0;it<4;it++){fw=gen(stopX); rv=reverse(fw.pts[fw.pts.length-1],fw.pts[fw.pts.length-1].s); stopX+=bx-rv.endX;}
+  const poses=fw.pts.concat(rv.out);
+  // starting tail positions for forward poses
+  poses.forEach(p=>{ if(p.tx===undefined){const px=p.x-k.Lt*Math.cos(p.th),pz=p.z-k.Lt*Math.sin(p.th); p.tx=px-k.tailOH*Math.cos(p.th); p.tz=pz-k.tailOH*Math.sin(p.th);} });
+  let roll=0; poses[0].roll=0;
+  for(let i=1;i<poses.length;i++){roll+=poses[i].dir*(poses[i].s-poses[i-1].s); poses[i].roll=roll;}
+  for(let i=0;i<poses.length;i++){const a=poses[Math.max(0,i-2)],b=poses[Math.min(poses.length-1,i+2)],ds=b.s-a.s||1; const dphi=(b.ph-a.ph)/ds*poses[i].dir; poses[i].steer=clamp(Math.atan(k.wb*dphi),-.62,.62);}
+  const sArr=Float32Array.from(poses.map(p=>p.s)), mark=fw.mark; mark.revEnd=poses[poses.length-1].s;
+  // first pose index west of bay by 26 m after the yard arc
+  let iPull=poses.findIndex(p=>p.s>mark.yardArc&&p.x<bx+26); mark.pull=poses[iPull].s;
+  return {k,poses,sArr,mark,bx,zEnd,sMax:mark.revEnd,stopX};
+}
+function poseAt(R,u){
+  const s=R.sArr, n=s.length; if(u<=s[0]) return R.poses[0]; if(u>=s[n-1]) return R.poses[n-1];
+  let lo=0,hi=n-1; while(hi-lo>1){const m=(lo+hi)>>1; if(s[m]<=u) lo=m; else hi=m;}
+  const a=R.poses[lo],b=R.poses[hi],f=(u-s[lo])/((s[hi]-s[lo])||1);
+  return {x:lerp(a.x,b.x,f),z:lerp(a.z,b.z,f),ph:lerp(a.ph,b.ph,f),th:lerp(a.th,b.th,f),roll:lerp(a.roll,b.roll,f),steer:lerp(a.steer,b.steer,f),dir:f<.5?a.dir:b.dir,tx:lerp(a.tx,b.tx,f),tz:lerp(a.tz,b.tz,f)};
+}
+function simulate(R){
+  const stops=[{u:R.mark.gate,dwell:3.6},{u:R.mark.cross,dwell:4.0},{u:R.mark.fwdEnd,dwell:1.4},{u:R.sMax,dwell:0}];
+  const vAt=u=>{const s=R.sArr; let lo=0,hi=s.length-1; while(hi-lo>1){const m=(lo+hi)>>1; if(s[m]<=u) lo=m; else hi=m;} return R.poses[lo].v;};
+  const Tu=[0]; let u=0,v=8,dwell=0,si=0; const A=1.7; let guard=0;
+  const tStop={};
+  while(u<R.sMax-1e-4 && guard++<200000){
+    const st=stops[si];
+    if(dwell>0){dwell-=DT; v=0;}
+    else{
+      let vt=vAt(u); if(st){const dist=st.u-u; vt=Math.min(vt,Math.sqrt(Math.max(0,2*A*dist))+0.3);}
+      v+=clamp(vt-v,-A*1.6*DT,A*DT); u+=v*DT;
+      if(st&&u>=st.u-0.03){u=st.u; v=0; dwell=st.dwell; tStop[si]=Tu.length*DT; si++;}
+    }
+    if(u>R.sMax) u=R.sMax; Tu.push(u);
+  }
+  const tHold=(Tu.length-1)*DT; const n=Math.round(HOLD/DT); for(let i=0;i<n;i++) Tu.push(R.sMax);
+  const tAt=uu=>{for(let i=0;i<Tu.length;i++) if(Tu[i]>=uu-1e-6) return i*DT; return tHold;};
+  const m=R.mark;
+  const stepU=[0,m.arcRoad-20,m.gate-14,m.gate+3,m.cross+3,m.pull,m.fwdEnd];
+  const stepT=stepU.map(tAt); stepT.push(tHold);
+  return {Tu:Float32Array.from(Tu),dur:(Tu.length-1)*DT,tHold,stepT,tGate:tStop[0],tCross:tStop[1],tFwd:tStop[2]};
+}
+const uAt=(TL,t)=>{const f=clamp(t/DT,0,TL.Tu.length-1),i=Math.floor(f),j=Math.min(TL.Tu.length-1,i+1); return lerp(TL.Tu[i],TL.Tu[j],f-i);};
+
+/* =====================================================================
+   THREE SETUP
+   ===================================================================== */
+const stageEl=$('#stage');
+if(typeof THREE==='undefined'){stageEl.insertAdjacentHTML('beforeend','<p class="nogl">'+L.ui.nogl+'</p>'); return;}
+const T=THREE, V3=T.Vector3;
+let renderer;
+try{renderer=new T.WebGLRenderer({canvas:$('#gl'),antialias:true,powerPreference:'high-performance'});}
+catch(e){stageEl.insertAdjacentHTML('beforeend','<p class="nogl">'+L.ui.nogl+'</p>'); return;}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
+const scene=new T.Scene(); const SKY='#cbd5da';
+scene.background=new T.Color(SKY); scene.fog=new T.Fog(SKY,170,520);
+const camera=new T.PerspectiveCamera(42,16/10,1,700);
+scene.add(new T.HemisphereLight(0xe3edf3,0x66705f,0.95));
+const sun=new T.DirectionalLight(0xfff1dc,0.95); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+{const c=sun.shadow.camera; c.left=-60;c.right=60;c.top=60;c.bottom=-60;c.near=10;c.far=260;} sun.shadow.bias=-0.0006;
+scene.add(sun,sun.target);
+const aniso=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+
+function cv(w,h,draw,rep){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new T.CanvasTexture(c);t.anisotropy=aniso; if(rep){t.wrapS=t.wrapT=T.RepeatWrapping;} return t;}
+const noise=cv(256,256,(g,w,h)=>{g.fillStyle='#e6e6e6';g.fillRect(0,0,w,h);for(let i=0;i<7000;i++){const v=190+Math.random()*60|0;g.fillStyle='rgb('+v+','+v+','+v+')';g.fillRect(Math.random()*w,Math.random()*h,2,2);}},true);
+const std=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.9,metalness:.02},o||{}));
+const MAT={
+ grass:std('#86a272'),asph:std('#6c7379',{map:noise}),road:std('#5f666c',{map:noise}),conc:std('#b9bdbd'),
+ wall:std('#dfe3e4'),wall2:std('#c8ced1'),roof:std('#e7ecee',{transparent:true,opacity:.2,depthWrite:false}),
+ door:std('#59636a'),dark:std('#1d2226'),tyre:std('#17191b'),rim:std('#9aa3a8',{metalness:.5,roughness:.4}),hubdark:std('#2a2f33'),
+ chrome:std('#c9d0d4',{metalness:.7,roughness:.3}),glass:std('#14202b',{metalness:.5,roughness:.15}),
+ cab:std('#1c5fb0',{roughness:.5}),cabW:std('#f1f4f5',{roughness:.5}),white:std('#f4f6f7'),ply:std('#b99a6b'),
+ hi:std('#ffc400'),hiE:std('#ffc400',{emissive:'#ffc400',emissiveIntensity:.5}),red:std('#d6262b'),
+ wood:std('#a98258'),wrap:std('#ebe6d6'),wrap2:std('#9ec1de'),steel:std('#7b868d',{metalness:.4}),
+ lightH:new T.MeshStandardMaterial({color:'#fff8d6',emissive:'#fff2a8',emissiveIntensity:.6}),
+ amber:new T.MeshStandardMaterial({color:'#ff9a1a',emissive:'#ff7a00',emissiveIntensity:0}),
+ brake:new T.MeshStandardMaterial({color:'#7a1214',emissive:'#ff1a1a',emissiveIntensity:0.15}),
+ rev:new T.MeshStandardMaterial({color:'#dfe6ea',emissive:'#ffffff',emissiveIntensity:0}),
+ skin:std('#d8a98c'),pants:std('#2b3340'),boot:std('#262626')
+};
+const addM=(geo,mat,x,y,z,p,sh=true)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y,z);if(sh){m.castShadow=true;m.receiveShadow=true;}if(p)p.add(m);return m;};
+const box=(w,h,d,mat,x,y,z,p)=>addM(new T.BoxGeometry(w,h,d),mat,x,y,z,p);
+const cylM=(rt,rb,h,mat,x,y,z,p,seg=14)=>addM(new T.CylinderGeometry(rt,rb,h,seg),mat,x,y,z,p);
+function plane(w,d,mat,x,z,y=0,p=scene){const m=new T.Mesh(new T.PlaneGeometry(w,d),mat);m.rotation.x=-PI/2;m.position.set(x,y,z);m.receiveShadow=true;p.add(m);return m;}
+function tileMat(mat,rx,rz){const m=mat.clone(); m.map=mat.map.clone(); m.map.needsUpdate=true; m.map.repeat.set(rx,rz); return m;}
+
+/* ---------- scenery ---------- */
+const rnd=(()=>{let s=7;return()=>(s=(s*16807)%2147483647)/2147483647;})();
+const world=new T.Group(); scene.add(world);
+plane(700,560,MAT.grass,0,20,0,world);
+// public road (traffic keeps left)
+{const rt=cv(256,128,(g,w,h)=>{g.fillStyle='#e8e8e8';g.fillRect(0,0,w,h);for(let i=0;i<2400;i++){const v=190+Math.random()*60|0;g.fillStyle='rgb('+v+','+v+','+v+')';g.fillRect(Math.random()*w,Math.random()*h,2,2);}
+  g.fillStyle='#f2f2f2';g.fillRect(0,6,w,3);g.fillRect(0,h-9,w,3);g.fillStyle='#ffffff';g.fillRect(10,h/2-2,170,4);},true);
+ const m=std('#6a7076',{map:rt}); m.map.repeat.set(700/12,1); plane(700,9,m,0,SITE.roadZ,0.02,world);}
+// footway
+plane(700,2,MAT.conc,0,SITE.roadZ-5.5,0.02,world);
+// entrance drive and site road
+plane(10,SITE.roadZ-SITE.yardZ-8,tileMat(MAT.asph,1.5,8),SITE.driveX,(SITE.roadZ-4+SITE.yardZ+4)/2,0.03,world);
+// bellmouth corners
+for(const sx of [-1,1]){const pts=[[0,0]];for(let i=0;i<=8;i++){const a=i/8*PI/2; pts.push([sx*(7-7*Math.cos(a)) , -7*Math.sin(a)+0]);}
+  const sh=new T.Shape(); sh.moveTo(0,0); for(let i=0;i<=8;i++){const a=i/8*PI/2; sh.lineTo(sx*(7-7*Math.sin(a)),-(7-7*Math.cos(a))*1);} sh.lineTo(0,-7); sh.closePath();
+  const m=new T.Mesh(new T.ShapeGeometry(sh),MAT.road.clone()); m.rotation.x=-PI/2; m.position.set(SITE.driveX+sx*5,0.031,SITE.roadZ-4.5); m.material.map=noise; m.scale.set(1,-1,1); m.receiveShadow=true; world.add(m);}
+// yard + car park
+plane(124,52,tileMat(MAT.asph,16,7),0,-4,0.03,world);
+plane(90,24,tileMat(MAT.asph,12,3.2),-17,36,0.03,world);
+// bay lines + painted markings
+{const lines=cv(1024,512,(g,w,h)=>{g.clearRect(0,0,w,h);g.fillStyle='rgba(255,255,255,.9)';
+  for(let i=0;i<=10;i++){const x=(bayX(1)-2.5+5*i+62)/124*w; g.fillRect(x-2,(0)/18*h,4,h);} },false);
+  const m=new T.MeshBasicMaterial({map:lines,transparent:true,depthWrite:false}); const p=plane(124,18,m,0,-21,0.05,world);}
+// car park bays
+{const t=cv(1024,256,(g,w,h)=>{g.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<=30;i++){const x=i/30*w;g.fillRect(x-1.5,18,3,90);g.fillRect(x-1.5,h-108,3,90);}g.fillRect(0,18,w,3);g.fillRect(0,h-21,w,3);});
+  plane(90,24,new T.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}),-17,36,0.05,world);}
+// zebra crossing
+{const t=cv(256,128,(g,w,h)=>{g.clearRect(0,0,w,h);g.fillStyle='rgba(255,255,255,.92)';for(let i=0;i<10;i++) g.fillRect(i*26+4,0,14,h);});
+  plane(10,4,new T.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}),SITE.driveX,SITE.crossZ,0.05,world);}
+// verge strip between yard and car park
+plane(124,2,MAT.grass,0,23,0.04,world);
+// speed/stop painted word
+function paintText(txt,w,d,x,z,rot,col){const t=cv(512,256,(g,W,H)=>{g.clearRect(0,0,W,H);g.fillStyle=col||'#fff';g.font='800 150px "Barlow Condensed",Arial Narrow,Arial';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,W/2,H/2);});
+  const m=plane(w,d,new T.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}),x,z,0.06,world); m.rotation.z=rot||0; return m;}
+// building (warehouse, ghost roof so the dock is visible from above)
+const BLD={x0:-50,x1:50,z0:-74,z1:-30,h:9,floor:1.25};
+{const g=new T.Group(); world.add(g);
+ const doors=[]; for(let i=1;i<=10;i++) doors.push(bayX(i));
+ const edges=[BLD.x0]; doors.forEach(d=>{edges.push(d-1.6,d+1.6);}); edges.push(BLD.x1);
+ // wall segments between doors (full height) + lintel above doors + plinth below
+ for(let i=0;i<edges.length;i+=2){const a=edges[i],b=edges[i+1]; box(b-a,BLD.h,0.5,MAT.wall,(a+b)/2,BLD.h/2,BLD.z1-0.25,g);}
+ box(BLD.x1-BLD.x0,BLD.h-4.6,0.5,MAT.wall,0,4.6+(BLD.h-4.6)/2,BLD.z1-0.25,g);
+ box(BLD.x1-BLD.x0,BLD.floor,0.5,MAT.wall2,0,BLD.floor/2,BLD.z1-0.25,g);
+ box(BLD.x1-BLD.x0,0.7,0.52,std('#1c5fb0'),0,6.2,BLD.z1-0.26,g);
+ // other walls
+ box(0.5,BLD.h,BLD.z1-BLD.z0,MAT.wall2,BLD.x0-0.25,BLD.h/2,(BLD.z0+BLD.z1)/2,g); box(0.5,BLD.h,BLD.z1-BLD.z0,MAT.wall2,BLD.x1+0.25,BLD.h/2,(BLD.z0+BLD.z1)/2,g);
+ box(BLD.x1-BLD.x0,BLD.h,0.5,MAT.wall2,0,BLD.h/2,BLD.z0-0.25,g);
+ const roof=box(BLD.x1-BLD.x0+1,0.3,BLD.z1-BLD.z0+1,MAT.roof,0,BLD.h+0.15,(BLD.z0+BLD.z1)/2,g); roof.castShadow=false;
+ plane(BLD.x1-BLD.x0,BLD.z1-BLD.z0,std('#aeb3b3'),0,(BLD.z0+BLD.z1)/2,BLD.floor+0.01,g);
+ // racking
+ for(let r=0;r<3;r++){const z=-50-r*8; box(80,0.15,2.2,MAT.hi,0,2.2,z,g); box(80,0.15,2.2,MAT.hi,0,4.4,z,g); box(80,6,0.2,std('#2e5da8'),0,3,z-1.1,g);
+  for(let i=0;i<20;i++){const c=i%3?'#c9a56a':'#8fb3d1'; box(3.2,1.5,1.8,std(c),-38+i*4,3.0,z,g); if(i%2) box(3.2,1.5,1.8,std(c),-38+i*4,5.2,z,g);} }
+ // doors (closed shutters, except the allocated bay which is built separately)
+ g.userData.shutters={}; for(let i=1;i<=10;i++){const sh=box(3.2,3.35,0.12,MAT.door,bayX(i),BLD.floor+1.675,BLD.z1+0.04,g); for(let j=1;j<6;j++) box(3.2,0.04,0.14,MAT.dark,bayX(i),BLD.floor+j*0.55,BLD.z1+0.05,g); g.userData.shutters[i]=sh;}
+ // bay numbers + bumpers
+ for(let i=1;i<=10;i++){const t=cv(128,128,(c,w,h)=>{c.fillStyle='#1c5fb0';c.fillRect(0,0,w,h);c.fillStyle='#fff';c.font='800 96px "Barlow Condensed",Arial';c.textAlign='center';c.textBaseline='middle';c.fillText(String(i),w/2,h/2+4);});
+  const p=new T.Mesh(new T.PlaneGeometry(1.5,1.5),new T.MeshBasicMaterial({map:t})); p.position.set(bayX(i),5.5,BLD.z1+0.02); g.add(p);
+  box(0.3,0.5,0.35,MAT.dark,bayX(i)-1.85,BLD.floor+0.4,BLD.z1+0.2,g); box(0.3,0.5,0.35,MAT.dark,bayX(i)+1.85,BLD.floor+0.4,BLD.z1+0.2,g);}
+ world.userData.bld=g;
+ // dock canopy edge stripe for warm look
+ box(BLD.x1-BLD.x0,0.25,0.9,MAT.dark,0,BLD.h-0.2,BLD.z1+0.3,g);
+}
+// driver lounge cabin
+{const g=new T.Group(); world.add(g); g.position.set(SITE.loungeX,0,SITE.loungeZ-3.5);
+ box(8,3,7,std('#5b6f86'),0,1.5,0,g); box(8.4,0.3,7.4,MAT.dark,0,3.1,0,g);
+ box(1.4,2.2,0.12,MAT.hi,0,1.1,3.55,g); box(3,1,0.1,MAT.glass,-2.4,1.8,3.52,g); box(3,1,0.1,MAT.glass,2.4,1.8,3.52,g);}
+// office / reception east of site road
+{const g=new T.Group(); world.add(g); g.position.set(55,0,20);
+ box(14,7,16,std('#cfd4d6'),0,3.5,0,g); box(14.4,0.4,16.4,MAT.dark,0,7.1,0,g); for(let i=0;i<4;i++){box(0.1,1.4,2.2,MAT.glass,-7.03,2.4,-5.5+i*3.6,g);box(0.1,1.4,2.2,MAT.glass,-7.03,5,-5.5+i*3.6,g);}}
+// gatehouse + barrier
+const barrierPivot=new T.Group(); barrierPivot.position.set(43.2,1.0,SITE.barrierZ); world.add(barrierPivot);
+{const g=new T.Group(); world.add(g); g.position.set(46,0,SITE.barrierZ+3.5);
+ box(4.4,3.2,6.4,std('#e9edee'),0,1.6,0,g); box(4.8,0.3,6.8,MAT.dark,0,3.3,0,g); box(0.12,1.2,2.6,MAT.glass,-2.25,2.0,0.3,g); box(.6,.4,.6,MAT.hi,0,3.65,0,g);
+ box(0.4,1.1,0.4,MAT.dark,43.2-46,0.55,-3.5,g);
+ const bt=cv(512,32,(c,w,h)=>{for(let i=0;i<16;i++){c.fillStyle=i%2?'#fff':'#d6262b';c.fillRect(i*32,0,32,h);}});
+ const arm=new T.Mesh(new T.BoxGeometry(8.4,0.18,0.18),new T.MeshStandardMaterial({map:bt})); arm.position.set(-4.2,0,0); arm.castShadow=true; barrierPivot.add(arm);}
+// fence
+{const post=new T.BoxGeometry(0.12,2.2,0.12), inst=new T.InstancedMesh(post,MAT.steel,200); let c=0; const m4=new T.Matrix4();
+ const add=(x,z)=>{m4.makeTranslation(x,1.1,z); inst.setMatrixAt(c++,m4);};
+ const run=(x0,z0,x1,z1)=>{const L=Math.hypot(x1-x0,z1-z0),n=Math.max(1,Math.round(L/4)); for(let i=0;i<=n;i++) add(lerp(x0,x1,i/n),lerp(z0,z1,i/n)); const mesh=new T.Mesh(new T.PlaneGeometry(L,1.9),new T.MeshBasicMaterial({color:'#4a5560',transparent:true,opacity:.28,side:T.DoubleSide,depthWrite:false})); mesh.position.set((x0+x1)/2,1.1,(z0+z1)/2); mesh.rotation.y=-Math.atan2(z1-z0,x1-x0); world.add(mesh);};
+ run(-62,50,35,50); run(45,50,62,50); run(62,50,62,-30); run(-62,50,-62,-30); run(-62,-30,-50,-30); run(50,-30,62,-30);
+ inst.count=c; world.add(inst);}
+// cars
+{const cols=['#c0392b','#2c3e50','#7f8c8d','#ecf0f1','#34495e','#1e8449','#d4ac0d','#5d6d7e'];
+ const car=(x,z,rot,col)=>{const g=new T.Group(); box(1.8,0.55,4.3,std(col),0,0.65,0,g); box(1.6,0.5,2.3,MAT.glass,0,1.15,-0.1,g); [[-0.9,1.3],[0.9,1.3],[-0.9,-1.3],[0.9,-1.3]].forEach(([a,b])=>{const w=cylM(.33,.33,.22,MAT.tyre,a,.33,b,g,10); w.rotation.z=PI/2;}); g.position.set(x,0,z); g.rotation.y=rot; world.add(g);};
+ for(let i=0;i<30;i++){ if(rnd()<.45) continue; const x=-61+i*3; car(x,29.5,0,cols[(rnd()*cols.length)|0]); }
+ for(let i=0;i<30;i++){ if(rnd()<.55) continue; const x=-61+i*3; car(x,42.5,0,cols[(rnd()*cols.length)|0]); }}
+// trees + opposite-side units
+function tree(x,z,s){s*=.62; const g=new T.Group(); cylM(.25*s,.35*s,2.4*s,std('#6b4f35'),0,1.2*s,0,g,6); const c=std(['#4f7d3e','#5f8d49','#456f37'][(rnd()*3)|0]); addM(new T.IcosahedronGeometry(2.2*s,0),c,0,4*s,0,g); addM(new T.IcosahedronGeometry(1.6*s,0),c,0.4*s,5.4*s,0.2*s,g); g.position.set(x,0,z); world.add(g);}
+for(let i=0;i<40;i++){const x=-160+i*8+rnd()*4; if(Math.abs(x-40)>12) tree(x,SITE.roadZ-12+rnd()*3,0.9+rnd()*.4); if(rnd()<.6) tree(x+2,SITE.roadZ+12+rnd()*6,1+rnd()*.5);}
+for(let i=0;i<14;i++){tree(-75+rnd()*6,-34+i*6,1);tree(75+rnd()*6,-34+i*6,1);}
+for(let i=0;i<9;i++){const w=22+rnd()*18,h=7+rnd()*6; const b=box(w,h,18,std(['#b9bfc4','#a9b4bb','#c5c9c2'][i%3]),-150+i*38,h/2,SITE.roadZ+32,world); }
+// lamp posts
+function lamp(x,z,rot){const g=new T.Group(); cylM(.1,.14,9,MAT.steel,0,4.5,0,g,8); box(2,.12,.3,MAT.steel,1,9,0,g); box(.7,.12,.35,MAT.lightH,1.8,8.92,0,g); g.position.set(x,0,z); g.rotation.y=rot||0; world.add(g);}
+[[33,10],[33,30],[47,-10],[-55,15],[-30,22],[0,22],[30,22],[-58,-26],[38,70],[42,70]].forEach(([x,z],i)=>lamp(x,z,i%2?PI:0));
+// signs
+function signboard(x,z,rot,text,w,h,bg){const t=cv(512,256,(g,W,H)=>{g.fillStyle=bg||'#1c5fb0';g.fillRect(0,0,W,H);g.strokeStyle='#fff';g.lineWidth=8;g.strokeRect(10,10,W-20,H-20);g.fillStyle='#fff';g.font='800 64px "Barlow Condensed",Arial Narrow,Arial';g.textAlign='center';g.textBaseline='middle';text.split('\n').forEach((l,i,a)=>g.fillText(l,W/2,H/2+(i-(a.length-1)/2)*72));});
+  const g=new T.Group(); cylM(.07,.07,2.8,MAT.steel,-w/2+.4,1.4,0,g,6); cylM(.07,.07,2.8,MAT.steel,w/2-.4,1.4,0,g,6); const p=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:t,side:T.DoubleSide})); p.position.set(0,2.8+h/2-.3,0); g.add(p); g.position.set(x,0,z); g.rotation.y=rot; world.add(g);}
+signboard(30,74,PI,'AIRE GATE DC\nDELIVERIES →',5,2.5);
+signboard(34,52,-PI/2,'ALL VISITORS\nREPORT TO GATEHOUSE',4,2,'#2e8b57');
+function speedSign(x,z){const t=cv(128,128,(g,w,h)=>{g.fillStyle='#fff';g.beginPath();g.arc(64,64,62,0,TAU);g.fill();g.strokeStyle='#d6262b';g.lineWidth=14;g.beginPath();g.arc(64,64,54,0,TAU);g.stroke();g.fillStyle='#111';g.font='800 62px "Barlow Condensed",Arial';g.textAlign='center';g.textBaseline='middle';g.fillText('5',64,68);});
+  const g=new T.Group(); cylM(.06,.06,2.6,MAT.steel,0,1.3,0,g,6); const p=new T.Mesh(new T.CircleGeometry(.55,24),new T.MeshBasicMaterial({map:t,side:T.DoubleSide})); p.position.set(0,2.8,0); g.add(p); g.position.set(x,0,z); g.rotation.y=-PI/2; world.add(g);}
+speedSign(46.5,52); speedSign(33,18); speedSign(-50,6); speedSign(56,2);
+
+/* ---------- people ---------- */
+function makePerson(vest,hat){
+  const g=new T.Group(); const vm=std(vest,{emissive:vest,emissiveIntensity:.18});
+  const mk=(w,h,d,m,x,y,z,p)=>box(w,h,d,m,x,y,z,p);
+  const legL=new T.Group(),legR=new T.Group(); legL.position.set(0,0.9,-0.11); legR.position.set(0,0.9,0.11);
+  [legL,legR].forEach(l=>{mk(.15,.88,.15,MAT.pants,0,-.45,0,l); mk(.26,.12,.17,MAT.boot,.05,-.86,0,l); g.add(l);});
+  mk(.28,.6,.44,vm,0,1.2,0,g); mk(.29,.07,.45,std('#eeeeee'),0,1.12,0,g); mk(.29,.07,.45,std('#eeeeee'),0,1.32,0,g);
+  const armL=new T.Group(),armR=new T.Group(); armL.position.set(0,1.45,-.28); armR.position.set(0,1.45,.28);
+  [armL,armR].forEach(a=>{mk(.12,.55,.12,vm,0,-.28,0,a); g.add(a);});
+  addM(new T.SphereGeometry(.12,10,8),MAT.skin,0,1.7,0,g); const h=addM(new T.SphereGeometry(.14,10,8),std(hat||'#f2f2f2'),0,1.76,0,g); h.scale.y=.7;
+  g.userData={legL,legR,armL,armR}; return g;
+}
+function walkAnim(p,ph,on){const u=p.userData,a=on?Math.sin(ph)*.65:0; u.legL.rotation.z=a;u.legR.rotation.z=-a;u.armL.rotation.z=-a*.8;u.armR.rotation.z=a*.8;p.position.y=on?Math.abs(Math.sin(ph))*.03:0;}
+const pDriver=makePerson('#ffd400','#f2f2f2'), pBank=makePerson('#ff6a13','#ff6a13'), pStaff=makePerson('#ffd400','#2e7de0'), pStaff2=makePerson('#ffd400','#f2f2f2');
+world.add(pDriver,pBank,pStaff,pStaff2); pDriver.visible=pBank.visible=false;
+
+/* ---------- forklift + pallets ---------- */
+function makeForklift(){
+  const g=new T.Group(); const yel=std('#f0b400',{roughness:.6});
+  box(1.9,.7,1.1,yel,-1.0,.62,0,g); box(.6,.9,1.05,MAT.dark,-1.95,.75,0,g); box(.5,.5,1.0,yel,-.3,.8,0,g);
+  [[0,.52],[0,-.52]].forEach(([x,z])=>{const w=cylM(.28,.28,.22,MAT.tyre,x,.28,z,g,12); w.rotation.x=PI/2;});
+  [[-1.5,.45],[-1.5,-.45]].forEach(([x,z])=>{const w=cylM(.24,.24,.22,MAT.tyre,x,.24,z,g,12); w.rotation.x=PI/2;});
+  [[-.25,.5],[-.25,-.5],[-1.5,.5],[-1.5,-.5]].forEach(([x,z])=>box(.07,1.35,.07,MAT.dark,x,1.9,z,g)); box(1.4,.06,1.15,MAT.dark,-.88,2.57,0,g);
+  box(.5,.4,.7,std('#1c5fb0'),-1.0,1.15,0,g); addM(new T.SphereGeometry(.13,8,6),MAT.skin,-1.0,1.65,0,g); box(.28,.45,.4,std('#d4ff2a',{emissive:'#a8c800',emissiveIntensity:.25}),-1.0,1.3,0,g);
+  box(.08,2.3,.08,MAT.dark,.35,1.2,.4,g); box(.08,2.3,.08,MAT.dark,.35,1.2,-.4,g);
+  const car=new T.Group(); car.position.set(.38,.1,0); g.add(car);
+  box(.06,.7,1.0,MAT.dark,0,.45,0,car); [.3,-.3].forEach(z=>box(1.05,.07,.12,MAT.steel,.55,0,z,car));
+  const hold=new T.Group(); hold.position.set(.95,.07,0); car.add(hold);
+  g.userData={car,hold}; return g;
+}
+function makePallet(i){
+  const g=new T.Group(); [-.4,0,.4].forEach(z=>box(1.18,.09,.12,MAT.wood,0,.05,z*1.0,g)); box(1.2,.05,1.0,MAT.wood,0,.115,0,g);
+  const h=.9+((i*7)%3)*.1; box(1.1,h,.92,i%3?MAT.wrap:MAT.wrap2,0,.14+h/2,0,g);
+  box(1.12,.04,.94,std('#ffffff'),0,.14+h+.01,0,g); box(.01,.3,.5,std('#222'),.56,.14+h*.6,0,g); g.userData.h=h+.2; return g;
+}
+
+/* ---------- vehicles ---------- */
+function makeWheel(parent,r,w,x,z,wl,steer){
+  const pv=new T.Group(); pv.position.set(x,r,z); const sp=new T.Group();
+  const ty=addM(new T.CylinderGeometry(r,r,w,18),MAT.tyre,0,0,0,sp); ty.rotation.x=PI/2;
+  const hb=addM(new T.CylinderGeometry(r*.55,r*.55,w+.02,12),MAT.rim,0,0,0,sp,false); hb.rotation.x=PI/2;
+  addM(new T.BoxGeometry(r*1.5,r*.16,w+.04),MAT.hubdark,0,0,0,sp,false); addM(new T.BoxGeometry(r*.16,r*1.5,w+.04),MAT.hubdark,0,0,0,sp,false);
+  pv.add(sp); parent.add(pv); wl.push({sp,r}); if(steer) steer.push(pv); return pv;
+}
+function makeCab(g,k,v){
+  const nose=k.nose, cabLen=2.3, c0=nose-cabLen, fa=nose-1.3, ra=fa-k.wb, mid=(c0+nose)/2;
+  const cb=new T.Group(); g.add(cb); v.cabGroup=cb;
+  box(nose-ra+.9,.34,.95,MAT.dark,(nose-.3+ra-1.2)/2,1.0,0,g); // chassis rails
+  box(cabLen,2.15,2.5,MAT.cab,mid,2.2,0,cb); box(cabLen*.82,.55,2.48,MAT.cabW,mid-cabLen*.08,3.55,0,cb); box(.9,.8,2.3,MAT.cabW,c0+.1,4.1,0,cb).rotation.z=-.25;
+  box(.06,1.05,2.12,MAT.glass,nose+.005,2.7,0,cb).rotation.z=.08;
+  [1,-1].forEach(sd=>{box(1.15,.82,.05,MAT.glass,mid-.1,2.75,sd*1.255,cb); box(.5,.08,.5,MAT.dark,mid+.2,.95,sd*1.2,cb); box(.5,.08,.5,MAT.dark,mid-.4,.65,sd*1.2,cb);
+    box(.12,.55,.22,MAT.dark,nose-.6,2.9,sd*1.55,cb); box(.35,.04,.04,MAT.dark,nose-.6,2.65,sd*1.4,cb);
+    box(.18,.18,.34,MAT.lightH,nose+.02,1.72,sd*.95,cb); box(.12,.12,.2,MAT.amber,nose+.04,1.5,sd*1.15,cb); });
+  box(.05,.7,1.6,MAT.chrome,nose+.015,1.7,0,cb); box(.35,.5,2.5,MAT.cabW,nose-.1,.9,0,cb);
+  cylM(.07,.07,2.6,MAT.chrome,c0-.15,2.9,1.28,cb,8);
+  box(1.1,.7,.7,MAT.chrome,ra+.8,.75,-1.0,g).castShadow=true;
+  [1,-1].forEach(sd=>makeWheel(g,.52,.32,fa,sd*1.08,v.wheels,v.steer));
+  [1,-1].forEach(sd=>{makeWheel(g,.52,.3,ra,sd*.78,v.wheels);makeWheel(g,.52,.3,ra,sd*1.12,v.wheels);});
+  [1,-1].forEach(sd=>{const m=box(.1,.18,.25,MAT.brake,ra-1.35,.95,sd*.85,g); m.userData.brake=1;});
+}
+function makeCargo(len,v,withPallets,k,legs){
+  const g=new T.Group();
+  const wall=std('#f3f5f6',{transparent:true,opacity:1}); v.wallMats.push(wall);
+  const hgt=2.75,w=2.5;
+  box(len,.1,w,MAT.ply,-len/2,1.3,0,g); box(len,.1,w,MAT.dark,-len/2,1.2,0,g);
+  const l=box(len,hgt,.06,wall,-len/2,1.35+hgt/2,-w/2+.03,g), r=box(len,hgt,.06,wall,-len/2,1.35+hgt/2,w/2-.03,g), rf=box(len,.06,w,wall,-len/2,1.35+hgt+.03,0,g), fr=box(.06,hgt,w,wall,-.03,1.35+hgt/2,0,g);
+  [l,r,rf,fr].forEach(m=>m.castShadow=!1);
+  // side livery
+  const lt=cv(1024,128,(c,W,H)=>{c.clearRect(0,0,W,H);c.fillStyle='#1c5fb0';c.fillRect(0,H*.62,W,H*.2);c.fillStyle='#ffc400';c.fillRect(0,H*.82,W,H*.06);c.fillStyle='#1c5fb0';c.font='800 78px "Barlow Condensed",Arial Narrow,Arial';c.textAlign='left';c.textBaseline='middle';c.fillText('DEMO HAULAGE',40,H*.32);});
+  [1,-1].forEach(sd=>{const p=new T.Mesh(new T.PlaneGeometry(Math.min(len-1,9),1.15),new T.MeshBasicMaterial({map:lt,transparent:true,depthWrite:false})); p.position.set(-len/2,2.25,sd*(w/2+.005)); if(sd<0) p.rotation.y=PI; v.liv.push(p); g.add(p);});
+  // rear doors (hinged)
+  v.doors=[]; [1,-1].forEach(sd=>{const piv=new T.Group(); piv.position.set(-len,1.35+hgt/2,sd*(w/2-.05)); const d=box(.05,hgt,w/2-.02,MAT.white,0,0,-sd*(w/4-.01),piv); piv.userData.sd=sd; g.add(piv); v.doors.push(piv);});
+  // rear marker board + lights
+  box(.04,.35,w,MAT.red,-len-.02,1.0,0,g); [1,-1].forEach(sd=>{const m=box(.08,.2,.3,MAT.brake,-len-.04,1.55,sd*1.0,g); m.userData.brake=1; const rv=box(.08,.15,.2,MAT.rev,-len-.04,1.55,sd*.6,g); rv.userData.rev=1; const am=box(.08,.15,.2,MAT.amber,-len-.04,1.75,sd*1.1,g); am.userData.haz=1;});
+  // underrun bar
+  box(Math.min(len*.5,6),.25,.05,MAT.steel,-len*.55,.78,w/2+.1,g); box(Math.min(len*.5,6),.25,.05,MAT.steel,-len*.55,.78,-w/2-.1,g);
+  if(legs){[1,-1].forEach(sd=>box(.12,1.2,.12,MAT.steel,-2.2,.62,sd*1.0,g));}
+  // pallets
+  v.pallets=[]; if(withPallets){const rows=Math.floor(len/1.2)-0; for(let i=0;i<k.pallets;i++){const rI=i>>1,c=i&1; const p=makePallet(i); p.position.set(-len+.7+rI*1.2,1.4,c?-.62:.62); p.userData.home=p.position.clone(); p.userData.homeParent=g; g.add(p); v.pallets.push(p);} }
+  return g;
+}
+function makeVehicle(kind){
+  const k=KINDS[kind]; const v={k,kind,wheels:[],steer:[],wallMats:[],liv:[],doors:[],pallets:[],tractor:new T.Group(),trailer:null,cargo:null};
+  makeCab(v.tractor,k,v);
+  if(kind==='artic'){
+    v.trailer=new T.Group(); box(1.2,.2,.8,MAT.dark,0,1.15,0,v.trailer); // kingpin plate
+    box(.8,.2,.8,MAT.dark,0,1.12,0,v.tractor); cylM(.45,.45,.18,MAT.steel,0,1.2,0,v.tractor,14);
+    v.cargo=makeCargo(k.cargo,v,true,k); v.cargo.position.x=k.front; v.trailer.add(v.cargo);
+    box(11.6,.3,.9,MAT.dark,-6.5,1.0,0,v.trailer);
+    [0,1.31,-1.31].forEach(o=>[1,-1].forEach(sd=>makeWheel(v.trailer,.5,.4,-k.Lt+o,sd*1.05,v.wheels)));
+    // wheel arches
+    [1,-1].forEach(sd=>box(3.8,.1,.55,MAT.dark,-k.Lt,1.12,sd*1.05,v.trailer));
+  }else{
+    v.cargo=makeCargo(k.cargo,v,true,k); v.cargo.position.x=k.front; v.tractor.add(v.cargo);
+    box(7.4,.3,.9,MAT.dark,.6,1.0,0,v.tractor);
+  }
+  v.group=new T.Group(); v.group.add(v.tractor); if(v.trailer) v.group.add(v.trailer); world.add(v.group);
+  v.brakeMats=[];v.revMats=[];v.hazMats=[];
+  v.group.traverse(m=>{if(m.userData&&m.userData.brake) m.material=MAT.brake; if(m.userData&&m.userData.rev) m.material=MAT.rev; if(m.userData&&m.userData.haz) m.material=MAT.amber;});
+  // overlays attached to the body: red reversing zone
+  const zl=(kind==='artic'?k.Lt+k.tailOH:k.tailOH);
+  v.revZone=hatch(8,3.2,'rgba(229,72,59,.55)'); v.revZone.rotation.set(-PI/2,0,0); v.revZone.position.set(-zl-4.2,.09,0); (v.trailer||v.tractor).add(v.revZone); v.revZone.visible=false;
+  v.xray=a=>{v.wallMats.forEach(m=>{m.opacity=lerp(1,.16,a); m.depthWrite=a<.5; m.transparent=a>.01; m.needsUpdate=true;}); };
+  return v;
+}
+function hatch(w,d,col){const t=cv(128,128,(g,W,H)=>{g.clearRect(0,0,W,H);g.fillStyle=col;g.fillRect(0,0,W,H);g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=12;for(let i=-H;i<W+H;i+=32){g.beginPath();g.moveTo(i,H);g.lineTo(i+H,0);g.stroke();}},true);
+  t.repeat.set(w/3,d/3); const m=new T.Mesh(new T.PlaneGeometry(w,d),new T.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,opacity:.9,side:T.DoubleSide})); return m;}
+const VEH={artic:makeVehicle('artic'),rigid:makeVehicle('rigid')};
+VEH.artic.group.visible=false; VEH.rigid.group.visible=false;
+['artic','rigid'].forEach(n=>{const v=VEH[n]; v.setDoors=function(o){v.doors.forEach(d=>{d.rotation.y=d.userData.sd>0?-1.78*o:1.78*o;});};});
+// parked, dropped trailers
+function staticTrailer(bayN){const v={wallMats:[],liv:[],doors:[],pallets:[],wheels:[],steer:[]}; const k=KINDS.artic; const g=new T.Group(); const c=makeCargo(k.cargo,v,false,k,true); g.add(c); c.position.x=k.front;
+  box(11.6,.3,.9,MAT.dark,-6.5,1.0,0,g); [0,1.31,-1.31].forEach(o=>[1,-1].forEach(sd=>makeWheel(g,.5,.4,-k.Lt+o,sd*1.05,v.wheels)));
+  g.position.set(bayX(bayN),0,SITE.dock+0.35+k.Lt+k.tailOH); g.rotation.y=-PI/2; world.add(g);}
+staticTrailer(2); staticTrailer(6);
+// forklift
+const fork=makeForklift(); world.add(fork);
+// bay highlight (door frame + floor)
+const bayGlow=new T.Group(); world.add(bayGlow); const glowMats=[];
+function buildBayGlow(n){while(bayGlow.children.length) bayGlow.remove(bayGlow.children[0]); glowMats.length=0; const x=bayX(n);
+  const m=new T.MeshBasicMaterial({color:'#ffc400',transparent:true,opacity:.9}); glowMats.push(m);
+  [[0,1.25+3.5,3.4,.18],[0,1.25-0.0,3.4,.18]].forEach(([_,y,w,h])=>box(w+.4,h,.2,m,x,y,SITE.dock+.12,bayGlow));
+  [-1.8,1.8].forEach(dx=>box(.18,3.6,.2,m,x+dx,1.25+1.8,SITE.dock+.12,bayGlow));
+  const fm=new T.MeshBasicMaterial({color:'#ffc400',transparent:true,opacity:.22,depthWrite:false}); glowMats.push(fm);
+  const fl=new T.Mesh(new T.PlaneGeometry(3.9,17),fm); fl.rotation.x=-PI/2; fl.position.set(x,.07,SITE.dock+8.5+.4); bayGlow.add(fl);
+  [-1.95,1.95].forEach(dx=>{const ln=new T.Mesh(new T.PlaneGeometry(.14,17),new T.MeshBasicMaterial({color:'#ffc400'})); ln.rotation.x=-PI/2; ln.position.set(x+dx,.075,SITE.dock+8.9); bayGlow.add(ln);});
+}
+
+/* ---------- ribbons, zones, sprites ---------- */
+const chevron=(col,bg)=>cv(64,64,(g,w,h)=>{g.clearRect(0,0,w,h);if(bg){g.fillStyle=bg;g.fillRect(0,0,w,h);}g.strokeStyle=col;g.lineWidth=11;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(16,10);g.lineTo(46,32);g.lineTo(16,54);g.stroke();},true);
+function ribbon(pts,w,mat,y){const pos=[],uv=[],idx=[];let d=0;
+  for(let i=0;i<pts.length;i++){const p=pts[i],a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)];let tx=b.x-a.x,tz=b.z-a.z;const l=Math.hypot(tx,tz)||1;tx/=l;tz/=l;const nx=-tz,nz=tx; if(i>0) d+=Math.hypot(p.x-pts[i-1].x,p.z-pts[i-1].z);
+    pos.push(p.x+nx*w/2,y,p.z+nz*w/2,p.x-nx*w/2,y,p.z-nz*w/2); uv.push(d/1.6,0,d/1.6,1); if(i<pts.length-1){const k=i*2;idx.push(k,k+2,k+1,k+1,k+2,k+3);}}
+  const geo=new T.BufferGeometry(); geo.setAttribute('position',new T.Float32BufferAttribute(pos,3)); geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2)); geo.setIndex(idx);
+  const m=new T.Mesh(geo,mat); m.renderOrder=3; return m;}
+const texYellow=chevron('#ffc400'), texRed=chevron('#ff5a4a'), texGreen=chevron('#ffffff','rgba(47,179,109,.85)');
+const bMat=(tex)=>new T.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2});
+const routeGroup=new T.Group(); world.add(routeGroup);
+const walkGroup=new T.Group(); world.add(walkGroup); const emerGroup=new T.Group(); world.add(emerGroup);
+let sweptMesh=null;
+const zoneCar=hatch(88,22,'rgba(229,72,59,.38)'); zoneCar.rotation.x=-PI/2; zoneCar.position.set(-18,.09,36); world.add(zoneCar);
+const zoneDock=hatch(5,17,'rgba(229,72,59,.45)'); zoneDock.rotation.x=-PI/2; world.add(zoneDock);
+const zoneWalkNo=hatch(30,5,'rgba(229,72,59,.4)'); zoneWalkNo.rotation.x=-PI/2; zoneWalkNo.position.set(-22,.09,3); world.add(zoneWalkNo);
+const ring=new T.Mesh(new T.RingGeometry(3.2,3.8,40),new T.MeshBasicMaterial({color:'#2fb36d',transparent:true,opacity:.9,side:T.DoubleSide})); ring.rotation.x=-PI/2; ring.position.set(SITE.assembly[0],.1,SITE.assembly[1]); world.add(ring);
+const asmSign=(()=>{const t=cv(128,128,(g,w,h)=>{g.fillStyle='#2fb36d';g.fillRect(0,0,w,h);g.fillStyle='#fff';g.font='800 90px "Barlow Condensed",Arial';g.textAlign='center';g.textBaseline='middle';g.fillText('A',64,70);g.strokeStyle='#fff';g.lineWidth=6;g.strokeRect(5,5,118,118);});
+  const g=new T.Group(); cylM(.07,.07,3,MAT.steel,0,1.5,0,g,6); const p=new T.Mesh(new T.PlaneGeometry(1.6,1.6),new T.MeshBasicMaterial({map:t,side:T.DoubleSide})); p.position.y=3.4; g.add(p); g.position.set(SITE.assembly[0],0,SITE.assembly[1]); world.add(g); return g;})();
+const stopLine=new T.Group(); world.add(stopLine);
+const speedSprites=[]; { [[40,3.4,38],[8,3.4,3],[-34,3.4,3]].forEach(([x,y,z])=>{const t=cv(128,128,(g,w,h)=>{g.fillStyle='#fff';g.beginPath();g.arc(64,64,62,0,TAU);g.fill();g.strokeStyle='#d6262b';g.lineWidth=14;g.beginPath();g.arc(64,64,54,0,TAU);g.stroke();g.fillStyle='#111';g.font='800 62px "Barlow Condensed",Arial';g.textAlign='center';g.textBaseline='middle';g.fillText('5',64,68);});
+  const s=new T.Sprite(new T.SpriteMaterial({map:t,depthTest:false,transparent:true})); s.scale.set(4,4,1); s.position.set(x,y,z); s.renderOrder=10; world.add(s); speedSprites.push(s);}); }
+const stopMarker=new T.Group(); world.add(stopMarker);
+function cone(x,z){const g=new T.Group(); cylM(.05,.28,.7,std('#ff6a13'),0,.35,0,g,10); cylM(.18,.18,.12,std('#fff'),0,.4,0,g,10); box(.6,.04,.6,std('#222'),0,.02,0,g); g.position.set(x,0,z); stopMarker.add(g);}
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+let kindId='artic', R=null, TL=null, veh=VEH.artic;
+let tNow=0, playing=true, speedMul=1, view='chase', tab='route';
+let ruleIdx=0, ruleClock=0;
+const ssow={read:new Set(),answers:[],attempts:0,quizOk:false,name:'',co:'',reg:'',ink:false,done:null};
+const cam={pos:new V3(0,60,150),tgt:new V3(0,0,0),orb:{az:0,el:0,zoom:1},hd:0,init:false};
+let WALK=[],WALK_E=[],lastStep=-1;
+
+function setKind(id){
+  kindId=id; veh=VEH[id]; VEH.artic.group.visible=id==='artic'; VEH.rigid.group.visible=id==='rigid';
+  R=buildRoute(KINDS[id]); TL=simulate(R); tNow=0; playing=true; lastStep=-1;
+  buildBayGlow(R.k.bay);
+  // route ribbons: cab path (yellow) and trailer-tail path while reversing (red)
+  while(routeGroup.children.length) routeGroup.remove(routeGroup.children[0]);
+  const f=[],rv=[]; R.poses.forEach((p,i)=>{ if(i%4===0||i===R.poses.length-1){ if(p.dir>0) f.push({x:p.x,z:p.z}); else rv.push({x:p.tx,z:p.tz}); } });
+  const rb1=ribbon(f,1.0,bMat(texYellow),.08), rb2=ribbon(rv,1.0,bMat(texRed),.08); routeGroup.add(rb1,rb2); routeGroup.userData={rb1,rb2};
+  // swept path
+  if(sweptMesh){world.remove(sweptMesh); sweptMesh.geometry.dispose();}
+  {const x0=-100,x1=70,z0=-34,z1=92,S=7,W=(x1-x0)*S,H=(z1-z0)*S; const c=document.createElement('canvas'); c.width=W;c.height=H; const g=c.getContext('2d'); g.fillStyle='#ffc400';
+   const k=R.k; for(let i=0;i<R.poses.length;i+=3){const p=R.poses[i]; g.save(); g.translate((p.x-x0)*S,(p.z-z0)*S); g.rotate(p.ph); if(k.Lt>0) g.fillRect(-1.5*S,-1.28*S,(k.nose+1.5)*S,2.56*S); else g.fillRect(-k.tailOH*S,-1.28*S,(k.nose+k.tailOH)*S,2.56*S); g.restore();
+     if(k.Lt>0){g.save(); g.translate((p.x-x0)*S,(p.z-z0)*S); g.rotate(p.th); g.fillRect(-(k.Lt+k.tailOH)*S,-1.28*S,(k.Lt+k.tailOH+k.front)*S,2.56*S); g.restore();}}
+   const tx=new T.CanvasTexture(c); tx.anisotropy=aniso; const m=new T.Mesh(new T.PlaneGeometry(x1-x0,z1-z0),new T.MeshBasicMaterial({map:tx,transparent:true,opacity:.42,depthWrite:false})); m.rotation.x=-PI/2; m.position.set((x0+x1)/2,.075,(z0+z1)/2); m.renderOrder=2; m.visible=$('#optSwept').getAttribute('aria-pressed')==='true'; sweptMesh=m; world.add(m);}
+  // stop marker + cones
+  while(stopMarker.children.length) stopMarker.remove(stopMarker.children[0]);
+  {const last=R.poses.findIndex(p=>p.dir<0)-1, p=R.poses[last]; const nx=p.x+Math.cos(p.ph)*(R.k.nose+1.2); cone(nx,0.2);cone(nx,6.4);
+   const ln=plane(.4,7,new T.MeshBasicMaterial({color:'#ffc400'}),nx,3.3,.07,stopMarker); }
+  // walkway
+  const doorX=bayX(R.k.bay)-1.9, doorZ=R.zEnd+R.k.Lt+ (R.k.Lt>0? R.k.nose-1.5 : R.k.nose-1.9);
+  WALK=[{x:doorX,z:doorZ},{x:doorX,z:SITE.walkZ},{x:SITE.loungeX,z:SITE.walkZ},{x:SITE.loungeX,z:SITE.loungeZ+.4}];
+  while(walkGroup.children.length) walkGroup.remove(walkGroup.children[0]);
+  const dense=[]; for(let i=0;i<WALK.length-1;i++){const a=WALK[i],b=WALK[i+1],L=Math.hypot(b.x-a.x,b.z-a.z),n=Math.max(1,Math.ceil(L/1)); for(let j=0;j<n;j++) dense.push({x:lerp(a.x,b.x,j/n),z:lerp(a.z,b.z,j/n)});} dense.push(WALK[WALK.length-1]);
+  walkGroup.add(ribbon(dense,1.4,bMat(texGreen),.08));
+  WALK_E=[WALK[0],WALK[1],{x:SITE.assembly[0],z:SITE.walkZ},{x:SITE.assembly[0],z:SITE.assembly[1]+1.5}];
+  while(emerGroup.children.length) emerGroup.remove(emerGroup.children[0]);
+  {const d2=[]; for(let i=0;i<WALK_E.length-1;i++){const a=WALK_E[i],b=WALK_E[i+1],Ln=Math.hypot(b.x-a.x,b.z-a.z),n=Math.max(1,Math.ceil(Ln)); for(let j=0;j<n;j++) d2.push({x:lerp(a.x,b.x,j/n),z:lerp(a.z,b.z,j/n)});} d2.push(WALK_E[WALK_E.length-1]); emerGroup.add(ribbon(d2,1.4,bMat(texGreen),.08));}
+  zoneDock.position.set(bayX(R.k.bay),.09,SITE.dock+8.9);
+  buildLabels(); renderRoute(); renderMarks(); updateChips();
+}
+const pathLen=W=>{let L=0;for(let i=0;i<W.length-1;i++) L+=Math.hypot(W[i+1].x-W[i].x,W[i+1].z-W[i].z);return L;};
+const walkLen=()=>pathLen(WALK);
+function walkPos(f,W){W=W||WALK; let L=pathLen(W)*clamp(f,0,1);for(let i=0;i<W.length-1;i++){const a=W[i],b=W[i+1],l=Math.hypot(b.x-a.x,b.z-a.z); if(L<=l||i===W.length-2){const q=l?L/l:0; return {x:lerp(a.x,b.x,q),z:lerp(a.z,b.z,q),h:Math.atan2(b.z-a.z,b.x-a.x)};} L-=l;}}
+
+/* ---------- 3D labels (DOM) ---------- */
+const labelsEl=$('#labels'); let LBL=[];
+function buildLabels(){
+  labelsEl.innerHTML=''; LBL=[]; const bx=bayX(R.k.bay), lastF=R.poses.findIndex(p=>p.dir<0)-1, pf=R.poses[lastF];
+  const defs=[['entrance',[SITE.driveX+1,5,70],'hi'],['gate',[46,5.2,SITE.barrierZ+3.5],'hi'],['cross',[SITE.driveX,3.2,SITE.crossZ],'stop'],['car',[-18,3,36],'stop'],['yard',[8,3.4,7],'mand'],
+    ['bay',[bx,8,SITE.dock],'hi'],['stop',[pf.x-R.k.nose-1.2,3,3],'hi'],['lounge',[SITE.loungeX,4.8,SITE.loungeZ-3.5],'safe'],['fork',[bx,5.2,SITE.dock-3],'stop'],['assembly',[SITE.assembly[0],4.6,SITE.assembly[1]],'safe'],
+    ['banks',[bx-5,2.6,-26],'hi'],['walk',[-26,2.2,SITE.walkZ],'safe'],['ppe1',[0,0,0],'mand'],['ppe2',[0,0,0],'mand'],['speed',[40,5,40],'stop']];
+  defs.forEach(([id,p,cls])=>{const el=document.createElement('div'); el.className='tag '+cls; el.hidden=true; labelsEl.appendChild(el); LBL.push({id,pos:new V3(p[0],p[1],p[2]),el,show:false});});
+  textLabels();
+}
+function textLabels(){LBL.forEach(l=>{let t=L.lb[l.id]||''; l.el.textContent=t.replace('{bay}',R.k.bay);});}
+const STEP_LABELS=[['entrance'],['entrance','gate'],['gate'],['cross'],['car','yard'],['bay','stop'],['bay','banks'],['bay','lounge','fork']];
+const RULE_LABELS=[['speed','car','yard'],['ppe1','ppe2'],['walk','lounge'],['bay','banks'],['fork','lounge'],['assembly','lounge']];
+function projectLabels(show){const w=stageEl.clientWidth,h=stageEl.clientHeight; const v=new V3();
+  LBL.forEach(l=>{const on=show.includes(l.id)||show==='all'; let vis=on; if(on){ if(l.id==='ppe1'||l.id==='ppe2'){const dp=pDriver.position; l.pos.set(dp.x,l.id==='ppe1'?2.3:0.4,dp.z);} v.copy(l.pos).project(camera); if(v.z>1||v.z<-1||Math.abs(v.x)>1.1||Math.abs(v.y)>1.1) vis=false; else l.el.style.transform='translate('+((v.x*.5+.5)*w).toFixed(1)+'px,'+((-v.y*.5+.5)*h).toFixed(1)+'px) translate(-50%,-100%)'; }
+    if(l.el.hidden===vis) l.el.hidden=!vis;});}
+
+/* ---------- frame state ---------- */
+const doorOpen=h=>ss((h-1.2)/2.2);
+function stepIndex(t){let i=0;for(let j=0;j<TL.stepT.length;j++) if(t>=TL.stepT[j]-1e-6) i=j; return i;}
+function barrierAmt(t){const a=TL.tGate+1.5,b=TL.tGate+3.6+2.2; return ss((t-a)/.8)*(1-ss((t-b)/.9));}
+function applyVehicle(p,v,holdT,brake,hz,rev){
+  const vh=veh; vh.tractor.position.set(p.x,0,p.z); vh.tractor.rotation.y=-p.ph;
+  if(vh.trailer){vh.trailer.position.set(p.x,0,p.z); vh.trailer.rotation.y=-p.th;}
+  vh.wheels.forEach(w=>{w.sp.rotation.z=-p.roll/w.r;}); vh.steer.forEach(s=>{s.rotation.y=-p.steer;});
+  MAT.brake.emissiveIntensity=brake?1.1:.12; MAT.rev.emissiveIntensity=rev?1.2:0; MAT.amber.emissiveIntensity=hz?(Math.sin(performance.now()/180)>0?1.1:.1):0;
+  const o=holdT>0?doorOpen(holdT):0; vh.setDoors(o); vh.xray(holdT>0?ss((holdT-3)/1.5):0);
+}
+function forkState(ft,k){ // returns {x,z,h,lift,carry:{i,host}}
+  const bx=R.bx, C=9, zS=SITE.dock-5.5, n=Math.min(R.k.pallets,12); const colX=c=>bx+(c?.62:-.62);
+  const kk=Math.max(0,Math.floor(ft/C)), pickN=kk;
+  if(ft<0||kk>=n){const c=kk>=n?(n&1):0; return {x:kk>=n?colX(n&1):colX(0),z:zS,h:PI/2,lift:0,carry:-1,released:Math.min(n,kk)};}
+  const c=ftColumn(kk), sg=c?1:-1, rowI=kk>>1, nSide=kk>>1; const lt=ft-kk*C;
+  const palZ=SITE.dock+.35+.7+1.2*rowI, zf=palZ-.95, slot=bx+sg*(8.6-1.3*nSide), xdepF=slot-sg*.95, cNext=ftColumn(kk+1), xN=colX(cNext);
+  const hdSide=sg>0?0:PI, kf=[[0,colX(c),zS,PI/2,0],[1.7,colX(c),zf,PI/2,0],[2.2,colX(c),zf,PI/2,.18],[3.9,colX(c),zS,PI/2,.18],[4.7,colX(c),zS,hdSide,.18],[6.2,xdepF,zS,hdSide,.18],[6.6,xdepF,zS,hdSide,0],[8.3,xN,zS,hdSide,0],[9,xN,zS,PI/2,0]];
+  let a=kf[0],b=kf[kf.length-1]; for(let i=0;i<kf.length-1;i++) if(lt>=kf[i][0]&&lt<=kf[i+1][0]){a=kf[i];b=kf[i+1];break;}
+  const f=ss((lt-a[0])/((b[0]-a[0])||1));
+  return {x:lerp(a[1],b[1],f),z:lerp(a[2],b[2],f),h:lerp(a[3],b[3],f),lift:lerp(a[4],b[4],f),carry:(lt>=2.2&&lt<6.6)?kk:-1,released:kk+(lt>=6.6?1:0),slot:{x:slot,z:zS}};
+}
+function ftColumn(k){return k&1;}
+function applyForklift(ft){
+  const s=forkState(ft); fork.position.set(s.x,BLD.floor,s.z); fork.rotation.y=-s.h; fork.userData.car.position.y=.1+s.lift*1;
+  const n=Math.min(R.k.pallets,12);
+  veh.pallets.forEach((p,i)=>{
+    const want=i<n && i<s.released? 'staged' : (i===s.carry?'carry':'home');
+    if(want==='home'){ if(p.parent!==p.userData.homeParent){p.userData.homeParent.add(p);} p.position.copy(p.userData.home); p.rotation.set(0,0,0); }
+    else if(want==='carry'){ if(p.parent!==fork.userData.hold) fork.userData.hold.add(p); p.position.set(0,0,0); p.rotation.set(0,0,0);}
+    else { if(p.parent!==world) world.add(p); const c=ftColumn(i), sg=c?1:-1, nSide=i>>1; p.position.set(R.bx+sg*(8.6-1.3*nSide),BLD.floor,SITE.dock-5.5); p.rotation.set(0,sg>0?0:PI,0); p.rotation.y=-(sg>0?0:PI);}
+  });
+}
+function resetPallets(){veh.pallets.forEach(p=>{if(p.parent!==p.userData.homeParent) p.userData.homeParent.add(p); p.position.copy(p.userData.home); p.rotation.set(0,0,0);});}
+
+function routeState(t){
+  const u=uAt(TL,t), p=poseAt(R,u), u2=uAt(TL,t+DT), v=(u2-u)/DT, u0=uAt(TL,Math.max(0,t-DT)), vPrev=(u-u0)/DT;
+  const holdT=t-TL.tHold, step=stepIndex(t);
+  return {u,p,v,brake:v<vPrev-.01&&v>0.05||(v<.05&&holdT<=0&&t>0.1),holdT,step,rev:p.dir<0&&v>.02,hz:p.dir<0||holdT>0};
+}
+function applyActors(st,tt,mode,rule){
+  const bx=R.bx;
+  // staff member at the zebra crossing
+  const tc=TL.tCross-3.0, f=clamp((tt-tc)/7,0,1); pStaff.position.set(lerp(46,34,f),0,SITE.crossZ); pStaff.rotation.y=PI; walkAnim(pStaff,tt*7,f>0&&f<1); pStaff.rotation.y=-Math.PI;
+  pStaff2.visible=false;
+  // banksman
+  const bankOn=mode==='route'?(st.step>=6):(rule===3);
+  pBank.visible=bankOn; if(bankOn){pBank.position.set(bx-5.2,0,SITE.dock+3.5); pBank.rotation.y=-(PI/2+.5); walkAnim(pBank,0,false); pBank.userData.armR.rotation.z=1.5+Math.sin(tt*3)*.5;} else pBank.userData.armR.rotation.z=0;
+  // driver on foot
+  let drv=false, f2=0, path=WALK, walking=true;
+  if(mode==='route'){ if(st.holdT>2){f2=clamp((st.holdT-2)*1.5/walkLen(),0,1); drv=f2<1;} }
+  else if(rule===1){drv=true; f2=0; walking=false;}
+  else if(rule===2){f2=(tt*1.3/walkLen())%1.2; drv=f2<1;}
+  else if(rule===4){f2=clamp((tt-3)*1.4/walkLen(),0,1.2)%1.2; drv=f2<1&&tt>3;}
+  else if(rule===5){path=WALK_E; f2=(tt*1.3/pathLen(WALK_E))%1.25; drv=f2<1;}
+  pDriver.visible=drv;
+  if(drv){const w=walkPos(f2,path); pDriver.position.set(w.x,0,w.z); pDriver.rotation.y=walking?-w.h:-PI/2; walkAnim(pDriver,tt*8,walking);}
+}
+
+/* ---------- camera ---------- */
+const eye=new V3(), look=new V3(), tmp=new V3();
+function desiredCam(st,p,mode,rule){
+  const bx=R.bx, orb=cam.orb, asp=camera.aspect, wide=asp<1.2?1.35:1;
+  camera.near=1; veh.cabGroup.visible=true;
+  if(mode==='ssow'){
+    const S=[
+      {t:[0,0,18],o:[40,78,100]}, {t:[WALK[0].x-.3,1.2,WALK[0].z],o:[-4.2,2.4,5.5]}, {t:[-22,0,-16],o:[22,34,34]},
+      {t:[bx-9,0.5,-4],o:[15,15,29]}, {t:[bx,2,-22],o:[-10,11,20]}, {t:[-46,0,-12],o:[16,32,34]}][rule];
+    tmp.set(S.t[0],S.t[1],S.t[2]); look.copy(tmp); eye.set(S.t[0]+S.o[0]*wide,S.t[1]+S.o[1],S.t[2]+S.o[2]*wide); return;
+  }
+  const H=new V3(p.x,0,p.z), rev=st.step>=6;
+  if(view==='cab'){
+    camera.near=.3; const v=veh; v.cabGroup.visible=false;
+    if(p.dir<0||st.step>=6){ v.tractor.updateMatrixWorld(true); eye.set(...R.k.mir.map((n,i)=>n)); v.tractor.localToWorld(eye); look.set(R.k.mir[0]-12,R.k.mir[1]-.25,R.k.mir[2]+2.2); v.tractor.localToWorld(look); camera.userData.mirror=true; }
+    else { v.tractor.updateMatrixWorld(true); eye.set(...R.k.eye); v.tractor.localToWorld(eye); look.set(R.k.eye[0]+30,R.k.eye[1]-.5,R.k.eye[2]); v.tractor.localToWorld(look); camera.userData.mirror=false; }
+    return;
+  }
+  camera.userData.mirror=false; veh.cabGroup.visible=true;
+  if(view==='site'){const d=(185*wide)*orb.zoom; const az=orb.az, el=(52+orb.el)*PI/180; look.set(8,0,15); eye.set(look.x+Math.sin(az)*Math.cos(el)*d,Math.sin(el)*d,look.z+Math.cos(az)*Math.cos(el)*d); return;}
+  if(view==='over'){const tgt=rev&&st.step>=6?new V3(bx,0,-8):H; const d=(rev?58:78)*wide*orb.zoom; const az=orb.az, el=(60+orb.el)*PI/180; look.copy(tgt); eye.set(look.x+Math.sin(az)*Math.cos(el)*d,Math.sin(el)*d,look.z+Math.cos(az)*Math.cos(el)*d); return;}
+  // chase
+  if(rev){const d=1*wide*orb.zoom; look.set(bx-3,1.5,-10); eye.set(bx+(R.k.id==='artic'?13:11)*d+Math.sin(orb.az)*10,10.5+orb.el*.3,17*d+Math.cos(orb.az)*6); return;}
+  const hd=cam.hd; const back=(34)*wide*orb.zoom; look.set(p.x+Math.cos(hd)*8,1.5,p.z+Math.sin(hd)*8);
+  eye.set(p.x-Math.cos(hd+orb.az)*back,15+orb.el*.2,p.z-Math.sin(hd+orb.az)*back);
+}
+
+/* =====================================================================
+   UI
+   ===================================================================== */
+const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function updateChips(){
+  $('#vehChip').textContent=(kindId==='artic'?L.ui.artic:L.ui.rigid)+' · '+(kindId==='artic'?L.ui.articS:L.ui.rigidS);
+  const b=$$('#vehSeg button'); b[0].innerHTML=L.ui.artic+'<small>'+L.ui.articS+'</small>'; b[1].innerHTML=L.ui.rigid+'<small>'+L.ui.rigidS+'</small>';
+  b.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k===kindId)));
+  const vb=$$('#viewSeg button'); const names={chase:L.ui.vChase,over:L.ui.vOver,site:L.ui.vSite,cab:L.ui.vCab}; vb.forEach(x=>{x.textContent=names[x.dataset.v];x.setAttribute('aria-pressed',String(x.dataset.v===view));});
+  $('#optLine').textContent=L.ui.line; $('#optSwept').textContent=L.ui.swept; $('#optVoice').textContent=L.ui.voice; $('#demoTag').textContent=L.ui.demo;
+  $$('#tabs button').forEach((b,i)=>b.textContent=L.tabs[i]);
+  $('#mirrorLbl').textContent=L.ui.mirror;
+}
+function stepText(i){const s=L.steps[i]; return [s[0].replace(/\{bay\}/g,R.k.bay),s[1].replace(/\{bay\}/g,R.k.bay)];}
+function renderRoute(){
+  const k=R.k, ui=L.ui;
+  let h='<p class="eyebrow">'+ui.job+'</p><dl class="job"><div><dt>'+ui.jobRef+'</dt><dd>J48213</dd></div><div class="bay"><dt>'+ui.bay+'</dt><dd>'+k.bay+'</dd></div><div><dt>'+ui.slot+'</dt><dd>Tue 17 Nov, 06:30</dd></div><div><dt>'+ui.load+'</dt><dd>'+(k.id==='artic'?'22':'10')+' pallets, ambient</dd></div><div style="grid-column:1/-1"><dt>'+ui.gate+'</dt><dd>0113 496 0214</dd></div></dl><ol class="steps">';
+  L.steps.forEach((s,i)=>{const [t,b]=stepText(i); h+='<li class="step k-'+STEP_KIND[i]+'" data-i="'+i+'"><button type="button" aria-expanded="false"><span class="n">'+(i+1)+'</span><span class="t">'+t+'</span></button><div class="b">'+b+'</div></li>';});
+  $('#p-route').innerHTML=h+'</ol>';
+  lastStep=-1;
+}
+function setStepUI(i){
+  if(i===lastStep) return; lastStep=i;
+  $$('#p-route .step').forEach((el,j)=>{el.classList.toggle('cur',j===i);el.classList.toggle('done',j<i);el.firstChild.setAttribute('aria-expanded',String(j===i));});
+  const [t,b]=stepText(i); const cap=$('#caption'); cap.className='caption k-'+STEP_KIND[i]; cap.innerHTML='<span class="n">'+(i+1)+'</span><div><h3>'+t+'</h3><p>'+b+'</p></div>';
+  $$('#marks i').forEach((m,j)=>m.classList.toggle('on',j<=i));
+  if(voiceOn) speak(t+'. '+b);
+}
+function renderMarks(){ $('#marks').innerHTML=TL.stepT.map(t=>'<i style="left:'+(t/TL.dur*100)+'%"></i>').join(''); }
+let voiceOn=false;
+function speak(txt){try{if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(txt); u.lang=L.code; speechSynthesis.speak(u);}catch(e){}}
+
+/* ---- rules / quiz / sign ---- */
+function renderRules(){
+  const ui=L.ui, n=ssow.read.size, m=L.rules.length; let h='<h2 class="h">'+ui.rulesHead+'</h2><p class="note" style="margin:0 0 10px">'+ui.rulesIntro+'</p>';
+  h+='<div class="progress"><i style="width:'+(n/m*100)+'%"></i></div><p class="eyebrow">'+ui.progress.replace('{n}',n).replace('{m}',m)+'</p>';
+  const kinds=['#d6262b','#2e7de0','#2fb36d','#e5483b','#ffc400','#2fb36d'];
+  L.rules.forEach((r,i)=>{const rd=ssow.read.has(i);
+    h+='<div class="rule'+(i===ruleIdx?' cur':'')+(rd?' read':'')+'" data-i="'+i+'"><button type="button"><span class="ico" style="background:'+kinds[i]+(i===4?';color:#1a1500':'')+'">'+(i+1)+'</span><span class="t">'+r[0]+'</span><span class="tick">'+(rd?'✓':'')+'</span></button><div class="body"><ul>'+r[1].map(x=>'<li>'+x+'</li>').join('')+'</ul><button type="button" class="btn'+(rd?' ghost':'')+'" data-got="'+i+'">'+(rd?ui.read+' ✓':ui.gotIt)+'</button></div></div>';});
+  const all=n===m;
+  h+='<h2 class="h" style="margin-top:20px">'+ui.quizHead+'</h2>';
+  if(!all) h+='<div class="gate">'+ui.quizLocked+'</div>';
+  else{ h+='<p class="note" style="margin:0">'+ui.quizIntro+'</p>';
+    L.quiz.forEach((q,qi)=>{const ans=ssow.answers[qi]; h+='<div class="q" data-q="'+qi+'"><p>'+(qi+1)+'. '+q.q+'</p>'+q.o.map((o,oi)=>{let c='opt-a'; if(ans!==undefined){ if(oi===ans) c+=(oi===q.a?' ok':' no'); else if(oi===q.a&&ans===q.a) c+=''; } return '<button type="button" class="'+c+'" data-o="'+oi+'">'+o+'</button>';}).join('')+(ans===undefined?'':(ans===q.a?'<p class="fb ok">'+ui.right+' '+q.e+'</p>':'<p class="fb no">'+ui.wrong+'</p>'))+'</div>';}); }
+  h+='<h2 class="h" style="margin-top:20px">'+ui.signHead+'</h2>';
+  if(!ssow.quizOk) h+='<div class="gate">'+ui.signLocked+'</div>';
+  else if(ssow.done){const d=ssow.done; h+='<div class="receipt"><p class="eyebrow" style="color:#6fd9a0">'+ui.signedHead+'</p><dl><dt>'+ui.rName+'</dt><dd>'+esc(d.name)+'</dd><dt>'+ui.rCo+'</dt><dd>'+esc(d.co)+'</dd><dt>'+ui.rReg+'</dt><dd>'+esc(d.reg)+'</dd><dt>'+ui.rDoc+'</dt><dd>SSOW-014 rev 7 · Aire Gate DC</dd><dt>'+ui.rQuiz+'</dt><dd>5 / 5 · '+d.attempts+'</dd><dt>'+ui.rWhen+'</dt><dd>'+d.when+'</dd><dt>'+ui.rRef+'</dt><dd>'+d.ref+'</dd></dl><p class="note" style="margin:10px 0">'+ui.signedNote+'</p><button type="button" class="btn ghost" id="again">'+ui.again+'</button></div>';}
+  else h+='<div class="form"><label class="full" for="fName">'+ui.fName+'<input type="text" id="fName" autocomplete="off" placeholder="'+ui.phName+'" value="'+esc(ssow.name)+'"></label><label for="fCo">'+ui.fCo+'<input type="text" id="fCo" autocomplete="off" placeholder="'+ui.phCo+'" value="'+esc(ssow.co)+'"></label><label for="fReg">'+ui.fReg+'<input type="text" id="fReg" autocomplete="off" placeholder="'+ui.phReg+'" value="'+esc(ssow.reg)+'"></label><div class="full"><label for="sig" style="margin-bottom:5px">'+ui.fSig+'</label><canvas id="sig" class="sig"></canvas></div><div class="full" style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="signBtn" disabled>'+ui.signBtn+'</button><button type="button" class="btn ghost" id="sigClear">'+ui.clear+'</button></div></div>';
+  $('#p-rules').innerHTML=h; initSig();
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function checkSign(){const b=$('#signBtn'); if(b) b.disabled=!(ssow.name.trim()&&ssow.co.trim()&&ssow.reg.trim()&&ssow.ink);}
+let sigCtx=null, drawing=false;
+function initSig(){const c=$('#sig'); if(!c) return; const dpr=window.devicePixelRatio||1, w=c.clientWidth||300, h=150; c.width=w*dpr;c.height=h*dpr; sigCtx=c.getContext('2d'); sigCtx.scale(dpr,dpr); sigCtx.lineWidth=2.4;sigCtx.lineCap='round';sigCtx.strokeStyle='#14181b'; ssow.ink=false;
+  const pt=e=>{const r=c.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top];};
+  c.onpointerdown=e=>{drawing=true;c.setPointerCapture(e.pointerId);const [x,y]=pt(e);sigCtx.beginPath();sigCtx.moveTo(x,y);e.preventDefault();};
+  c.onpointermove=e=>{if(!drawing)return;const [x,y]=pt(e);sigCtx.lineTo(x,y);sigCtx.stroke();ssow.ink=true;checkSign();};
+  c.onpointerup=c.onpointercancel=()=>{drawing=false;};
+  $('#sigClear').onclick=()=>{sigCtx.clearRect(0,0,c.width,c.height);ssow.ink=false;checkSign();};
+  $('#fName').oninput=e=>{ssow.name=e.target.value;checkSign();}; $('#fCo').oninput=e=>{ssow.co=e.target.value;checkSign();}; $('#fReg').oninput=e=>{ssow.reg=e.target.value;checkSign();};
+  $('#signBtn').onclick=()=>{const when=new Date().toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'}); let hsh=0; const sstr=ssow.name+ssow.reg+when; for(let i=0;i<sstr.length;i++) hsh=(hsh*31+sstr.charCodeAt(i))>>>0;
+    ssow.done={name:ssow.name,co:ssow.co,reg:ssow.reg.toUpperCase(),when,attempts:ssow.attempts+' wrong',ref:'BB-'+hsh.toString(16).toUpperCase().padStart(8,'0')}; if(ssow.attempts===0) ssow.done.attempts='first time'; renderRules(); $('#p-rules').scrollIntoView({block:'end',behavior:'smooth'});};
+}
+$('#p-rules').addEventListener('click',e=>{
+  const rb=e.target.closest('.rule>button'); if(rb){ruleIdx=+rb.parentNode.dataset.i; ruleClock=0; renderRules(); return;}
+  const gb=e.target.closest('[data-got]'); if(gb){const i=+gb.dataset.got; ssow.read.add(i); if(i<L.rules.length-1) {ruleIdx=i+1; ruleClock=0;} renderRules(); return;}
+  const ob=e.target.closest('.opt-a'); if(ob){const qi=+ob.closest('.q').dataset.q, oi=+ob.dataset.o; if(oi!==L.quiz[qi].a) ssow.attempts++; ssow.answers[qi]=oi; ssow.quizOk=L.quiz.every((q,i)=>ssow.answers[i]===q.a); renderRules(); return;}
+  if(e.target.id==='again'){ssow.read.clear();ssow.answers=[];ssow.attempts=0;ssow.quizOk=false;ssow.done=null;ssow.name=ssow.co=ssow.reg='';ruleIdx=0;renderRules();}
+});
+
+/* ---- docket + QR ---- */
+function qrSvg(text){
+  try{const q=qrcode(0,'M'); q.addData(text); q.make(); const n=q.getModuleCount(); let d=''; for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(q.isDark(r,c)) d+='M'+(c+4)+' '+(r+4)+'h1v1h-1z'; return '<svg viewBox="0 0 '+(n+8)+' '+(n+8)+'" role="img" aria-label="QR code" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="'+d+'" fill="#111"/></svg>';}
+  catch(e){return '<p>QR</p>';}
+}
+function renderDocket(){
+  const ui=L.ui, k=R.k, url='https://baybrief.example/s/AGDC-LS10/J48213?v='+(k.id==='artic'?'c1':'c2');
+  const json=JSON.stringify({site:'AGDC-LS10',ssow:'SSOW-014 r7',entrance:{from:'west',turn:'left'},stops:[{at:'barrier',hold:'gatehouse'},{at:'zebra',giveWay:true}],bays:{class1:4,class2:8},zones:['car-park:no-hgv','walkway:cab>lounge','dock:no-entry']},null,1).replace(/\n\s{2,}/g,m=>m);
+  $('#p-docket').innerHTML='<div class="docket-wrap"><div class="paper"><h2>'+ui.docketHead+'</h2><p class="sub">Demo Foods Ltd → Aire Gate Distribution Centre (demo site)</p><table><tr><td>Job</td><td>J48213</td></tr><tr><td>Slot</td><td>Tue 17 Nov 2026, 06:30</td></tr><tr><td>Goods</td><td>'+(k.id==='artic'?'22':'10')+' pallets, ambient grocery</td></tr><tr><td>Vehicle</td><td>'+(k.id==='artic'?L.ui.artic:L.ui.rigid)+'</td></tr><tr><td>Bay</td><td><b>'+k.bay+'</b></td></tr></table><div class="qrbox">'+qrSvg(url)+'<b>'+ui.scanHead+'</b><code>'+url+'</code></div><div style="margin-top:12px;display:flex;justify-content:center"><button type="button" class="btn" id="scanBtn">'+ui.scan+'</button></div></div>'
+  +'<div class="side"><h3>'+ui.howHead+'</h3><ul>'+ui.how.map(x=>'<li>'+x+'</li>').join('')+'</ul><pre class="code">'+esc(json)+'</pre><p class="note">The QR sits on the delivery note and the dispatch email. It opens a web page, so there is nothing to install. The brief is cached for yards with poor signal.</p></div></div>';
+  $('#scanBtn').onclick=()=>{setTab('route'); setKind(kindId); window.scrollTo({top:0,behavior:'smooth'});};
+}
+function setTab(t){
+  tab=t; $('#layout').dataset.tab=t;
+  $$('#tabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===t)));
+  $('#p-route').hidden=t!=='route'; $('#p-rules').hidden=t!=='rules'; $('#p-docket').hidden=t!=='docket';
+  if(t==='rules'){ruleClock=0; renderRules(); resetPallets(); lastStep=-1; $('#caption').className='caption k-mand'; updateRuleCaption(); $('#transport').hidden=true;} else {$('#transport').hidden=false;}
+  if(t==='docket') renderDocket();
+  if(t==='route'){lastStep=-1; resetPallets();}
+  resize();
+}
+function updateRuleCaption(){const r=L.rules[ruleIdx]; const cap=$('#caption'); cap.className='caption k-'+['stop','mand','safe','stop','warn','safe'][ruleIdx]; cap.innerHTML='<span class="n">'+(ruleIdx+1)+'</span><div><h3>'+r[0]+'</h3><p>'+r[1][0]+'</p></div>';}
+
+/* ---- events ---- */
+$('#vehSeg').addEventListener('click',e=>{const b=e.target.closest('button'); if(b&&b.dataset.k!==kindId){setKind(b.dataset.k); if(tab==='docket') renderDocket(); if(tab==='rules') renderRules();}});
+$('#viewSeg').addEventListener('click',e=>{const b=e.target.closest('button'); if(b){view=b.dataset.v; cam.orb.az=0;cam.orb.el=0;cam.orb.zoom=1; updateChips();}});
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button'); if(b) setTab(b.dataset.t);});
+$('#lang').addEventListener('change',e=>{LANG=e.target.value; L=I18N[LANG]; try{localStorage.setItem('bb-lang',LANG);}catch(_){} document.documentElement.lang=L.code; updateChips(); textLabels(); renderRoute(); renderRules(); renderDocket(); if(tab==='rules') updateRuleCaption();});
+$('#p-route').addEventListener('click',e=>{const s=e.target.closest('.step'); if(s){const i=+s.dataset.i; tNow=Math.min(TL.dur,TL.stepT[i]+.05); playing=false; setPlayUI();}});
+const playBtn=$('#playBtn');
+function setPlayUI(){const atEnd=tNow>=TL.dur-.05; $('#playIco').innerHTML=playing?'<path d="M3 2h4v14H3zM11 2h4v14h-4z" fill="currentColor"/>':(atEnd?'<path d="M9 3a6 6 0 1 1-5.7 4H1l3.5-4L8 7H5.4A4 4 0 1 0 9 5z" fill="currentColor"/>':'<path d="M4 2l12 7-12 7z" fill="currentColor"/>'); playBtn.setAttribute('aria-label',playing?L.ui.pause:(atEnd?L.ui.replay:L.ui.play));}
+playBtn.onclick=()=>{ if(tNow>=TL.dur-.05){tNow=0;playing=true;} else playing=!playing; if(!playing&&'speechSynthesis' in window){try{speechSynthesis.cancel();}catch(e){}} setPlayUI();};
+$('#scrub').addEventListener('input',e=>{tNow=e.target.value/1000*TL.dur; playing=false; setPlayUI();});
+$('#speedBtn').onclick=e=>{speedMul=speedMul===1?2:speedMul===2?4:1; e.target.textContent=speedMul+'×';};
+function toggleOpt(id,fn){const b=$(id); b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',String(on)); fn(on);};}
+toggleOpt('#optLine',on=>{routeGroup.visible=on;});
+toggleOpt('#optSwept',on=>{if(sweptMesh) sweptMesh.visible=on;});
+toggleOpt('#optVoice',on=>{voiceOn=on; if(!on){try{speechSynthesis.cancel();}catch(e){}} else {lastStep=-1;}});
+// orbit
+{let down=null; const cv=$('#gl'); cv.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,az:cam.orb.az,el:cam.orb.el}; cv.setPointerCapture(e.pointerId);});
+ cv.addEventListener('pointermove',e=>{if(!down) return; const dx=e.clientX-down.x, dy=e.clientY-down.y; cam.orb.az=down.az-dx*.008; cam.orb.el=clamp(down.el+dy*.2,-30,25);});
+ cv.addEventListener('pointerup',()=>{down=null;}); cv.addEventListener('pointercancel',()=>{down=null;});
+ cv.addEventListener('wheel',e=>{e.preventDefault(); cam.orb.zoom=clamp(cam.orb.zoom*(1+Math.sign(e.deltaY)*.08),.4,2);},{passive:false});}
+
+function resize(){const w=stageEl.clientWidth,h=stageEl.clientHeight; if(!w||!h) return; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(stageEl); window.addEventListener('resize',resize);
+
+/* =====================================================================
+   LOOP
+   ===================================================================== */
+let last=performance.now(), reduce=false; try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt=Math.min(.05,(now-last)/1000); last=now;
+  if(tab==='docket') return;
+  let st,pose,mode;
+  if(tab==='route'){
+    mode='route'; if(playing){tNow+=dt*speedMul; if(tNow>=TL.dur){tNow=TL.dur;playing=false;setPlayUI();}}
+    st=routeState(tNow); pose=st.p; setStepUI(st.step);
+    $('#scrub').value=Math.round(tNow/TL.dur*1000); $('#timeLbl').textContent=fmt(tNow)+' / '+fmt(TL.dur);
+    applyVehicle(pose,veh,st.holdT,st.brake,st.hz,st.rev);
+    applyForklift(st.holdT-3.2);
+    veh.revZone.visible=st.step===6&&st.holdT<=0;
+    zoneDock.visible=st.step===7; zoneCar.visible=st.step===4; zoneWalkNo.visible=false; walkGroup.visible=st.step>=7; emerGroup.visible=false;
+    speedSprites.forEach(s=>s.visible=false); ring.visible=false; asmSign.visible=false;
+    barrierPivot.rotation.z=-ss(barrierAmt(tNow))*1.35;
+    applyActors(st,tNow,'route',-1);
+  }else{
+    mode='ssow'; ruleClock+=dt; const rule=ruleIdx; let holdT=-1;
+    if(rule===3){ const t0=TL.tFwd, t1=TL.tHold, tt=t0+(ruleClock%((t1-t0)+3)); st=routeState(Math.min(tt,t1)); st.step=6; st.holdT=-1; }
+    else{ st={p:poseAt(R,R.sMax),v:0,brake:false,holdT:-1,step:7,rev:false,hz:false}; if(rule===4) holdT=3.2+(ruleClock%46); else if(rule===2||rule===5) holdT=30; }
+    pose=st.p; applyVehicle(pose,veh,holdT,st.brake,rule===3||rule===4,st.rev);
+    if(rule===4) applyForklift(holdT-3.2-1); else { applyForklift(-1); if(rule!==3&&rule!==4) resetPallets(); }
+    veh.revZone.visible=rule===3; zoneDock.visible=rule===4; zoneCar.visible=rule===0; zoneWalkNo.visible=rule===2;
+    walkGroup.visible=rule===1||rule===2||rule===4; emerGroup.visible=rule===5;
+    speedSprites.forEach(s=>s.visible=rule===0); ring.visible=asmSign.visible=rule===5;
+    barrierPivot.rotation.z=0; applyActors(st,ruleClock,'ssow',rule);
+  }
+  // camera
+  if(!cam.init) cam.hd=pose.ph; cam.hd=lerp(cam.hd,pose.ph,1-Math.exp(-dt*2.2));
+  desiredCam(st,pose,mode,ruleIdx);
+  const isCab=view==='cab'&&mode==='route';
+  if(!cam.init||isCab){cam.pos.copy(eye);cam.tgt.copy(look);cam.init=true;} else {const k=1-Math.exp(-dt*(mode==='ssow'?2.4:2.8)); cam.pos.lerp(eye,k); cam.tgt.lerp(look,k);}
+  camera.position.copy(cam.pos); camera.lookAt(cam.tgt); const fov=isCab?(camera.userData.mirror?55:62):42; if(camera.fov!==fov){camera.fov=fov;} camera.updateProjectionMatrix();
+  const fx=$('#cabfx'); fx.hidden=!isCab; if(isCab){const m=!!camera.userData.mirror; ['.dash','.pillL','.pillR','.roof'].forEach(q=>{$(q,fx).style.display=m?'none':'';}); $('#mirrorFx').style.display=m?'':'none'; $('#mirrorLbl').style.display=m?'':'none';}
+  sun.target.position.set(cam.tgt.x,0,cam.tgt.z); sun.position.set(cam.tgt.x-45,80,cam.tgt.z+35); sun.target.updateMatrixWorld();
+  const pu=.5+.5*Math.sin(now/260); glowMats[0].opacity=.55+.45*pu; glowMats[1].opacity=.12+.2*pu; ring.scale.setScalar(1+.12*pu);
+  if(!reduce){texYellow.offset.x-=dt*.9; texRed.offset.x-=dt*.9; texGreen.offset.x-=dt*.9;}
+  routeGroup.userData.rb2.visible=routeGroup.visible&&(tab==='route'||ruleIdx===3);
+  let show=mode==='route'?STEP_LABELS[st.step]:RULE_LABELS[ruleIdx]; if(view==='site'&&mode==='route') show=show.concat(['bay']);
+  projectLabels(show);
+  renderer.render(scene,camera);
+}
+// init (wait briefly for the display fonts so painted signs use them)
+function boot(){
+  document.documentElement.lang=L.code; $('#lang').value=LANG;
+  if(reduce) playing=false;
+  setKind('artic'); setPlayUI(); resize(); updateChips();
+  renderRules(); renderDocket();
+  requestAnimationFrame(frame);
+}
+(function(){let done=false; const go=()=>{if(!done){done=true;boot();}}; try{Promise.race([Promise.all([document.fonts.load('800 60px "Barlow Condensed"'),document.fonts.load('600 14px "Barlow"')]),new Promise(r=>setTimeout(r,1200))]).then(go,go);}catch(e){go();}})();
+if(location.hash==='#debug') window.__bb={scene,veh:()=>veh,get t(){return tNow;},set t(v){tNow=v;playing=false;setPlayUI();},get dur(){return TL.dur;},setTab,setKind,setView:v=>{view=v;updateChips();},rule:i=>{ruleIdx=i;ruleClock=0;renderRules();updateRuleCaption();},ssow,TL:()=>TL,R:()=>R};
+})();
+</script>
+</html>
