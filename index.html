@@ -1253,7 +1253,7 @@ if(!reduce)addEventListener('scroll',()=>{$('.aurora').style.transform=`translat
 /* ---------- contact form: validation, loading and error states ---------- */
 (()=>{
   const FORM_ENDPOINT='/api/contact';
-  const TURNSTILE_SITE_KEY=''; /* paste the Cloudflare Turnstile site key here to turn the captcha on */
+  const TURNSTILE_SITE_KEY='0x4AAAAAAGItDrIP7l1qk8MC'; /* Cloudflare Turnstile site key (public). The secret key is the TURNSTILE_SECRET environment variable in Vercel. */
   const formT0=Date.now();
   const form=$('#form'),btn=$('#formBtn'),lbl=$('.lbl',btn),status=$('#formStatus');
   const rules={
