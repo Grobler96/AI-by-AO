@@ -203,3 +203,6 @@ a.card .go{display:inline-block;margin-top:14px;color:var(--cyan);font-weight:60
 .facts li:last-child{border-bottom:0;padding-bottom:0}
 .facts b{font-family:var(--disp);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
 .facts span{color:#c6cce6;font-size:15px}
+
+/* Accessibility */
+.skip-link{position:absolute;left:12px;top:-60px;z-index:1000;padding:10px 16px;border-radius:10px;background:#fff;color:#04050d;font:600 14px Inter,system-ui,sans-serif;text-decoration:none}.skip-link:focus{top:12px}
