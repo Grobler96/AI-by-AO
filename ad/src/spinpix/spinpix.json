@@ -1,0 +1,228 @@
+[
+  {
+    "id": "spinpix-360",
+    "title": "360 Spin",
+    "voiceName": "af_bella",
+    "voiceSpeed": 1.15,
+    "voice": {
+      "a": "Step up. Strike a pose!",
+      "b": "Now let the camera spin around you.",
+      "c": "Slow-mo. Confetti. Total main character energy.",
+      "d": "The three-sixty spin, from SpinPix [[U]] [[K]].",
+      "e": "Capture the moment. Spin the fun."
+    },
+    "caption": {
+      "d": "The 360 Spin, from SpinPix UK."
+    },
+    "voiceStart": {
+      "a": 0.5,
+      "b": 2.4,
+      "c": 4.9,
+      "d": 8.4,
+      "e": 11.4
+    },
+    "voiceMax": {
+      "a": 1.6,
+      "b": 2.1,
+      "c": 3.1,
+      "d": 2.6,
+      "e": 2.0
+    },
+    "marks": {
+      "drop": 0.45,
+      "pose": 1.6,
+      "spin": 2.4,
+      "slowmo": 4.9,
+      "slowEnd": 8.0,
+      "logo": 8.4,
+      "tagline": 11.4,
+      "fun": 12.4,
+      "cta": 13.4
+    },
+    "captionOff": [
+      "e"
+    ]
+  },
+  {
+    "id": "spinpix-quiz",
+    "title": "Find your booth",
+    "voiceName": "af_bella",
+    "voiceSpeed": 1.15,
+    "voice": {
+      "a": "Which booth is right for your big day?",
+      "b": "Getting married? The Magic Mirror.",
+      "c": "Prom night? It has to be the three-sixty spin!",
+      "d": "Now, is your date free?",
+      "e": "It is! Get a quote from SpinPix [[U]] [[K]]."
+    },
+    "caption": {
+      "c": "Prom night? It has to be the 360 Spin!"
+    },
+    "voiceStart": {
+      "a": 0.4,
+      "b": 2.9,
+      "c": 5.6,
+      "d": 8.8,
+      "e": 10.8
+    },
+    "voiceMax": {
+      "a": 2.2,
+      "b": 2.4,
+      "c": 2.7,
+      "d": 1.6,
+      "e": 2.6
+    },
+    "marks": {
+      "tapWed": 2.6,
+      "resWed": 3.0,
+      "back": 5.15,
+      "tapProm": 5.45,
+      "resProm": 5.85,
+      "cal": 8.5,
+      "tapDate": 10.0,
+      "free": 10.5,
+      "quote": 12.3,
+      "press": 13.0
+    }
+  },
+  {
+    "id": "spinpix-montage",
+    "title": "Party montage",
+    "voiceName": "af_bella",
+    "voiceSpeed": 1.15,
+    "bpm": 120,
+    "voice": {
+      "a": "Weddings!",
+      "b": "Prom night!",
+      "c": "Parties!",
+      "d": "Work events!",
+      "e": "Magic Mirror.",
+      "f": "Selfie Pod.",
+      "g": "Three-sixty spin.",
+      "h": "Classic Booth.",
+      "i": "Props table!",
+      "j": "Every party needs a SpinPix.",
+      "k": "Check your date today!"
+    },
+    "caption": {
+      "g": "360 Spin."
+    },
+    "voiceStart": {
+      "a": 0.5,
+      "b": 1.6,
+      "c": 2.6,
+      "d": 3.6,
+      "e": 4.6,
+      "f": 5.6,
+      "g": 6.6,
+      "h": 7.6,
+      "i": 8.6,
+      "j": 9.6,
+      "k": 12.15
+    },
+    "voiceMax": {
+      "a": 0.9,
+      "b": 0.95,
+      "c": 0.9,
+      "d": 0.95,
+      "e": 0.95,
+      "f": 0.95,
+      "g": 0.95,
+      "h": 0.95,
+      "i": 0.95,
+      "j": 2.0,
+      "k": 1.5
+    },
+    "marks": {
+      "cuts": [
+        0.5,
+        1.5,
+        2.5,
+        3.5,
+        4.5,
+        5.5,
+        6.5,
+        7.5,
+        8.5,
+        9.5
+      ],
+      "end": 9.5,
+      "cta": 12.0
+    },
+    "captionOff": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i"
+    ]
+  },
+  {
+    "id": "spinpix-qr",
+    "title": "QR guest gallery",
+    "voiceName": "af_bella",
+    "voiceSpeed": 1.15,
+    "voice": {
+      "a": "Every guest has a camera in their pocket.",
+      "b": "So let them share every photo and video!",
+      "c": "Just scan the [[Q]] [[R]] code, and upload.",
+      "d": "It all lands in one private gallery, for six months.",
+      "e": "Only thirty-five pounds, from SpinPix [[U]] [[K]]."
+    },
+    "caption": {
+      "e": "Only £35, from SpinPix UK."
+    },
+    "voiceStart": {
+      "a": 0.4,
+      "b": 2.9,
+      "c": 5.5,
+      "d": 7.9,
+      "e": 11.2
+    },
+    "voiceMax": {
+      "a": 2.3,
+      "b": 2.3,
+      "c": 2.1,
+      "d": 3.0,
+      "e": 2.7
+    },
+    "marks": {
+      "phones": [
+        0.5,
+        0.8,
+        1.1,
+        1.4,
+        1.7
+      ],
+      "flashes": [
+        1.0,
+        1.5,
+        1.9,
+        2.3,
+        3.2,
+        3.6,
+        4.0,
+        4.4
+      ],
+      "card": 5.2,
+      "scan": 6.0,
+      "lock": 6.6,
+      "open": 7.0,
+      "fly": [
+        8.0,
+        8.3,
+        8.6,
+        8.9,
+        9.2,
+        9.5
+      ],
+      "grid": 9.9,
+      "price": 11.2,
+      "cta": 13.2
+    }
+  }
+]

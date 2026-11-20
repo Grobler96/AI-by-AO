@@ -1,11 +1,17 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, interpolate, random, spring, staticFile, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { C, disp, mono } from "./theme";
+import adsJson from "./ads.json";
+
+export type AdConfig = (typeof adsJson)[number];
+export const ads: AdConfig[] = adsJson;
+const AdCtx = React.createContext<AdConfig>(ads[0]);
+const useAd = () => React.useContext(AdCtx);
+const accentOf = (a: string) => (C as Record<string, string>)[a] ?? C.cyan;
 
 export const FPS = 30;
 export const DURATION = 13 * FPS;
 
-const HOOK = "What if your missed calls turned into booked jobs?";
 
 /* ---------- helpers ---------- */
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -75,6 +81,7 @@ const Background: React.FC = () => {
 const Hook: React.FC = () => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { hook } = useAd();
   const s = spring({ frame: f, fps, config: { damping: 14, stiffness: 120 } });
   return (
     <div
@@ -96,13 +103,14 @@ const Hook: React.FC = () => {
         boxShadow: "0 20px 80px rgba(0,0,0,.45)",
       }}
     >
-      {HOOK}
+      {hook}
     </div>
   );
 };
 
 /* ---------- scene 1: the missed call ---------- */
 const MissedCall: React.FC = () => {
+  const { call } = useAd();
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const enter = spring({ frame: f - 6, fps, config: { damping: 11, stiffness: 140 } });
@@ -136,11 +144,11 @@ const MissedCall: React.FC = () => {
         >
           <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
             <div style={{ width: 130, height: 130, borderRadius: "50%", background: missed ? "#ff4f64" : C.grad, display: "grid", placeItems: "center", fontSize: 64, transform: `scale(${missed ? 0.9 + 0.1 * flip : 1})` }}>
-              {missed ? "✕" : "📞"}
+              {missed ? call.missedIcon : call.icon}
             </div>
             <div>
-              <div style={{ fontSize: 64, fontWeight: 700 }}>{missed ? "Missed call" : "Incoming call…"}</div>
-              <div style={{ fontFamily: mono, fontSize: 38, color: C.muted, marginTop: 8 }}>02:14 am · Unknown</div>
+              <div style={{ fontSize: 64, fontWeight: 700 }}>{missed ? call.missed : call.incoming}</div>
+              <div style={{ fontFamily: mono, fontSize: 38, color: C.muted, marginTop: 8 }}>{call.sub}</div>
             </div>
           </div>
         </div>
@@ -178,13 +186,14 @@ const Typed: React.FC<{ segs: Seg[]; start: number; size: number; cps?: number }
 };
 
 const TypeScene: React.FC = () => {
+  const { type } = useAd();
   const f = useCurrentFrame();
   const l2 = interpolate(f, [80, 94], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
   return (
     <AbsoluteFill style={{ justifyContent: "center", padding: "260px 70px 0" }}>
-      <Typed segs={[{ t: "Your AI just " }, { t: "booked", hl: true }, { t: " a job at 2am" }]} start={4} size={92} cps={0.9} />
+      <Typed segs={type.segs} start={4} size={92} cps={0.9} />
       <div style={{ marginTop: 70, textAlign: "center", fontFamily: disp, fontWeight: 500, fontSize: 64, color: C.muted, opacity: l2, transform: `translateY(${(1 - l2) * 40}px)` }}>
-        …while you were asleep 😴
+        {type.line2}
       </div>
     </AbsoluteFill>
   );
@@ -226,16 +235,25 @@ const UiCard: React.FC<{ delay: number; x: number; y: number; rot: number; accen
   );
 };
 
-const Cards: React.FC = () => (
-  <AbsoluteFill>
-    <div style={{ position: "absolute", top: 400, width: "100%", textAlign: "center", fontFamily: disp, fontWeight: 700, fontSize: 70, color: C.text }}>
-      AI handles it <Pill size={70}>instantly</Pill>
-    </div>
-    <UiCard delay={4} x={60} y={620} rot={-3} accent={C.cyan} icon="📞" title="AI picked up" sub="Quote booked · Thu 9am" />
-    <UiCard delay={18} x={260} y={940} rot={3} accent={C.violet} icon="💬" title="Chatbot replied" sub="Lead qualified in 12s" />
-    <UiCard delay={32} x={90} y={1260} rot={-2} accent={C.pink} icon="🧾" title="Invoice sent ✓" sub="Paid before you woke up" />
-  </AbsoluteFill>
-);
+const CARD_POS = [
+  { delay: 4, x: 60, y: 620, rot: -3 },
+  { delay: 18, x: 260, y: 940, rot: 3 },
+  { delay: 32, x: 90, y: 1260, rot: -2 },
+];
+
+const Cards: React.FC = () => {
+  const { cards, cardsHeader } = useAd();
+  return (
+    <AbsoluteFill>
+      <div style={{ position: "absolute", top: 400, width: "100%", textAlign: "center", fontFamily: disp, fontWeight: 700, fontSize: 70, color: C.text }}>
+        {cardsHeader.pre}<Pill size={70}>{cardsHeader.pill}</Pill>
+      </div>
+      {cards.map((c, i) => (
+        <UiCard key={i} {...CARD_POS[i]} accent={accentOf(c.accent)} icon={c.icon} title={c.title} sub={c.sub} />
+      ))}
+    </AbsoluteFill>
+  );
+};
 
 /* ---------- glitch wipe ---------- */
 const Glitch: React.FC = () => {
@@ -270,7 +288,7 @@ const Meet: React.FC = () => {
 };
 
 /* ---------- logo reveal ---------- */
-const LogoMark: React.FC<{ size: number }> = ({ size }) => {
+export const LogoMark: React.FC<{ size: number }> = ({ size }) => {
   const f = useCurrentFrame();
   const cols = [C.cyan, C.violet, C.pink];
   return (
@@ -284,7 +302,7 @@ const LogoMark: React.FC<{ size: number }> = ({ size }) => {
   );
 };
 
-const Reveal: React.FC = () => {
+export const Reveal: React.FC = () => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const logo = spring({ frame: f, fps, config: { damping: 11, stiffness: 100 } });
@@ -327,11 +345,13 @@ const Reveal: React.FC = () => {
 };
 
 /* ---------- timeline ---------- */
-export const Ad: React.FC = () => {
+export const Ad: React.FC<{ adId: string }> = ({ adId }) => {
   const f = useCurrentFrame();
+  const cfg = ads.find((a) => a.id === adId) ?? ads[0];
   return (
+    <AdCtx.Provider value={cfg}>
     <AbsoluteFill style={{ background: C.bg, overflow: "hidden" }}>
-      <Audio src={staticFile("audio/soundtrack.wav")} />
+      <Audio src={staticFile(`audio/${cfg.id}.wav`)} />
       <Background />
       {f < 8.9 * FPS && <Hook />}
       <Sequence from={0} durationInFrames={80}><Scene len={80}><MissedCall /></Scene></Sequence>
@@ -341,5 +361,6 @@ export const Ad: React.FC = () => {
       <Sequence from={272} durationInFrames={50}><Scene len={50} fadeIn={2} fadeOut={8}><Meet /></Scene></Sequence>
       <Sequence from={312} durationInFrames={DURATION - 312}><Scene len={DURATION - 312} fadeIn={8} fadeOut={0}><Reveal /></Scene></Sequence>
     </AbsoluteFill>
+    </AdCtx.Provider>
   );
 };
