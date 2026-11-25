@@ -1,6 +1,7 @@
-/* AI by AO: cookie consent + analytics, shared by every page.
+/* AI by AO: cookie consent, analytics and call / WhatsApp buttons, shared by every page.
    Analytics never loads until the visitor accepts.
-   To switch analytics on, paste your Google Analytics 4 measurement ID below (it looks like G-XXXXXXXXXX). */
+   To switch analytics on, paste your Google Analytics 4 measurement ID below (it looks like G-XXXXXXXXXX).
+   To switch on the call and WhatsApp buttons, fill in the numbers in CONTACT below. */
 (function(){
   var GA_ID='';
   var KEY='aiao-consent';
@@ -44,6 +45,52 @@
     var c=e.target.closest&&e.target.closest('[data-cookie-settings]');if(c){e.preventDefault();show()}
   });
 
-  function init(){var v=get();if(v==='granted')loadAnalytics();else if(!v)setTimeout(show,1200)}
+  /* Call and WhatsApp buttons. Leave a number empty to hide that button everywhere.
+     phone: international format, e.g. '+441130000000'.  phoneDisplay: how to show it, e.g. '0113 000 0000'.
+     whatsapp: digits only with the country code and no +, e.g. '447000000000'. */
+  var CONTACT={phone:'',phoneDisplay:'',whatsapp:'',whatsappText:'Hi, I found you on your website and would like to talk about '};
+  if(window.AIAO_CONTACT)for(var ck in window.AIAO_CONTACT)CONTACT[ck]=window.AIAO_CONTACT[ck];
+
+  function addContactButtons(){
+    var phone=(CONTACT.phone||'').replace(/[^+\d]/g,''),wa=(CONTACT.whatsapp||'').replace(/\D/g,'');
+    if(!phone&&!wa)return;
+    var callHref='tel:'+phone,waHref='https://wa.me/'+wa+'?text='+encodeURIComponent(CONTACT.whatsappText||'');
+    var callText=CONTACT.phoneDisplay||phone;
+    function link(cls,href,html,track,label){
+      var a=document.createElement('a');a.className=cls;a.href=href;a.setAttribute('data-track',track);if(label)a.setAttribute('aria-label',label);a.innerHTML=html;
+      if(track==='whatsapp_click'){a.target='_blank';a.rel='noopener'}
+      return a;
+    }
+    /* the call-to-action band at the bottom of each page */
+    var rows=document.querySelectorAll('.band .cta-row');
+    for(var i=0;i<rows.length;i++){
+      if(phone)rows[i].appendChild(link('btn ghost',callHref,'<span aria-hidden="true">📞</span> Call us','call_click'));
+      if(wa)rows[i].appendChild(link('btn ghost',waHref,'<span aria-hidden="true">💬</span> WhatsApp','whatsapp_click'));
+    }
+    /* "Or email us directly" line under the homepage contact form */
+    var or=document.querySelector('.or');
+    if(or){
+      if(phone){or.appendChild(document.createTextNode(' · Call '));or.appendChild(link('',callHref,callText,'call_click'))}
+      if(wa){or.appendChild(document.createTextNode(' · '));or.appendChild(link('',waHref,'WhatsApp us','whatsapp_click'))}
+    }
+    /* footer, under the email address */
+    var mail=document.querySelector('.site-foot .foot a[href^="mailto:"]');
+    if(mail&&mail.parentNode){
+      var p=document.createElement('p');p.style.marginTop='6px';
+      if(phone)p.appendChild(link('',callHref,'Call '+callText,'call_click'));
+      if(phone&&wa)p.appendChild(document.createTextNode(' · '));
+      if(wa)p.appendChild(link('',waHref,'WhatsApp','whatsapp_click'));
+      mail.parentNode.parentNode.insertBefore(p,mail.parentNode.nextSibling);
+    }
+    /* homepage mobile bar: call and WhatsApp icons replace the email icon */
+    var bar=document.getElementById('mcta'),envelope=bar&&bar.querySelector('.mcta-mail');
+    if(bar&&envelope){
+      if(wa)bar.insertBefore(link('mcta-mail',waHref,'<span aria-hidden="true">💬</span>','whatsapp_click','WhatsApp AI by AO'),envelope);
+      if(phone)bar.insertBefore(link('mcta-mail',callHref,'<span aria-hidden="true">📞</span>','call_click','Call AI by AO'),envelope);
+      envelope.parentNode.removeChild(envelope);
+    }
+  }
+
+  function init(){addContactButtons();var v=get();if(v==='granted')loadAnalytics();else if(!v)setTimeout(show,1200)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
