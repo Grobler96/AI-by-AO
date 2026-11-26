@@ -48,7 +48,7 @@
   /* Call and WhatsApp buttons. Leave a number empty to hide that button everywhere.
      phone: international format, e.g. '+441130000000'.  phoneDisplay: how to show it, e.g. '0113 000 0000'.
      whatsapp: digits only with the country code and no +, e.g. '447000000000'. */
-  var CONTACT={phone:'',phoneDisplay:'',whatsapp:'',whatsappText:'Hi, I found you on your website and would like to talk about '};
+  var CONTACT={phone:'+447904984168',phoneDisplay:'07904 984168',whatsapp:'447904984168',whatsappText:'Hi, I found you on your website and would like to talk about '};
   if(window.AIAO_CONTACT)for(var ck in window.AIAO_CONTACT)CONTACT[ck]=window.AIAO_CONTACT[ck];
 
   function addContactButtons(){
