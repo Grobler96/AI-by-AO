@@ -43,21 +43,23 @@
   <div class="toc"><a href="#who">Who we are</a><a href="#collect">What we collect</a><a href="#use">How we use it</a><a href="#share">Who we share it with</a><a href="#keep">How long we keep it</a><a href="#rights">Your rights</a><a href="#cookies">Cookies</a><a href="#contact">Contact</a></div>
   <div class="doc">
     <h2 id="who">Who we are</h2>
-    <p>This website is run by AI by AO ("we", "us", "our"). We build business automations, AI phone callers, chatbots and websites. We are the data controller for the personal data described in this policy.</p>
+    <p>This website is run by AI by AO ("we", "us", "our"). We build business automations, AI receptionists, chatbots and websites. We are the data controller for the personal data described in this policy.</p>
     <p>If you have any question about this policy or your data, email us at <a href="mailto:grobleroliver@gmail.com">grobleroliver@gmail.com</a>.</p>
 
     <h2 id="collect">What we collect</h2>
     <ul>
       <li><strong>Information you send us.</strong> When you use our contact form or email us, we receive your name, email address, company (if given), the service you're interested in and your message.</li>
       <li><strong>Calls and WhatsApp messages.</strong> If you call us or message us on WhatsApp, we receive your phone number, the name on your WhatsApp profile and whatever you tell us, in the call or in your messages.</li>
+      <li><strong>Demo chatbot conversations.</strong> If we send you a link to a demo chatbot made for your business and you chat with it, we collect what you type, the replies it gives, how many times the link is opened and when it was first opened. To stop anyone sending too many messages, we also keep a scrambled one-way version of your IP address (a hash), not the address itself. Please don't type personal or sensitive details into the demo.</li>
       <li><strong>Analytics data, only if you agree.</strong> If you accept analytics cookies, we collect information about how you use the site, such as pages viewed, buttons clicked, approximate location (country or city), device and browser type. IP addresses are anonymised.</li>
-      <li><strong>Technical data.</strong> Like every website, the services that deliver this site (hosting, fonts and code libraries) receive your IP address and browser details so they can send you the page.</li>
+      <li><strong>Technical data.</strong> Like every website, the services that deliver this site (hosting, spam protection, fonts and code libraries) receive your IP address and browser details so they can send you the page.</li>
     </ul>
     <p>We don't ask for and don't want sensitive personal data, so please don't include any in your message.</p>
 
     <h2 id="use">How we use it, and our lawful basis</h2>
     <table><thead><tr><th>Purpose</th><th>Lawful basis (UK GDPR)</th></tr></thead><tbody>
       <tr><td>Replying to your enquiry and giving you a demo or quote</td><td>Legitimate interests, and steps taken at your request before entering into a contract</td></tr>
+      <tr><td>Running a demo chatbot we have shared with you, and stopping it being misused</td><td>Legitimate interests</td></tr>
       <tr><td>Providing services you've agreed to buy</td><td>Performance of a contract</td></tr>
       <tr><td>Understanding how the site is used so we can improve it</td><td>Consent (you can withdraw it at any time)</td></tr>
       <tr><td>Keeping records we're legally required to keep</td><td>Legal obligation</td></tr>
@@ -67,17 +69,20 @@
     <h2 id="share">Who we share it with</h2>
     <p>We only share data with trusted providers who help us run the site and our business:</p>
     <ul>
-      <li><strong>FormSubmit</strong>, which delivers contact form messages to our inbox.</li>
+      <li><strong>FormSubmit</strong>, which delivers contact form messages from our website to our inbox.</li>
       <li><strong>Google (Gmail)</strong>, where we receive and reply to emails.</li>
       <li><strong>WhatsApp (Meta)</strong>, if you message us on WhatsApp. WhatsApp is run by Meta, which handles your messages under its own terms and privacy policy.</li>
       <li><strong>Google Analytics</strong>, only if you accept analytics cookies.</li>
-      <li><strong>GitHub Pages</strong>, which hosts this website.</li>
+      <li><strong>Vercel</strong>, which hosts this website and runs the server code that handles the contact form.</li>
+      <li><strong>Cloudflare Turnstile</strong>, which checks that the contact form is being used by a person and not a bot. It runs on our homepage, where it receives your IP address and some browser details.</li>
+      <li><strong>Supabase</strong>, which runs our demo chatbots and stores their conversations.</li>
+      <li><strong>Anthropic</strong>, whose AI model writes the replies in our demo chatbots. It receives what you type in the demo and handles it under its own terms and privacy policy.</li>
       <li><strong>Google Fonts and jsDelivr</strong>, which deliver the fonts and code libraries the site uses.</li>
     </ul>
     <p>Some of these providers may process data outside the UK. Where that happens, they rely on recognised safeguards such as the UK International Data Transfer Addendum or adequacy regulations.</p>
 
     <h2 id="keep">How long we keep it</h2>
-    <p>We keep enquiry emails, WhatsApp messages and call notes for up to 24 months after our last contact with you, unless you become a client. Client records are kept for as long as we work together and then for up to 6 years for legal and accounting reasons. Analytics data is kept for 14 months.</p>
+    <p>We keep enquiry emails, WhatsApp messages, call notes and demo chatbot conversations for up to 24 months after our last contact with you, unless you become a client. Client records are kept for as long as we work together and then for up to 6 years for legal and accounting reasons. Analytics data is kept for 14 months.</p>
 
     <h2 id="rights">Your rights</h2>
     <p>Under UK data protection law you have the right to:</p>
